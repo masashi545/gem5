@@ -53,3 +53,5 @@ Source('flitBuffer.cc')
 Source('flit.cc')
 Source('Credit.cc')
 Source('NetworkBridge.cc')
+
+DebugFlag('TracePacket', "'generated_ticks' 'src_node' 'dest_node' 'vc_num' 'packet_size'")

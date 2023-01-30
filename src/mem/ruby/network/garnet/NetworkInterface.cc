@@ -37,6 +37,7 @@
 
 #include "base/cast.hh"
 #include "debug/RubyNetwork.hh"
+#include "debug/TracePacket.hh"
 #include "mem/ruby/network/MessageBuffer.hh"
 #include "mem/ruby/network/garnet/Credit.hh"
 #include "mem/ruby/network/garnet/flitBuffer.hh"
@@ -449,9 +450,7 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
             niOutVcs[vc].insert(fl);
         }
 
-        // output packet trace information
-        printf("TRACE %lu %d %d %d %d\n",
-                        (uint64_t)curTick(),
+        DPRINTF(TracePacket, "%d %d %d %d\n",
                         m_net_ptr->get_router_id(m_id, vnet),
                         m_net_ptr->get_router_id(destID, vnet), 
                         vc, 
