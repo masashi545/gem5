@@ -449,6 +449,14 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
             niOutVcs[vc].insert(fl);
         }
 
+        // output packet trace information
+        printf("TRACE %lu %d %d %d %d\n",
+                        (uint64_t)curTick(),
+                        m_net_ptr->get_router_id(m_id, vnet),
+                        m_net_ptr->get_router_id(destID, vnet), 
+                        vc, 
+                        num_flits);
+
         m_ni_out_vcs_enqueue_time[vc] = curTick();
         outVcState[vc].setState(ACTIVE_, curTick());
     }
