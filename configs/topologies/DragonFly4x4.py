@@ -32,6 +32,7 @@ class DragonFly4x4(SimpleTopology):
 
         k = 4
         n = k * k
+        assert n == options.num_mem, "num_mem_nodes: invalid"
 
         link_latency = options.link_latency  # used by simple and garnet
         router_latency = options.router_latency  # only used by garnet

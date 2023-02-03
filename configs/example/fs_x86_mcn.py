@@ -1,11 +1,15 @@
-# x86-fs-mn.py
+# fs_x86_mcn.py
 # Author: Masashi Oda
+
+# Full System Simulation config file
+# ISA: x86
+# Memory Cube Network architecture
 
 """
 Usage:
 
-$ scons build/X86/gem5.opt
-$ ./build/X86/gem5.opt oda_config/x86-fs_mn.py 
+$ scons ./build/X86/gem5.opt -j5
+$ ./fs.sh
 
 """
 
@@ -17,7 +21,7 @@ from m5.defines import buildEnv
 from m5.objects import *
 from m5.util import *
 
-addToPath("../../")
+addToPath("../")
 
 from ruby import Ruby
 
@@ -95,10 +99,15 @@ madt_records = []
 for i in range(args.num_cpus):
     base_entries.append(
         X86IntelMPProcessor(
-            local_apic_id=i, local_apic_version=0x14, enable=True, bootstrap=(i == 0)
+            local_apic_id=i,
+            local_apic_version=0x14,
+            enable=True,
+            bootstrap=(i == 0),
         )
     )
-    madt_records.append(X86ACPIMadtLAPIC(acpi_processor_id=i, apic_id=i, flags=1))
+    madt_records.append(
+        X86ACPIMadtLAPIC(acpi_processor_id=i, apic_id=i, flags=1)
+    )
 
 io_apic = X86IntelMPIOAPIC(
     id=args.num_cpus, version=0x11, enable=True, address=0xFEC00000
@@ -138,7 +147,6 @@ madt_records.append(
         flags=0,
     )
 )
-
 
 def assignISAInt(irq, apicPin):
     base_entries.append(
@@ -211,7 +219,9 @@ entries.append(X86E820Entry(addr=0xFFFF_0000, size="64kB", range_type=2))
 if len(system.mem_ranges) == 2:
     entries.append(
         X86E820Entry(
-            addr=0x1_0000_0000, size="%dB" % (system.mem_ranges[1].size()), range_type=1
+            addr=0x1_0000_0000,
+            size="%dB" % (system.mem_ranges[1].size()),
+            range_type=1,
         )
     )
 
@@ -220,6 +230,7 @@ system.workload.e820_table.entries = entries
 
 cmdline = "earlyprintk=ttyS0 console=ttyS0 lpj=7999923 root=/dev/hda1"
 system.workload.command_line = fillInCmdline(mdesc, cmdline)
+
 
 # ---------------------------- Default Setup --------------------------- #
 # Set the cache line size for the entire system
@@ -251,7 +262,8 @@ system.init_param = args.init_param
 
 # For now, assign all the CPUs to the same clock domain
 system.cpu = [
-    CPUClass(clk_domain=system.cpu_clk_domain, cpu_id=i) for i in range(args.num_cpus)
+    CPUClass(clk_domain=system.cpu_clk_domain, cpu_id=i)
+    for i in range(args.num_cpus)
 ]
 
 
@@ -270,13 +282,14 @@ InterfaceClass = GarnetNetworkInterface()
 # Instantiate the network object
 # so that the controllers can connect to it.
 network = NetworkClass(
-    ruby_system=ruby,
+    ruby_system=system.ruby,
     topology=args.topology,
     routers=[],
     ext_links=[],
     int_links=[],
     netifs=[],
 )
+
 (
     network,
     IntLinkClass,
@@ -292,13 +305,13 @@ protocol = buildEnv["PROTOCOL"]
 exec("from . import %s" % protocol)
 try:
     (cpu_sequencers, dir_cntrls, topology) = eval(
-        "%s.create_system(options, \
-                                                                    full_system, \
-                                                                    system, \
-                                                                    dma_ports, \
-                                                                    bootmem, \
-                                                                    ruby, \
-                                                                    cpus)"
+        "%s.create_system(args, \
+                          full_system, \
+                          system, \
+                          dma_ports, \
+                          bootmem, \
+                          system.ruby, \
+                          cpus)"
         % protocol
     )
 except:
@@ -333,14 +346,18 @@ if system.iobus != None:
     for cpu_seq in cpu_sequencers:
         cpu_seq.connectIOPorts(system.iobus)
 
-system.ruby.number_of_virtual_networks = system.ruby.network.number_of_virtual_networks
+system.ruby.number_of_virtual_networks = (
+    system.ruby.network.number_of_virtual_networks
+)
 system.ruby._cpu_ports = cpu_sequencers
 system.ruby.num_of_sequencers = len(cpu_sequencers)
 
 # Create a backing copy of physical memory in case required
-if options.access_backing_store:
+if args.access_backing_store:
     system.ruby.access_backing_store = True
-    system.ruby.phys_mem = SimpleMemory(range=system.mem_ranges[0], in_addr_map=False)
+    system.ruby.phys_mem = SimpleMemory(
+        range=system.mem_ranges[0], in_addr_map=False
+    )
 
 
 # Create a seperate clock domain for Ruby
@@ -406,7 +423,11 @@ if args.timesync:
 if args.frame_capture:
     VncServer.frame_capture = True
 
-if buildEnv["TARGET_ISA"] == "arm" and not args.bare_metal and not args.dtb_filename:
+if (
+    buildEnv["TARGET_ISA"] == "arm"
+    and not args.bare_metal
+    and not args.dtb_filename
+):
     if args.machine_type not in [
         "VExpress_GEM5",
         "VExpress_GEM5_V1",

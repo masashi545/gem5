@@ -1,4 +1,0 @@
-m5 checkpoint
-./bin/lu.S.x
-sleep 5
-m5 exit
