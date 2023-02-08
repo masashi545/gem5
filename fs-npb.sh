@@ -21,6 +21,7 @@ configs/example/fs.py \
 --checkpoint-restore=$1 \
 --restore-with-cpu=TimingSimpleCPU \
 \
+--mem-type=HMC_2500_1x32 \
 --caches \
 --l2cache \
 --l1d_size=32kB \

@@ -64,6 +64,7 @@ from common import MemConfig
 from common import ObjectList
 from common.Caches import *
 from common import Options
+from common import HMC
 
 
 def cmd_line_template():
@@ -325,6 +326,7 @@ def build_drive_system(np):
 parser = argparse.ArgumentParser()
 Options.addCommonOptions(parser)
 Options.addFSOptions(parser)
+HMC.add_options(parser)
 
 # Add the ruby specific and protocol specific args
 if "--ruby" in sys.argv:

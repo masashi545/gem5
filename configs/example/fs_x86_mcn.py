@@ -14,6 +14,7 @@ $ ./fs.sh
 """
 
 import argparse
+import math
 import sys
 
 import m5
@@ -147,6 +148,7 @@ madt_records.append(
         flags=0,
     )
 )
+
 
 def assignISAInt(irq, apicPin):
     base_entries.append(
@@ -339,7 +341,82 @@ system.sys_port_proxy = sys_port_proxy
 # Connect the system port for loading of binaries etc
 system.system_port = system.sys_port_proxy.in_ports
 
-setup_memory_controllers(system, system.ruby, dir_cntrls, args)
+if args.numa_high_bit:
+    block_size_bits = args.numa_high_bit + 1 - int(math.log(args.num_dirs, 2))
+    system.ruby.block_size_bytes = 2 ** (block_size_bits)
+else:
+    system.ruby.block_size_bytes = args.cacheline_size
+
+system.ruby.memory_size_bits = 48  # 256TB
+
+index = 0
+mem_ctrls = []
+crossbars = []
+
+if args.numa_high_bit:
+    dir_bits = int(math.log(args.num_dirs, 2))
+    intlv_size = 2 ** (args.numa_high_bit - dir_bits + 1)
+else:
+    intlv_size = args.cacheline_size
+
+intlv_bits = int(math.log(args.num_dirs, 2))
+
+for dir_cntrl in dir_cntrls:
+    crossbar = None
+    if len(system.mem_ranges) > 1:
+        crossbar = IOXBar()
+        crossbars.append(crossbar)
+        dir_cntrl.memory_out_port = crossbar.cpu_side_ports
+
+    dir_ranges = []
+    for r in system.mem_ranges:
+        mem_type = ObjectList.mem_list.get(args.mem_type)
+
+        intlv_low_bit = intlv_bits
+
+        if args.xor_low_bit:
+            xor_high_bit = args.xor_low_bit + intlv_bits - 1
+        else:
+            xor_high_bit = 0
+
+        dram_intf = mem_type()
+
+        if dram_intf.addr_mapping.value == "RoRaBaChCo":
+
+            rowbuffer_size = (
+                dram_intf.device_rowbuffer_size.value
+                * dram_intf.devices_per_rank.value
+            )
+
+            intlv_low_bit = int(math.log(rowbuffer_size, 2))
+
+        dram_intf.range = m5.objects.AddrRange(
+            r.start,
+            size=r.size(),
+            intlvHighBit=intlv_low_bit + intlv_bits - 1,
+            xorHighBit=xor_high_bit,
+            intlvBits=intlv_bits,
+            intlvMatch=i,
+        )
+
+        mem_ctrl = m5.objects.MemCtrl(dram=dram_intf)
+
+        if args.access_backing_store:
+            dram_intf.kvm_map = False
+
+        mem_ctrls.append(mem_ctrl)
+        dir_ranges.append(dram_intf.range)
+
+        mem_ctrl.port = crossbar.mem_side_ports
+
+        mem_ctrl.dram.enable_dram_powerdown = args.enable_dram_powerdown
+
+    index += 1
+    dir_cntrl.addr_ranges = dir_ranges
+
+system.mem_ctrls = mem_ctrls
+
+system.ruby.crossbars = crossbars
 
 # Connect the cpu sequencers and the piobus
 if system.iobus != None:

@@ -217,7 +217,7 @@ def add_options(parser):
         help="Number of packets to buffer at the\
                         response side of the serial link",
     )
-
+    '''
     # Latency of the serial link composed by SER/DES latency (1.6ns [4]) plus
     # the PCB trace latency (3ns Estimated based on [5])
     parser.add_argument(
@@ -226,6 +226,7 @@ def add_options(parser):
         type=str,
         help="Latency of the serial links",
     )
+    '''
 
     # Clock frequency of the each serial link(SerDes) [1]
     parser.add_argument(
@@ -395,6 +396,7 @@ def add_options(parser):
         help="vault storage capacity in bytes. Default:\
                         256MB",
     )
+    '''
     parser.add_argument(
         "--mem-type",
         type=str,
@@ -417,6 +419,7 @@ def add_options(parser):
         type=int,
         help="Number of ranks to iterate across",
     )
+    '''
     parser.add_argument(
         "--burst-length",
         default=256,
