@@ -119,6 +119,9 @@ def define_options(parser):
         help="Recycle latency for ruby controller input buffers",
     )
 
+    parser.add_argument("--mcn", action="store_true")
+
+
     protocol = buildEnv["PROTOCOL"]
     exec("from . import %s" % protocol)
     eval("%s.define_options(parser)" % protocol)
@@ -162,6 +165,7 @@ def setup_memory_controllers(system, ruby, dir_cntrls, options):
         dir_ranges = []
         for r in system.mem_ranges:
             mem_type = ObjectList.mem_list.get(options.mem_type)
+            # (intf, r, i, intlv_bits, intlv_size, xor_low_bit)
             dram_intf = MemConfig.create_mem_intf(
                 mem_type,
                 r,
@@ -190,8 +194,11 @@ def setup_memory_controllers(system, ruby, dir_cntrls, options):
             if issubclass(mem_type, DRAMInterface):
                 mem_ctrl.dram.enable_dram_powerdown = (options.enable_dram_powerdown)
 
+            #print(mem_ctrl.dram.device_size)
+
         index += 1
         dir_cntrl.addr_ranges = dir_ranges
+        #print(dir_ranges[0])
 
     system.mem_ctrls = mem_ctrls
 
@@ -240,6 +247,8 @@ def create_system(
         cpus = system.cpu
 
     protocol = buildEnv["PROTOCOL"]
+    if options.mcn:
+        protocol = "MOESI_MCN"
     exec("from . import %s" % protocol)
     try:
         (cpu_sequencers, dir_cntrls, topology) = eval(
@@ -277,7 +286,8 @@ def create_system(
     # Connect the system port for loading of binaries etc
     system.system_port = system.sys_port_proxy.in_ports
 
-    setup_memory_controllers(system, ruby, dir_cntrls, options)
+    if not options.mcn:
+        setup_memory_controllers(system, ruby, dir_cntrls, options)
 
     # Connect the cpu sequencers and the piobus
     if piobus != None:
@@ -306,7 +316,7 @@ def create_directories(options, bootmem, ruby_system, system):
 
         exec("ruby_system.dir_cntrl%d = dir_cntrl" % i)
         dir_cntrl_nodes.append(dir_cntrl)
-
+    
     if bootmem is not None:
         rom_dir_cntrl = Directory_Controller()
         rom_dir_cntrl.directory = RubyDirectoryMemory()

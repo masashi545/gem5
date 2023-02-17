@@ -1,3 +1,15 @@
+# Copyright (c) 2019 ARM Limited
+# All rights reserved.
+#
+# The license below extends only to copyright in the software and shall
+# not be construed as granting a license to any other intellectual
+# property including but not limited to intellectual property relating
+# to a hardware implementation of the functionality of the software
+# licensed hereunder.  You may use the software subject to the license
+# terms below provided that you ensure that this notice is replicated
+# unmodified and in its entirety in all distributions of the software,
+# modified or unmodified, in source code or in binary form.
+#
 # Copyright (c) 2006-2007 The Regents of The University of Michigan
 # Copyright (c) 2009 Advanced Micro Devices, Inc.
 # All rights reserved.
@@ -53,8 +65,10 @@ def create_system(
     options, full_system, system, dma_ports, bootmem, ruby_system, cpus
 ):
 
-    if buildEnv["PROTOCOL"] != "MESI_Two_Level":
-        fatal("This script requires the MESI_Two_Level protocol to be built.")
+    if buildEnv["PROTOCOL"] != "MOESI_MCN_cache":
+        panic(
+            "This script requires the MOESI_MCN_cache protocol to be built."
+        )
 
     cpu_sequencers = []
 
@@ -65,14 +79,14 @@ def create_system(
     #
     l1_cntrl_nodes = []
     l2_cntrl_nodes = []
+    l3_cntrl_nodes = []
     dma_cntrl_nodes = []
 
     #
     # Must create the individual controllers before the network to ensure the
     # controller constructors are called before the network constructor
     #
-    l2_bits = int(math.log(options.num_l2caches, 2))             # l2_bits = 2
-    block_size_bits = int(math.log(options.cacheline_size, 2))   # block_size_bits = 6
+    block_size_bits = int(math.log(options.cacheline_size, 2))
 
     for i in range(options.num_cpus):
         #
@@ -91,21 +105,16 @@ def create_system(
             is_icache=False,
         )
 
-        prefetcher = RubyPrefetcher()
-
         clk_domain = cpus[i].clk_domain
 
         l1_cntrl = L1Cache_Controller(
             version=i,
             L1Icache=l1i_cache,
             L1Dcache=l1d_cache,
-            l2_select_num_bits=l2_bits,
             send_evictions=send_evicts(options),
-            prefetcher=prefetcher,
-            ruby_system=ruby_system,
-            clk_domain=clk_domain,
             transitions_per_cycle=options.ports,
-            enable_prefetch=False,
+            clk_domain=clk_domain,
+            ruby_system=ruby_system,
         )
 
         cpu_seq = RubySequencer(
@@ -128,17 +137,32 @@ def create_system(
         l1_cntrl.requestFromL1Cache.out_port = ruby_system.network.in_port
         l1_cntrl.responseFromL1Cache = MessageBuffer()
         l1_cntrl.responseFromL1Cache.out_port = ruby_system.network.in_port
-        l1_cntrl.unblockFromL1Cache = MessageBuffer()
-        l1_cntrl.unblockFromL1Cache.out_port = ruby_system.network.in_port
-
-        l1_cntrl.optionalQueue = MessageBuffer()
-
         l1_cntrl.requestToL1Cache = MessageBuffer()
         l1_cntrl.requestToL1Cache.in_port = ruby_system.network.out_port
         l1_cntrl.responseToL1Cache = MessageBuffer()
         l1_cntrl.responseToL1Cache.in_port = ruby_system.network.out_port
+        l1_cntrl.triggerQueue = MessageBuffer(ordered=True)
 
-    l2_index_start = block_size_bits + l2_bits
+    # Create the L2s interleaved addr ranges
+    l2_addr_ranges = []
+    l2_bits = int(math.log(options.num_l2caches, 2))
+    numa_bit = block_size_bits + l2_bits - 1
+    sysranges = [] + system.mem_ranges
+    if bootmem:
+        sysranges.append(bootmem.range)
+    for i in range(options.num_l2caches):
+        ranges = []
+        for r in sysranges:
+            addr_range = AddrRange(
+                r.start,
+                size=r.size(),
+                intlvHighBit=numa_bit,
+                intlvBits=l2_bits,
+                intlvMatch=i,
+            )
+            ranges.append(addr_range)
+        l2_addr_ranges.append(ranges)
+        #print(ranges[0])
 
     for i in range(options.num_l2caches):
         #
@@ -147,7 +171,7 @@ def create_system(
         l2_cache = L2Cache(
             size=options.l2_size,
             assoc=options.l2_assoc,
-            start_index_bit=l2_index_start,
+            start_index_bit=block_size_bits + l2_bits,
         )
 
         l2_cntrl = L2Cache_Controller(
@@ -155,28 +179,32 @@ def create_system(
             L2cache=l2_cache,
             transitions_per_cycle=options.ports,
             ruby_system=ruby_system,
+            addr_ranges=l2_addr_ranges[i],
         )
 
         exec("ruby_system.l2_cntrl%d = l2_cntrl" % i)
         l2_cntrl_nodes.append(l2_cntrl)
 
         # Connect the L2 controllers and the network
-        l2_cntrl.DirRequestFromL2Cache = MessageBuffer()
-        l2_cntrl.DirRequestFromL2Cache.out_port = ruby_system.network.in_port
+        l2_cntrl.GlobalRequestFromL2Cache = MessageBuffer()
+        l2_cntrl.GlobalRequestFromL2Cache.out_port = (
+            ruby_system.network.in_port
+        )
         l2_cntrl.L1RequestFromL2Cache = MessageBuffer()
         l2_cntrl.L1RequestFromL2Cache.out_port = ruby_system.network.in_port
         l2_cntrl.responseFromL2Cache = MessageBuffer()
         l2_cntrl.responseFromL2Cache.out_port = ruby_system.network.in_port
 
-        l2_cntrl.unblockToL2Cache = MessageBuffer()
-        l2_cntrl.unblockToL2Cache.in_port = ruby_system.network.out_port
+        l2_cntrl.GlobalRequestToL2Cache = MessageBuffer()
+        l2_cntrl.GlobalRequestToL2Cache.in_port = ruby_system.network.out_port
         l2_cntrl.L1RequestToL2Cache = MessageBuffer()
         l2_cntrl.L1RequestToL2Cache.in_port = ruby_system.network.out_port
         l2_cntrl.responseToL2Cache = MessageBuffer()
         l2_cntrl.responseToL2Cache.in_port = ruby_system.network.out_port
+        l2_cntrl.triggerQueue = MessageBuffer(ordered=True)
 
     # Run each of the ruby memory controllers at a ratio of the frequency of
-    # the ruby system
+    # the ruby system.
     # clk_divider value is a fix to pass regression.
     ruby_system.memctrl_clk_domain = DerivedClockDomain(
         clk_domain=ruby_system.clk_domain, clk_divider=3
@@ -196,11 +224,16 @@ def create_system(
         dir_cntrl.responseToDir.in_port = ruby_system.network.out_port
         dir_cntrl.responseFromDir = MessageBuffer()
         dir_cntrl.responseFromDir.out_port = ruby_system.network.in_port
+        dir_cntrl.forwardFromDir = MessageBuffer()
+        dir_cntrl.forwardFromDir.out_port = ruby_system.network.in_port
         dir_cntrl.requestToMemory = MessageBuffer()
         dir_cntrl.responseFromMemory = MessageBuffer()
+        dir_cntrl.triggerQueue = MessageBuffer(ordered=True)
 
     for i, dma_port in enumerate(dma_ports):
+        #
         # Create the Ruby objects associated with the dma controller
+        #
         dma_seq = DMASequencer(
             version=i, ruby_system=ruby_system, in_ports=dma_port
         )
@@ -217,10 +250,13 @@ def create_system(
 
         # Connect the dma controller to the network
         dma_cntrl.mandatoryQueue = MessageBuffer()
-        dma_cntrl.responseFromDir = MessageBuffer(ordered=True)
+        dma_cntrl.responseFromDir = MessageBuffer()
         dma_cntrl.responseFromDir.in_port = ruby_system.network.out_port
-        dma_cntrl.requestToDir = MessageBuffer()
-        dma_cntrl.requestToDir.out_port = ruby_system.network.in_port
+        dma_cntrl.reqToDir = MessageBuffer()
+        dma_cntrl.reqToDir.out_port = ruby_system.network.in_port
+        dma_cntrl.respToDir = MessageBuffer()
+        dma_cntrl.respToDir.out_port = ruby_system.network.in_port
+        dma_cntrl.triggerQueue = MessageBuffer(ordered=True)
 
     all_cntrls = (
         l1_cntrl_nodes + l2_cntrl_nodes + dir_cntrl_nodes + dma_cntrl_nodes
@@ -239,10 +275,13 @@ def create_system(
 
         # Connect the dma controller to the network
         io_controller.mandatoryQueue = MessageBuffer()
-        io_controller.responseFromDir = MessageBuffer(ordered=True)
+        io_controller.responseFromDir = MessageBuffer()
         io_controller.responseFromDir.in_port = ruby_system.network.out_port
-        io_controller.requestToDir = MessageBuffer()
-        io_controller.requestToDir.out_port = ruby_system.network.in_port
+        io_controller.reqToDir = MessageBuffer()
+        io_controller.reqToDir.out_port = ruby_system.network.in_port
+        io_controller.respToDir = MessageBuffer()
+        io_controller.respToDir.out_port = ruby_system.network.in_port
+        io_controller.triggerQueue = MessageBuffer(ordered=True)
 
         all_cntrls = all_cntrls + [io_controller]
 

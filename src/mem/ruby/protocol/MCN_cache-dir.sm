@@ -1,0 +1,106 @@
+machine(MachineType:Directory, "Directory protocol")
+:  DirectoryMemory * directory;
+   Cycles directory_latency := 6;
+   Cycles to_memory_controller_latency := 1;
+
+   // Message Queues
+   MessageBuffer * requestToDir, network="From", virtual_network="1",
+        vnet_type="request";  // a mod-L2 bank -> this Dir
+   MessageBuffer * responseToDir, network="From", virtual_network="2",
+        vnet_type="response";  // a mod-L2 bank -> this Dir
+
+   MessageBuffer * forwardFromDir, network="To", virtual_network="1",
+        vnet_type="forward";
+   MessageBuffer * responseFromDir, network="To", virtual_network="2",
+        vnet_type="response";  // Dir -> mod-L2 bank
+
+   MessageBuffer * requestToMemory;
+   MessageBuffer * responseFromMemory;
+
+   MessageBuffer * triggerQueue;
+{
+  // STATES
+  state_declaration(State, desc="Directory states", default="Directory_State_I") {
+    // Base states
+    I, AccessPermission:Read_Write, desc="Invalid";
+    S, AccessPermission:Read_Write, desc="Shared";
+    O, AccessPermission:Maybe_Stale, desc="Owner";
+    M, AccessPermission:Maybe_Stale, desc="Modified";
+
+    // Transient states
+    // The memory has valid data in some of these
+    IS_M, AccessPermission:Read_Write, desc="Blocked, was in I, waiting for mem";
+    IS, AccessPermission:Read_Write, desc="Blocked, was in I, data forwarded";
+    SS, AccessPermission:Read_Only, desc="Blocked, was in shared";
+    OO, AccessPermission:Busy, desc="Blocked, was in owned";
+    MO, AccessPermission:Busy, desc="Blocked, going to owner or maybe modified";
+    MM_M, AccessPermission:Read_Only, desc="Blocked, fetching from memory, going to MM";
+    MM, AccessPermission:Busy, desc="Blocked, req or mem data forwarded, going to modified";
+
+    MI, AccessPermission:Busy, desc="Blocked on a writeback";
+    MIS, AccessPermission:Busy, desc="Blocked on a writeback, but don't remove from sharers when received";
+    OS, AccessPermission:Busy, desc="Blocked on a writeback";
+    OSS, AccessPermission:Busy, desc="Blocked on a writeback, but don't remove from sharers when received";
+
+    // We have valid data in a TBE
+    WBI, AccessPermission:Read_Only, desc="Sent writeback, waiting for memory; will be I";
+    WBS, AccessPermission:Read_Only, desc="Sent writeback, waiting for memory; will be S";
+    XI_M, AccessPermission:Read_Only, desc="Blocked, going to I, waiting for the memory controller";
+    XI_M_U, AccessPermission:Read_Only, desc="Blocked, going to XI_U, waiting for the memory controller";
+    XI_U, AccessPermission:Read_Only, desc="Blocked, going to I, waiting for an unblock";
+
+    OI_D, AccessPermission:Busy, desc="In O, going to I, waiting for data";
+    OD, AccessPermission:Busy, desc="In O, waiting for dma ack from L2";
+    MD, AccessPermission:Busy, desc="In M, waiting for dma ack from L2";
+  }
+
+  // Events
+  enumeration(Event, desc="Directory events") {
+    GETX, desc="A GETX arrives";
+    GETS, desc="A GETS arrives";
+    PUTX, desc="A PUTX arrives";
+    PUTO, desc="A PUTO arrives";
+    PUTO_SHARERS, desc="A PUTO arrives, but don't remove from sharers list";
+    Unblock, desc="An unblock message arrives";
+    Last_Unblock, desc="An unblock message arrives, we're not waiting for any additional unblocks";
+    Exclusive_Unblock, desc="The processor become the exclusive owner (E or M) of the line";
+    Clean_Writeback, desc="The final message as part of a PutX/PutS, no data";
+    Dirty_Writeback, desc="The final message as part of a PutX/PutS, contains data";
+    Memory_Data_DMA,   desc="Fetched data from memory arrives; original requestor is DMA";
+    Memory_Data_Cache, desc="Fetched data from memory arrives; original requestor is Cache";
+    Memory_Ack,    desc="Writeback Ack from memory arrives";
+    DMA_READ,      desc="DMA Read";
+    DMA_WRITE_LINE,    desc="DMA Write full line";
+    DMA_WRITE_PARTIAL, desc="DMA Write partial line";
+    DMA_ACK,       desc="DMA Ack";
+    Data,          desc="Data to directory";
+    All_Acks,      desc="All pending acks, unblocks, etc have been received";
+  }
+
+  // TYPEs
+  // DirectoryEntry
+  structure(Entry, desc="...", interface='AbstractCacheEntry', main="false") {
+    State DirectoryState,          desc="Directory state";
+    NetDest Sharers,                   desc="Sharers for this block";
+    NetDest Owner,                     desc="Owner of this block";
+    int WaitingUnblocks,           desc="Number of acks we're waiting for";
+  }
+  // Transaction Buffer Entry (TBE)
+  structure(TBE, desc="...") {
+    Addr PhysicalAddress,   desc="Physical address for this entry";
+    int Len,           desc="Length of request";
+    DataBlock DataBlk, desc="DataBlk";
+    MachineID Requestor, desc="original requestor";
+    bool WaitingWBAck, desc="DataBlk WB request sent, but no ack from mem yet";
+    bool WaitingDMAAck, desc="DMA ack sent, waiting for unblock";
+  }
+  // TBE Table
+  structure(TBETable, external = "yes") {
+    TBE lookup(Addr);
+    void allocate(Addr);
+    void deallocate(Addr);
+    bool isPresent(Addr);
+  }
+
+  int blockSize, default="RubySystem::getBlockSizeBytes()";
+}

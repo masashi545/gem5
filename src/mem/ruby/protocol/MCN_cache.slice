@@ -1,0 +1,8 @@
+protocol "MCN_cache";
+include "RubySlicc_interfaces.slicc";
+include "MCN_cache-msg.sm";
+include "MCN_cache-L1cache.sm";
+include "MCN_cache-L2cache.sm";
+include "MCN_cache-cachecube.sm";
+include "MCN_cache-dir.sm";
+include "MCN_cache-dma.sm";

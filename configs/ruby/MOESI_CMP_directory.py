@@ -161,6 +161,7 @@ def create_system(
             )
             ranges.append(addr_range)
         l2_addr_ranges.append(ranges)
+        #print(ranges[0])
 
     for i in range(options.num_l2caches):
         #

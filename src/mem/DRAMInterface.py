@@ -397,7 +397,7 @@ class HMC_2500_1x32(DDR3_1600_8x8):
     devices_per_rank = 1
 
     # 4 layers so 4 ranks [2]
-    ranks_per_channel = 4
+    ranks_per_channel = 1 # modify by oda 2023/02/17
 
     # HMC has 2 banks per layer [2]
     # Each layer represents a rank. With 4 layers and 8 banks in total, each

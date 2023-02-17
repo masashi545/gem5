@@ -39,15 +39,18 @@ from common import FileSystemConfig
 # Declare caches used by the protocol
 #
 class L0Cache(RubyCache):
-    pass
+    dataAccessLatency = 1
+    tagAccessLatency = 1
 
 
 class L1Cache(RubyCache):
-    pass
+    dataAccessLatency = 20
+    tagAccessLatency = 20
 
 
 class L2Cache(RubyCache):
-    pass
+    dataAccessLatency = 100
+    tagAccessLatency = 100
 
 
 def define_options(parser):

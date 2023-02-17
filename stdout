@@ -1,0 +1,35 @@
+Global frequency set at 1000000000000 ticks per second
+build/X86/mem/dram_interface.cc:690: warn: DRAM device capacity (8192 Mbytes) does not match the address range assigned (2048 Mbytes)
+build/X86/sim/kernel_workload.cc:46: info: kernel located at: resource/kernels/x86_64-vmlinux-2.6.22.9.smp
+      0: system.pc.south_bridge.cmos.rtc: Real-time clock set to Sun Jan  1 00:00:00 2012
+system.pc.com_1.device: Listening for connections on port 3456
+0: system.remote_gdb: listening for remote gdb on port 7000
+build/X86/dev/intel_8254_timer.cc:128: warn: Reading current count from inactive timer.
+gem5 Simulator System.  https://www.gem5.org
+gem5 is copyrighted software; use the --copyright option for details.
+
+gem5 version 22.1.0.0
+gem5 compiled Feb  3 2023 16:40:29
+gem5 started Feb 10 2023 04:10:05
+gem5 executing on uji, pid 172247
+command line: ./build/X86/gem5.opt configs/example/fs.py --kernel=resource/kernels/x86_64-vmlinux-2.6.22.9.smp --disk-image=resource/disks/linux-x86-npb.img --cpu-clock=3GHz --cpu-type=AtomicSimpleCPU --script=scripts/npb/dc.sh --mem-size=2GB --caches --l2cache --l1d_size=64kB --l1i_size=64kB --l2_size=1MB --cacheline_size=64 --num-cpus=4 --num-dir=4
+
+**** REAL SIMULATION ****
+warn: system.workload.acpi_description_table_pointer.rsdt adopting orphan SimObject param 'entries'
+build/X86/sim/simulate.cc:192: info: Entering event queue @ 0.  Starting simulation...
+build/X86/dev/x86/pc.cc:117: warn: Don't know what interrupt to clear for console.
+build/X86/arch/x86/cpuid.cc:185: warn: x86 cpuid: unknown family 0x8086
+build/X86/arch/x86/generated/exec-ns.cc.inc:27: warn: instruction 'wbinvd' unimplemented
+build/X86/sim/power_state.cc:105: warn: PowerState: Already in the requested power state, request ignored
+build/X86/arch/x86/generated/exec-ns.cc.inc:27: warn: instruction 'wbinvd' unimplemented
+build/X86/arch/x86/cpuid.cc:185: warn: x86 cpuid: unknown family 0x8086
+build/X86/arch/x86/cpuid.cc:185: warn: x86 cpuid: unknown family 0x8086
+build/X86/arch/x86/cpuid.cc:185: warn: x86 cpuid: unknown family 0x8086
+build/X86/arch/x86/interrupts.cc:530: hack: Assuming logical destinations are 1 << id.
+build/X86/dev/ps2/mouse.cc:151: warn: Unknown mouse command 0xe1.
+build/X86/arch/generic/debugfaults.hh:145: warn: MOVNTI: Ignoring non-temporal hint, modeling as cacheable!
+Writing checkpoint
+build/X86/sim/simulate.cc:192: info: Entering event queue @ 5255664173235.  Starting simulation...
+Exiting @ tick 5278381120548 because m5_exit instruction encountered
+ event queue @ 5255664173235.  Starting simulation...
+Exiting @ tick 5278381120548 because m5_exit instruction encountered

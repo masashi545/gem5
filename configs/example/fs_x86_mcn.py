@@ -30,13 +30,11 @@ from common.FSConfig import *
 from common.SysPaths import *
 from common.Benchmarks import *
 from common import Simulation
-from common import CacheConfig
-from common import CpuConfig
-from common import MemConfig
 from common import ObjectList
 from common.Caches import *
 from common import Options
 from common import FileSystemConfig
+from common import HMC
 
 from topologies import *
 from network import Network
@@ -46,6 +44,7 @@ parser = argparse.ArgumentParser()
 Options.addCommonOptions(parser)
 Options.addFSOptions(parser)
 Ruby.define_options(parser)
+HMC.add_options(parser)
 
 # ---------------------------- Parse Options --------------------------- #
 args = parser.parse_args()
@@ -54,6 +53,7 @@ args = parser.parse_args()
 (CPUClass, mem_mode, FutureClass) = Simulation.setCPUClass(args)
 MemClass = Simulation.setMemClass(args)
 
+# makeLinuxX86System(mem_mode, args.num_cpus, mdesc, args.ruby, cmdline=cmdline)
 # ---------------------------- Setup System ---------------------------- #
 system = System()
 # System -> src/sim/System.py
@@ -71,8 +71,27 @@ system.mem_mode = mem_mode
 system.workload = X86FsLinux()
 # X86FsLinux -> src/arch/x86/X88FsWorkload.py
 
-system.m5op_base = 0xFFFF0000
-system.mem_range = [AddrRange(start=0x80000000, size=mdesc.mem())]
+system.m5ops_base = 0x0_FFFF_0000
+# Physical memory
+# On the PC platform, the memory region 0xC0000000-0xFFFFFFFF is reserved
+# for various devices.  Hence, if the physical memory size is greater than
+# 3GB, we need to split it into two parts.
+excess_mem_size = convert.toMemorySize(mdesc.mem()) - convert.toMemorySize(
+    "3GB"
+)
+if excess_mem_size <= 0:
+    system.mem_ranges = [AddrRange(mdesc.mem())]
+else:
+    warn(
+        "Physical memory size specified is %s which is greater than "
+        "3GB.  Twice the number of memory controllers would be "
+        "created." % (mdesc.mem())
+    )
+
+    system.mem_ranges = [
+        AddrRange("3GB"),
+        AddrRange(Addr("4GB"), size=excess_mem_size),
+    ]
 
 # Platform
 system.pc = Pc()
@@ -111,7 +130,7 @@ for i in range(args.num_cpus):
     )
 
 io_apic = X86IntelMPIOAPIC(
-    id=args.num_cpus, version=0x11, enable=True, address=0xFEC00000
+    id=args.num_cpus, version=0x11, enable=True, address=0x0_0FEC0_0000
 )
 system.pc.south_bridge.io_apic.apic_id = io_apic.id
 
@@ -128,8 +147,7 @@ ext_entries.append(
     X86IntelMPBusHierarchy(bus_id=1, subtractive_decode=True, parent_bus=0)
 )
 
-base_entries.append(
-    X86IntelMPIOIntAssignment(
+pci_dev4_inta = X86IntelMPIOIntAssignment(
         interrupt_type="INT",
         polarity="ConformPolarity",
         trigger="ConformTrigger",
@@ -137,8 +155,8 @@ base_entries.append(
         source_bus_irq=0 + (4 << 2),
         dest_io_apic_id=io_apic.id,
         dest_io_apic_intin=16,
-    )
 )
+base_entries.append(pci_dev4_inta)
 
 madt_records.append(
     X86ACPIMadtIntSourceOverride(
@@ -201,18 +219,30 @@ system.workload.acpi_description_table_pointer.xsdt.oem_id = "gem5"
 
 # --------------------- Set up the Memory Entry ----------------------- #
 entries = [  # Mark the first megabyte of memory as reserved
-    X86E820Entry(addr=0x0000_0000, size="639kB", range_type=1),
-    X86E820Entry(addr=0x0009_FC00, size="385kB", range_type=2),
+    X86E820Entry(addr=0x0_0000_0000, size="639kB", range_type=1),
+    X86E820Entry(addr=0x0_0009_FC00, size="385kB", range_type=2),
     # Mark the rest of physical memory as available
     X86E820Entry(
-        addr=0x0010_0000,
-        size="%dB" % (system.mem_ranges[0].size() - 0x0010_0000),
+        addr=0x0_0010_0000,
+        size="%dB" % (system.mem_ranges[0].size() - 0x0_0010_0000),
         range_type=1,
     ),
 ]
 
+# Mark [mem_size, 3GB) as reserved if memory less than 3GB, which force
+# IO devices to be mapped to [0xC0000000, 0xFFFF0000). Requests to this
+# specific range can pass though bridge to iobus.
+if len(system.mem_ranges) == 1:
+    entries.append(
+        X86E820Entry(
+            addr=system.mem_ranges[0].size(),
+            size="%dB" % (0xC0000000 - system.mem_ranges[0].size()),
+            range_type=2,
+        )
+    )
+
 # Reserve the last 16kB of the 32-bit address space for the m5op interface
-entries.append(X86E820Entry(addr=0xFFFF_0000, size="64kB", range_type=2))
+entries.append(X86E820Entry(addr=0x0_FFFF_0000, size="64kB", range_type=2))
 
 # In case the physical memory is greater than 3GB, we split it into two
 # parts and add a separate e820 entry for the second part.  This entry
@@ -269,6 +299,7 @@ system.cpu = [
 ]
 
 
+# Ruby.create_system(args, True, system, system.iobus, system._dma_ports, bootmem)
 # ---------------------------- Ruby Configuration --------------------------- #
 system.ruby = RubySystem()
 
@@ -304,15 +335,15 @@ system.ruby.network = network
 cpus = system.cpu
 
 protocol = buildEnv["PROTOCOL"]
-exec("from . import %s" % protocol)
+exec("from ruby import %s" % protocol)
 try:
     (cpu_sequencers, dir_cntrls, topology) = eval(
-        "%s.create_system(args, \
-                          full_system, \
-                          system, \
-                          dma_ports, \
-                          bootmem, \
-                          system.ruby, \
+        "%s.create_system(args,\
+                          True,\
+                          system,\
+                          system._dma_ports,\
+                          None,\
+                          system.ruby,\
                           cpus)"
         % protocol
     )
@@ -341,6 +372,7 @@ system.sys_port_proxy = sys_port_proxy
 # Connect the system port for loading of binaries etc
 system.system_port = system.sys_port_proxy.in_ports
 
+# --------------------- Memory Controller Setup ----------------------- #
 if args.numa_high_bit:
     block_size_bits = args.numa_high_bit + 1 - int(math.log(args.num_dirs, 2))
     system.ruby.block_size_bytes = 2 ** (block_size_bits)
@@ -349,37 +381,103 @@ else:
 
 system.ruby.memory_size_bits = 48  # 256TB
 
-index = 0
-mem_ctrls = []
-crossbars = []
+# --------------- HMC --------------- #
+start_addr = 0x0_0000_0000
+for idx, dir_cntrl in enumerate(dir_cntrls):
 
-if args.numa_high_bit:
-    dir_bits = int(math.log(args.num_dirs, 2))
-    intlv_size = 2 ** (args.numa_high_bit - dir_bits + 1)
-else:
-    intlv_size = args.cacheline_size
+    # create HMC host controller
+    hmc_host = SubSystem()
 
-intlv_bits = int(math.log(args.num_dirs, 2))
+    # Create additional crossbar
+    clk = "100GHz"
+    vd = VoltageDomain(voltage="1V")
+    membus = NoncoherentXBar(width=8)
+    #membus.badaddr_responder = BadAddr()
+    #membus.default = membus.badaddr_responder.pio
+    membus.width = 8
+    membus.frontend_latency = 3
+    membus.forward_latency = 4
+    membus.response_latency = 2
+    membus.clk_domain = SrcClockDomain(clock=clk, voltage_domain=vd)
 
-for dir_cntrl in dir_cntrls:
-    crossbar = None
-    if len(system.mem_ranges) > 1:
-        crossbar = IOXBar()
-        crossbars.append(crossbar)
-        dir_cntrl.memory_out_port = crossbar.cpu_side_ports
+    # create memory ranges for the serial links
+    slar = convert.toMemorySize(args.serial_link_addr_range)  # 128MB
+    hmc_size = slar * args.num_serial_links                   # 512MB
+    # create memory ranges for the vault controllers
+    arv = convert.toMemorySize(args.hmc_dev_vault_size)       # 32MB
 
+    vault_ranges = []
+    for i in range(args.hmc_dev_num_vaults):
+        vault_ranges.append(AddrRange(start_addr, size=arv))
+        start_addr += arv
+
+    ser_ranges = []
+    for i in range(args.num_serial_links):
+        ser_ranges.append(AddrRange(vault_ranges[i*4].start, size=slar))
+
+    #if idx == 0:
+    #    ser_ranges[0] = AddrRange(0x0_0009_fc00, slar - 1)
+    #    vault_ranges[0] = AddrRange(0x0_0009_fc00, arv - 1)
+    if idx == 2:
+        start_addr = 0x1_0000_0000
+    
+    print("%02s: [%09x-%09x]" % (idx, ser_ranges[0].start, ser_ranges[3].end))
+
+    sl = [
+        SerialLink(
+            ranges=ser_ranges[i],
+            req_size=args.link_buffer_size_req,
+            resp_size=args.link_buffer_size_rsp,
+            num_lanes=args.num_lanes_per_link,
+            link_speed=args.serial_link_speed,
+            delay=args.total_ctrl_latency,
+        )
+        for i in range(args.num_serial_links)
+    ]
+    hmc_host.seriallink = sl
+
+    # set the clock frequency for serial link
+    for i in range(args.num_serial_links):
+        clk = args.link_controller_frequency
+        vd = VoltageDomain(voltage="1V")
+        scd = SrcClockDomain(clock=clk, voltage_domain=vd)
+        hmc_host.seriallink[i].clk_domain = scd
+
+    for i in range(args.num_links_controllers):
+        membus.mem_side_ports = hmc_host.seriallink[i].cpu_side_port
+
+    membus.cpu_side_ports = dir_cntrl.memory_out_port
+    
+    exec("system.membus%d = membus" % idx)
+
+
+    hmc_dev = SubSystem()
+
+    # 4 HMC Crossbars located in its logic-base (LoB)
+    xb = [
+        NoncoherentXBar(
+            width=args.xbar_width,
+            frontend_latency=args.xbar_frontend_latency,
+            forward_latency=args.xbar_forward_latency,
+            response_latency=args.xbar_response_latency,
+        )
+        for i in range(args.number_mem_crossbar)
+    ]
+    hmc_dev.xbar = xb
+
+    # Attach 4 serial link to 4 crossbar/s
+    for i in range(args.num_serial_links):
+        hmc_host.seriallink[i].mem_side_port = hmc_dev.xbar[i].cpu_side_ports
+
+
+    intlv_size = 128
+
+    mem_ctrls = []
     dir_ranges = []
-    for r in system.mem_ranges:
-        mem_type = ObjectList.mem_list.get(args.mem_type)
 
-        intlv_low_bit = intlv_bits
-
-        if args.xor_low_bit:
-            xor_high_bit = args.xor_low_bit + intlv_bits - 1
-        else:
-            xor_high_bit = 0
-
-        dram_intf = mem_type()
+    for r, vault_range in enumerate(vault_ranges): # r = 0..15
+        # Create the DRAM interface
+        dram_intf = MemClass()
 
         if dram_intf.addr_mapping.value == "RoRaBaChCo":
 
@@ -387,36 +485,34 @@ for dir_cntrl in dir_cntrls:
                 dram_intf.device_rowbuffer_size.value
                 * dram_intf.devices_per_rank.value
             )
-
             intlv_low_bit = int(math.log(rowbuffer_size, 2))
 
-        dram_intf.range = m5.objects.AddrRange(
-            r.start,
-            size=r.size(),
-            intlvHighBit=intlv_low_bit + intlv_bits - 1,
-            xorHighBit=xor_high_bit,
-            intlvBits=intlv_bits,
-            intlvMatch=i,
-        )
+        dram_intf.devices_per_rank = 1
+        dram_intf.range = vault_range
 
-        mem_ctrl = m5.objects.MemCtrl(dram=dram_intf)
+        # Enable low-power DRAM states if option is set
+        dram_intf.enable_dram_powerdown = None
 
-        if args.access_backing_store:
-            dram_intf.kvm_map = False
-
+        # Create the controller that will drive the interface
+        #mem_ctrl = m5.objects.MemCtrl(dram=dram_intf)
+        mem_ctrl = dram_intf.controller()
         mem_ctrls.append(mem_ctrl)
+
         dir_ranges.append(dram_intf.range)
 
-        mem_ctrl.port = crossbar.mem_side_ports
-
-        mem_ctrl.dram.enable_dram_powerdown = args.enable_dram_powerdown
-
-    index += 1
+        # Connect the controllers to the membus
+        mem_ctrl.port = hmc_dev.xbar[r // 4].mem_side_ports
+        # Set memory device size. There is an independent controller
+        # for each vault. All vaults are same size.
+        mem_ctrl.dram.device_size = args.hmc_dev_vault_size
+    
     dir_cntrl.addr_ranges = dir_ranges
+    
+    hmc_dev.mem_ctrls = mem_ctrls
 
-system.mem_ctrls = mem_ctrls
+    exec("system.hmc_host%d = hmc_host" % idx)
+    exec("system.hmc_dev%d = hmc_dev" % idx)
 
-system.ruby.crossbars = crossbars
 
 # Connect the cpu sequencers and the piobus
 if system.iobus != None:
@@ -488,7 +584,7 @@ else:
     root = Root(full_system=True, system=system)
 
 
-if ObjectList.is_kvm_cpu(TestCPUClass) or ObjectList.is_kvm_cpu(FutureClass):
+if ObjectList.is_kvm_cpu(CPUClass) or ObjectList.is_kvm_cpu(FutureClass):
     # Required for running kvm on multiple host cores.
     # Uses gem5's parallel event queue feature
     # Note: The simulator is quite picky about this number!
@@ -500,11 +596,7 @@ if args.timesync:
 if args.frame_capture:
     VncServer.frame_capture = True
 
-if (
-    buildEnv["TARGET_ISA"] == "arm"
-    and not args.bare_metal
-    and not args.dtb_filename
-):
+if buildEnv["USE_ARM_ISA"] and not args.bare_metal and not args.dtb_filename:
     if args.machine_type not in [
         "VExpress_GEM5",
         "VExpress_GEM5_V1",

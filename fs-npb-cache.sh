@@ -5,10 +5,9 @@ if [ $# == 0 ]; then
     exit 1
 fi
 
-./build/X86/gem5.opt \
+./build/X86_MESI_Three_Level/gem5.opt \
 \
---debug-flags=MemoryAccess \
---debug-file=debug.out \
+--debug-flags=Checkpoint \
 \
 configs/example/fs.py \
 \
@@ -22,22 +21,23 @@ configs/example/fs.py \
 --restore-with-cpu=TimingSimpleCPU \
 \
 --mem-type=HMC_2500_1x32 \
---serial-link-addr-range=32MB \
---hmc-dev-vault-size=8MB \
 --mem-size=8GB \
 --caches \
 --l2cache \
---l1d_size=32kB \
---l1d_assoc=2 \
---l1i_size=32kB \
---l1i_assoc=2 \
---l2_size=256kB \
---l2_assoc=8 \
+--num-clusters=1 \
+--l0d_size=64kB \
+--l0d_assoc=2 \
+--l0i_size=64kB \
+--l0i_assoc=2 \
+--l1d_size=1MB \
+--l1d_assoc=8 \
+--l2_size=1GB \
+--l2_assoc=16 \
 --cacheline_size=64 \
 --ruby \
 \
 --network=garnet \
---topology=DragonFly4x4 \
+--topology=DragonFly4x4_3level \
 --num-mems=16 \
 --num-cpus=4 \
 --num-l2caches=4 \

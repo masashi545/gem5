@@ -21,8 +21,8 @@ from common import FileSystemConfig
 from topologies.BaseTopology import SimpleTopology
 
 
-class DragonFly4x4(SimpleTopology):
-    description = "DragonFly4x4"
+class DragonFly4x4_3level(SimpleTopology):
+    description = "DragonFly4x4_3level"
 
     def __init__(self, controllers):
         self.nodes = controllers
@@ -39,19 +39,23 @@ class DragonFly4x4(SimpleTopology):
 
         cpu_nodes = []
         l2c_nodes = []
+        l3c_nodes = []
         dir_nodes = []
         dma_nodes = []
         for node in nodes:
-            if node.type == "L1Cache_Controller":
+            if node.type == "L0Cache_Controller":
                 cpu_nodes.append(node)
-            elif node.type == "L2Cache_Controller":
+            elif node.type == "L1Cache_Controller":
                 l2c_nodes.append(node)
+            elif node.type == "L2Cache_Controller":
+                l3c_nodes.append(node)
             elif node.type == "Directory_Controller":
                 dir_nodes.append(node)
             elif node.type == "DMA_Controller":
                 dma_nodes.append(node)
         assert len(cpu_nodes) == 4, "num_cpu_nodes: invalid"
         assert len(l2c_nodes) == 4, "num_l2c_nodes: invalid"
+        assert len(l3c_nodes) == 4, "num_l3c_nodes: invalid"
         assert len(dir_nodes) == options.num_dirs, "num_dir_nodes: invalid"
 
         # Create the routers in  4x4 dragonfly
@@ -83,6 +87,17 @@ class DragonFly4x4(SimpleTopology):
             link_count += 1
         # Connect each L2 cache bank to the appropriate router
         for (i, n) in enumerate(l2c_nodes):
+            ext_links.append(
+                ExtLink(
+                    link_id=link_count,
+                    ext_node=n,
+                    int_node=routers[corner[i]],
+                    latency=link_latency,
+                )
+            )
+            link_count += 1
+        # Connect each L3 cache bank to the appropriate router
+        for (i, n) in enumerate(l3c_nodes):
             ext_links.append(
                 ExtLink(
                     link_id=link_count,

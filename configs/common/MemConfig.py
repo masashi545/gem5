@@ -215,6 +215,8 @@ def config_mem(options, system):
                 dram_intf = create_mem_intf(
                     intf, r, i, intlv_bits, intlv_size, opt_xor_low_bit
                 )
+                print("%02s: [%09s]" % (range_iter, dram_intf.range))
+
 
                 # Set the number of ranks based on the command-line
                 # options if it was explicitly set
