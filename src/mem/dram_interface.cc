@@ -771,6 +771,8 @@ DRAMInterface::init()
 
             // ...and equal or smaller than the row-buffer size
             if (rowBufferSize < range.granularity()) {
+                std::cout << "rowBufferSize: " << rowBufferSize << std::endl;
+                std::cout << "range.granularity(): " << range.granularity() << std::endl;
                 fatal("Channel interleaving of %s must be at most as large "
                       "as the row-buffer size\n", name());
             }

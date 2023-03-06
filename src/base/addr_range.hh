@@ -117,6 +117,8 @@ class AddrRange
         }
 
         auto count = std::distance(begin_it, end_it);
+        std::cout << "count: " << count << std::endl;
+        std::cout << "AddrRange: " << this << std::endl;
         // either merge if got all ranges or keep this equal to the single
         // interleaved range
         if (count > 1) {

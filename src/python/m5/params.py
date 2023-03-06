@@ -925,13 +925,13 @@ class AddrRange(ParamValue):
 
     def __str__(self):
         if len(self.masks) == 0:
-            return "%s:%s" % (self.start, self.end)
+            return "0x%09x - 0x%09x" % (self.start, self.end)
         else:
-            return "%s:%s:%s:%s" % (
+            return "0x%09x - 0x%09x: match=%02d: masks=[%s]" % (
                 self.start,
                 self.end,
                 self.intlvMatch,
-                ":".join(str(m) for m in self.masks),
+                ",".join("{:09x}".format(m) for m in self.masks),
             )
 
     def size(self):

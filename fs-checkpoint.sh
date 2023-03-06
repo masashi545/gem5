@@ -17,12 +17,12 @@ configs/example/fs.py \
 \
 --script=scripts/npb/$1.sh \
 \
---mem-size=64MB \
+--mem-size=8GB \
 --caches \
 --l2cache \
 --l1d_size=32kB \
 --l1i_size=32kB \
 --l2_size=256kB \
 \
---num-cpus=1 \
+--num-cpus=4 \
 

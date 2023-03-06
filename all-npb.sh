@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Sorted by checkpoint ID
-app=(ep lu sp is mg ft bt cg)
+app=(ep lu sp is mg bt ft cg)
 
 for ((i=1; i<9; i++))
 do

@@ -7,9 +7,6 @@ fi
 
 ./build/X86/gem5.opt \
 \
---debug-flags=MemoryAccess \
---debug-file=debug.out \
-\
 configs/example/fs.py \
 \
 --kernel=resource/kernels/x86_64-vmlinux-2.6.22.9.smp \
@@ -22,8 +19,6 @@ configs/example/fs.py \
 --restore-with-cpu=TimingSimpleCPU \
 \
 --mem-type=HMC_2500_1x32 \
---serial-link-addr-range=32MB \
---hmc-dev-vault-size=8MB \
 --mem-size=8GB \
 --caches \
 --l2cache \

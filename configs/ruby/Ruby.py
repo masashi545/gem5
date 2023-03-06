@@ -194,7 +194,7 @@ def setup_memory_controllers(system, ruby, dir_cntrls, options):
             if issubclass(mem_type, DRAMInterface):
                 mem_ctrl.dram.enable_dram_powerdown = (options.enable_dram_powerdown)
 
-            #print(mem_ctrl.dram.device_size)
+            #print("%x" % dram_intf.range.masks[0])
 
         index += 1
         dir_cntrl.addr_ranges = dir_ranges

@@ -397,7 +397,7 @@ class HMC_2500_1x32(DDR3_1600_8x8):
     devices_per_rank = 1
 
     # 4 layers so 4 ranks [2]
-    ranks_per_channel = 1 # modify by oda 2023/02/17
+    ranks_per_channel = 1 # modified by oda (2023/02/20)
 
     # HMC has 2 banks per layer [2]
     # Each layer represents a rank. With 4 layers and 8 banks in total, each
@@ -464,6 +464,82 @@ class HMC_2500_1x32(DDR3_1600_8x8):
         controller.dram = self
         return controller
 
+# added by oda (2023/02/20)
+# HMCのvaultにあたる
+class HMC_2500_4x32(DDR3_1600_8x8):
+    device_size = "32MiB"
+
+    device_bus_width = 128
+
+    burst_length = 32
+
+    device_rowbuffer_size = "1MB"
+
+    devices_per_rank = 1
+
+    ranks_per_channel = 1 
+    
+    banks_per_rank = 2
+
+    # 1250 MHz [2]
+    tCK = "0.8ns"
+
+    # 8 beats across an x32 interface translates to 4 clocks @ 1250 MHz
+    tBURST = "3.2ns"
+
+    # Values using DRAMSpec HMC model [1]
+    tRCD = "10.2ns"
+    tCL = "9.9ns"
+    tRP = "7.7ns"
+    tRAS = "21.6ns"
+
+    # tRRD depends on the power supply network for each vendor.
+    # We assume a tRRD of a double bank approach to be equal to 4 clock
+    # cycles (Assumption)
+    tRRD = "3.2ns"
+
+    # activation limit is set to 0 since there are only 2 banks per vault
+    # layer.
+    activation_limit = 0
+
+    # Values using DRAMSpec HMC model [1]
+    tRFC = "59ns"
+    tWR = "8ns"
+    tRTP = "4.9ns"
+
+    # Default different rank bus delay assumed to 1 CK for TSVs, @1250 MHz =
+    # 0.8 ns (Assumption)
+    tCS = "0.8ns"
+
+    # Value using DRAMSpec HMC model [1]
+    tREFI = "3.9us"
+
+    # The default page policy in the vault controllers is simple closed page
+    # [2] nevertheless 'close' policy opens and closes the row multiple times
+    # for bursts largers than 32Bytes. For this reason we use 'close_adaptive'
+    page_policy = "close_adaptive"
+
+    # RoCoRaBaCh resembles the default address mapping in HMC
+    addr_mapping = "RoCoRaBaCh"
+
+    # These parameters do not directly correlate with buffer_size in real
+    # hardware. Nevertheless, their value has been tuned to achieve a
+    # bandwidth similar to the cycle-accurate model in [2]
+    write_buffer_size = 32
+    read_buffer_size = 32
+
+    def controller(self):
+        """
+        Instantiate the memory controller and bind it to
+        the current interface.
+        """
+        controller = MemCtrl(
+            min_writes_per_switch=8,
+            static_backend_latency="4ns",
+            static_frontend_latency="4ns",
+        )
+        controller.dram = self
+        return controller
 
 # A single DDR3-2133 x64 channel refining a selected subset of the
 # options for the DDR-1600 configuration, based on the same DDR3-1600
