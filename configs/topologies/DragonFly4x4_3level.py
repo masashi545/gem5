@@ -6,11 +6,11 @@ command option
     --caches \ 
     --l2cache \ 
     --ruby \ 
-    --network=garnet \ 
-    --topology=DragonFly4x4 \ 
-    --num-cpus=4 \ 
-    --num-l2caches=4 \ 
-    --num-dir=4 \  
+    --network=garnet \ 
+    --topology=DragonFly4x4 \ 
+    --num-cpus=4 \ 
+    --num-l2caches=4 \ 
+    --num-dir=4 \ 
 """
 
 from m5.params import *
