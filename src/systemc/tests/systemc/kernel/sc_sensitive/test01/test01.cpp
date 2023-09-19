@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-03-22
                    Ucar Aziz, Synopsys, Inc.
@@ -48,75 +48,76 @@
 
 #include "systemc.h"
 
-
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
-    sc_in<bool>    clk;
-    sc_in<bool>    in1;
- 
+    sc_in<bool> clk;
+    sc_in<bool> in1;
+
     void main_action1()
-    { 
-	int i = 0;
-	while( true ) {
-	    wait();
-	    cout << "i = " << i << endl;
-	    i ++;
-	}
+    {
+        int i = 0;
+        while (true)
+        {
+            wait();
+            cout << "i = " << i << endl;
+            i++;
+        }
     }
 
     void main_action2()
-    { 
-	int j = 0;
-	while( true ) {
-	    wait();
-	    cout << "j = " << j << endl;
-	    j ++;
-	}
+    {
+        int j = 0;
+        while (true)
+        {
+            wait();
+            cout << "j = " << j << endl;
+            j++;
+        }
     }
- 
+
     SC_CTOR(mod_a)
     {
-	SC_CTHREAD( main_action1, clk );
-	SC_CTHREAD( main_action2, in1 );
+        SC_CTHREAD(main_action1, clk);
+        SC_CTHREAD(main_action2, in1);
     }
 };
 
-SC_MODULE( mod_b )
+SC_MODULE(mod_b)
 {
-    sc_in<bool>    clk;
+    sc_in<bool> clk;
     sc_inout<bool> in1;
- 
+
     void main_action()
-    { 
-	bool j = true;
-	while( true ) {
-	    wait();
-	    in1->write( j );
-	    j = !j;
-	}
-    }
- 
-    SC_CTOR( mod_b )
     {
-	SC_CTHREAD( main_action, clk );
+        bool j = true;
+        while (true)
+        {
+            wait();
+            in1->write(j);
+            j = !j;
+        }
+    }
+
+    SC_CTOR(mod_b)
+    {
+        SC_CTHREAD(main_action, clk);
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_clock clk( "clk", 10, SC_NS );
-    sc_clock clk1( "clk1", 5, SC_NS );
+    sc_clock clk("clk", 10, SC_NS);
+    sc_clock clk1("clk1", 5, SC_NS);
     sc_signal<bool> channel;
-    mod_a a( "a" );
-    mod_b b( "b" );
+    mod_a a("a");
+    mod_b b("b");
 
-    b.clk( clk1 );
-    b.in1( channel );   
-    a.clk( clk );
-    a.in1( channel );
+    b.clk(clk1);
+    b.in1(channel);
+    a.clk(clk);
+    a.in1(channel);
 
-    sc_start( 100, SC_NS );   
+    sc_start(100, SC_NS);
 
     return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,29 +39,30 @@
 
 #include "systemc.h"
 
-SC_MODULE( pro )
+SC_MODULE(pro)
 {
     sc_out<sc_logic> out;
 
     void main_action()
     {
         int i = 0;
-        while( true ) {
-            sc_logic tmp( i );
-            out.write( tmp );
+        while (true)
+        {
+            sc_logic tmp(i);
+            out.write(tmp);
             cout << sc_time_stamp() << ": " << tmp.to_char() << endl;
-            wait( 3, SC_NS );
+            wait(3, SC_NS);
             i = (i + 1) % 4;
         }
     }
 
-    SC_CTOR( pro )
+    SC_CTOR(pro)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
     }
 };
 
-SC_MODULE( con )
+SC_MODULE(con)
 {
     sc_in<sc_logic> in;
 
@@ -75,25 +76,24 @@ SC_MODULE( con )
         cout << sc_time_stamp() << ": negedge" << endl;
     }
 
-    SC_CTOR( con )
+    SC_CTOR(con)
     {
-        SC_METHOD( pos_action );
+        SC_METHOD(pos_action);
         sensitive << in.pos();
         dont_initialize();
-        SC_METHOD( neg_action );
+        SC_METHOD(neg_action);
         sensitive << in.neg();
         dont_initialize();
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_signal<sc_logic> sig;
-    pro p( "p" );
-    con c( "c" );
-    p.out( sig );
-    c.in( sig );
-    sc_start( 100, SC_NS );
+    pro p("p");
+    con c("c");
+    p.out(sig);
+    c.in(sig);
+    sc_start(100, SC_NS);
     return 0;
 }

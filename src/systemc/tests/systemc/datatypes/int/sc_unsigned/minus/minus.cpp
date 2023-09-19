@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  minus.cpp -- 
+  minus.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,19 +37,18 @@
 
 #include "systemc.h"
 
-
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  sc_unsigned a(3);
-  sc_unsigned b(3);
-  
+    sc_unsigned a(3);
+    sc_unsigned b(3);
 
-  a = 2;
-  b = 4;
-  cout << "a = " << a << " " << "b = " << b << endl;
-  cout << "a - b = " << (a - b) << endl; 
-  cout << "a - 4 = " << (a - 4) << endl;
-  cout << "2 - b = " << (2 - b) << endl;
-  
-  return 0;
+    a = 2;
+    b = 4;
+    cout << "a = " << a << " "
+         << "b = " << b << endl;
+    cout << "a - b = " << (a - b) << endl;
+    cout << "a - 4 = " << (a - 4) << endl;
+    cout << "2 - b = " << (2 - b) << endl;
+
+    return 0;
 }

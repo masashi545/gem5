@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  input_char_sc_signed.cpp -- 
+  input_char_sc_signed.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,14 +39,14 @@
 
 int sc_main(int ac, char *av[])
 {
-  ifstream      testvectors ("input_char_sc_signed/input.decimal");
-  char          buffer[8];
-  sc_signed     sample  (8);
- 
-  testvectors >> buffer; 
-  sample = buffer;
+    ifstream testvectors("input_char_sc_signed/input.decimal");
+    char buffer[8];
+    sc_signed sample(8);
 
-  cout << "SAMPLE DATA = " << sample << endl;
-  sc_start(0, SC_NS);
-  return 0;
+    testvectors >> buffer;
+    sample = buffer;
+
+    cout << "SAMPLE DATA = " << sample << endl;
+    sc_start(0, SC_NS);
+    return 0;
 }

@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 // $Log: sc_bv_base.cpp,v $
 // Revision 1.2  2011/08/24 22:05:40  acg
 //  Torsten Maehne: initialization changes to remove warnings.
@@ -59,102 +58,103 @@
 #include "sysc/datatypes/fx/sc_fix.h"
 #include "sysc/datatypes/fx/sc_ufix.h"
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_bv_base
-//
-//  Arbitrary size bit vector base class.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_bv_base
+    //
+    //  Arbitrary size bit vector base class.
+    // ----------------------------------------------------------------------------
 
-void
-sc_bv_base::init( int length_, bool init_value )
-{
-    // check the length
-    if( length_ <= 0 ) {
-	SC_REPORT_ERROR( sc_core::SC_ID_ZERO_LENGTH_, 0 );
+    void
+    sc_bv_base::init(int length_, bool init_value)
+    {
+        // check the length
+        if (length_ <= 0)
+        {
+            SC_REPORT_ERROR(sc_core::SC_ID_ZERO_LENGTH_, 0);
+        }
+        // allocate memory for the data and control words
+        m_len = length_;
+        m_size = (m_len - 1) / SC_DIGIT_SIZE + 1;
+        m_data = new sc_digit[m_size];
+        // initialize the bits to 'init_value'
+        sc_digit dw = init_value ? ~SC_DIGIT_ZERO : SC_DIGIT_ZERO;
+        int sz = m_size;
+        for (int i = 0; i < sz; ++i)
+        {
+            m_data[i] = dw;
+        }
+        clean_tail();
     }
-    // allocate memory for the data and control words
-    m_len = length_;
-    m_size = (m_len - 1) / SC_DIGIT_SIZE + 1;
-    m_data = new sc_digit[m_size];
-    // initialize the bits to 'init_value'
-    sc_digit dw = init_value ? ~SC_DIGIT_ZERO : SC_DIGIT_ZERO;
-    int sz = m_size;
-    for( int i = 0; i < sz; ++ i ) {
-	m_data[i] = dw;
+
+    void
+    sc_bv_base::assign_from_string(const std::string &s)
+    {
+        // s must have been converted to bin
+        int len = m_len;
+        int s_len = s.length() - 1;
+        int min_len = sc_min(len, s_len);
+        int i = 0;
+        for (; i < min_len; ++i)
+        {
+            char c = s[s_len - i - 1];
+            if (c != '0' && c != '1')
+            {
+                SC_REPORT_ERROR(sc_core::SC_ID_CANNOT_CONVERT_,
+                                "string can contain only '0' and '1' characters");
+            }
+            set_bit(i, sc_logic_value_t(c - '0'));
+        }
+        // if formatted, fill the rest with sign(s), otherwise fill with zeros
+        sc_logic_value_t fill = (s[s_len] == 'F' ? sc_logic_value_t(s[0] - '0')
+                                                 : sc_logic_value_t(0));
+        for (; i < len; ++i)
+        {
+            set_bit(i, fill);
+        }
     }
-    clean_tail();
-}
 
+    // constructors
 
-void
-sc_bv_base::assign_from_string( const std::string& s )
-{
-    // s must have been converted to bin
-    int len = m_len;
-    int s_len = s.length() - 1;
-    int min_len = sc_min( len, s_len );
-    int i = 0;
-    for( ; i < min_len; ++ i ) {
-	char c = s[s_len - i - 1];
-	if( c != '0' && c != '1' ) {
-	    SC_REPORT_ERROR( sc_core::SC_ID_CANNOT_CONVERT_,
-	        "string can contain only '0' and '1' characters" );
-	}
-	set_bit( i, sc_logic_value_t( c - '0' ) );
+    sc_bv_base::sc_bv_base(const char *a)
+        : m_len(0), m_size(0), m_data(0)
+    {
+        std::string s = convert_to_bin(a);
+        init(s.length() - 1);
+        assign_from_string(s);
     }
-    // if formatted, fill the rest with sign(s), otherwise fill with zeros
-    sc_logic_value_t fill = (s[s_len] == 'F' ? sc_logic_value_t( s[0] - '0' )
-		                             : sc_logic_value_t( 0 ));
-    for( ; i < len; ++ i ) {
-	set_bit( i, fill );
+
+    sc_bv_base::sc_bv_base(const char *a, int length_)
+        : m_len(0), m_size(0), m_data(0)
+    {
+        init(length_);
+        assign_from_string(convert_to_bin(a));
     }
-}
 
-
-// constructors
-
-sc_bv_base::sc_bv_base( const char* a )
-    : m_len( 0 ), m_size( 0 ), m_data( 0 )
-{
-    std::string s = convert_to_bin( a );
-    init( s.length() -  1 );
-    assign_from_string( s );
-}
-
-sc_bv_base::sc_bv_base( const char* a, int length_ )
-    : m_len( 0 ), m_size( 0 ), m_data( 0 )
-{
-    init( length_ );
-    assign_from_string( convert_to_bin( a ) );
-}
-
-sc_bv_base::sc_bv_base( const sc_bv_base& a )
-    : sc_proxy<sc_bv_base>(),
-      m_len( a.m_len ),
-      m_size( a.m_size ),
-      m_data( new sc_digit[m_size] )
-{
-    // copy the bits
-    int sz = m_size;
-    for( int i = 0; i < sz; ++ i ) {
-	m_data[i] = a.m_data[i];
+    sc_bv_base::sc_bv_base(const sc_bv_base &a)
+        : sc_proxy<sc_bv_base>(),
+          m_len(a.m_len),
+          m_size(a.m_size),
+          m_data(new sc_digit[m_size])
+    {
+        // copy the bits
+        int sz = m_size;
+        for (int i = 0; i < sz; ++i)
+        {
+            m_data[i] = a.m_data[i];
+        }
     }
-}
 
+    // assignment operators
 
-// assignment operators
-
-sc_bv_base&
-sc_bv_base::operator = ( const char* a )
-{
-    assign_from_string( convert_to_bin( a ) );
-    return *this;
-}
-
+    sc_bv_base &
+    sc_bv_base::operator=(const char *a)
+    {
+        assign_from_string(convert_to_bin(a));
+        return *this;
+    }
 
 #if 0
 
@@ -301,88 +301,93 @@ sc_bv_base::rrotate( int n )
 
 #endif
 
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
+    // convert formatted string to binary string
 
-// convert formatted string to binary string
-
-const std::string
-convert_to_bin( const char* s )
-{
-    // Beware: logic character strings cannot start with '0x' or '0X',
-    //         because this is seen as a hexadecimal encoding prefix!
-
-    if( s == 0 ) {
-	SC_REPORT_ERROR(sc_core::SC_ID_CANNOT_CONVERT_, 
-	    "character string is zero" );
-    }
-    if( *s == 0 ) {
-	SC_REPORT_ERROR(sc_core::SC_ID_CANNOT_CONVERT_, 
-	    "character string is empty");
-    }
-
-    int n = strlen( s );
-    int i = 0;
-    if( s[0] == '-' || s[0] == '+' ) {
-	++ i;
-    }
-    if( n > (i + 2) && s[i] == '0' )
+    const std::string
+    convert_to_bin(const char *s)
     {
-        if (s[i+1] == 'b' || s[i+1] == 'B' )
-	{
-	    if ( s[i+2] == '0' || s[i+2] == '1' )
-	    {
-		std::string str( &s[2] );
-	        str += "F";
-	        return str;
-	    }
-	}
-        if ( s[i+1] == 'b' || s[i+1] == 'B' ||
-	     s[i+1] == 'c' || s[i+1] == 'C' ||
-	     s[i+1] == 'd' || s[i+1] == 'D' ||
-	     s[i+1] == 'o' || s[i+1] == 'O' ||
-	     s[i+1] == 'x' || s[i+1] == 'X') 
-        {
-	    try {
-		// worst case length = n * 4
-		sc_fix a( s, n * 4, n * 4, SC_TRN, SC_WRAP, 0, SC_ON );
-		std::string str = a.to_bin();
-		str += "F"; // mark the string as formatted
-		// get rid of prefix (0b) and redundant leading bits
-		const char* p = str.c_str() + 2;
-		while( p[1] && p[0] == p[1] ) {
-		    ++ p;
-		}
-		return std::string( p );
-	    } catch( sc_core::sc_report ) {
-		char msg[BUFSIZ];
-		std::sprintf( msg, "character string '%s' is not valid", s );
-		SC_REPORT_ERROR( sc_core::SC_ID_CANNOT_CONVERT_, msg );
-		// never reached
-		return std::string();
-	    }
-	}
+        // Beware: logic character strings cannot start with '0x' or '0X',
+        //         because this is seen as a hexadecimal encoding prefix!
 
+        if (s == 0)
+        {
+            SC_REPORT_ERROR(sc_core::SC_ID_CANNOT_CONVERT_,
+                            "character string is zero");
+        }
+        if (*s == 0)
+        {
+            SC_REPORT_ERROR(sc_core::SC_ID_CANNOT_CONVERT_,
+                            "character string is empty");
+        }
+
+        int n = strlen(s);
+        int i = 0;
+        if (s[0] == '-' || s[0] == '+')
+        {
+            ++i;
+        }
+        if (n > (i + 2) && s[i] == '0')
+        {
+            if (s[i + 1] == 'b' || s[i + 1] == 'B')
+            {
+                if (s[i + 2] == '0' || s[i + 2] == '1')
+                {
+                    std::string str(&s[2]);
+                    str += "F";
+                    return str;
+                }
+            }
+            if (s[i + 1] == 'b' || s[i + 1] == 'B' ||
+                s[i + 1] == 'c' || s[i + 1] == 'C' ||
+                s[i + 1] == 'd' || s[i + 1] == 'D' ||
+                s[i + 1] == 'o' || s[i + 1] == 'O' ||
+                s[i + 1] == 'x' || s[i + 1] == 'X')
+            {
+                try
+                {
+                    // worst case length = n * 4
+                    sc_fix a(s, n * 4, n * 4, SC_TRN, SC_WRAP, 0, SC_ON);
+                    std::string str = a.to_bin();
+                    str += "F"; // mark the string as formatted
+                    // get rid of prefix (0b) and redundant leading bits
+                    const char *p = str.c_str() + 2;
+                    while (p[1] && p[0] == p[1])
+                    {
+                        ++p;
+                    }
+                    return std::string(p);
+                }
+                catch (sc_core::sc_report)
+                {
+                    char msg[BUFSIZ];
+                    std::sprintf(msg, "character string '%s' is not valid", s);
+                    SC_REPORT_ERROR(sc_core::SC_ID_CANNOT_CONVERT_, msg);
+                    // never reached
+                    return std::string();
+                }
+            }
+        }
+
+        // bin by default
+
+        std::string str(s);
+        str += "U"; // mark the string as unformatted
+        return str;
     }
 
-    // bin by default
+    // convert binary string to formatted string
 
-    std::string str( s );
-    str += "U"; // mark the string as unformatted
-    return str;
-}
-
-// convert binary string to formatted string
-
-const std::string
-convert_to_fmt( const std::string& s, sc_numrep numrep, bool w_prefix )
-{
-    int n = s.length();
-    std::string str("0bus");
-    // str += "0bus";
-    str += s;
-    sc_ufix a( str.c_str(), n, n, SC_TRN, SC_WRAP, 0, SC_ON );
-    return a.to_string( numrep, w_prefix );
-}
+    const std::string
+    convert_to_fmt(const std::string &s, sc_numrep numrep, bool w_prefix)
+    {
+        int n = s.length();
+        std::string str("0bus");
+        // str += "0bus";
+        str += s;
+        sc_ufix a(str.c_str(), n, n, SC_TRN, SC_WRAP, 0, SC_ON);
+        return a.to_string(numrep, w_prefix);
+    }
 
 } // namespace sc_dt

@@ -18,11 +18,11 @@
  *****************************************************************************/
 
 /*****************************************************************************
- 
+
   pulse.cpp -- Implementation of the pulse generator.
- 
+
   Original Author: Ali Dasdan, Synopsys, Inc.
- 
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -53,46 +53,46 @@
 
 // Find the pulse period to produce speed.
 // This function also rounds the period to the nearest integer.
-int
-gen_pulse_mod::find_period(int speed)
+int gen_pulse_mod::find_period(int speed)
 {
-  if (speed <= 0)
-    return 1;
+    if (speed <= 0)
+        return 1;
 
-  const double num = DIST_BETWEEN_TWO_PULSES * PERIODS_PER_HOUR / 2;
+    const double num = DIST_BETWEEN_TWO_PULSES * PERIODS_PER_HOUR / 2;
 
-  double dp = num / speed;
-  int    ip = int(dp);
+    double dp = num / speed;
+    int ip = int(dp);
 
-  ip = ip + ((dp - ip) >= double(0.5) ? 1 : 0);
+    ip = ip + ((dp - ip) >= double(0.5) ? 1 : 0);
 
-  return ip;
+    return ip;
 }
 
 // Generate pulses for speedometer and odometers.
-void
-gen_pulse_mod::gen_pulse_proc()
+void gen_pulse_mod::gen_pulse_proc()
 {
-  wait();
-
-  speed_pulse = false;
-  dist_pulse = false;
-
-  // Wait until the car is started.
-  do {
     wait();
-  } while (start.read() == false);
-
-  while (true) {
-
-    speed_pulse = true;
-    dist_pulse = true;
-    AWAIT(find_period(speed));
 
     speed_pulse = false;
     dist_pulse = false;
-    AWAIT(find_period(speed));
-  }
+
+    // Wait until the car is started.
+    do
+    {
+        wait();
+    } while (start.read() == false);
+
+    while (true)
+    {
+
+        speed_pulse = true;
+        dist_pulse = true;
+        AWAIT(find_period(speed));
+
+        speed_pulse = false;
+        dist_pulse = false;
+        AWAIT(find_period(speed));
+    }
 }
 
 // End of file

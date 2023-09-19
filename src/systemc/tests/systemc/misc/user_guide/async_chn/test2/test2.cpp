@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test2.cpp -- 
+  test2.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,88 +37,94 @@
 
 #include "systemc.h"
 
-SC_MODULE( p1 )
+SC_MODULE(p1)
 {
-  SC_HAS_PROCESS( p1 );
+    SC_HAS_PROCESS(p1);
 
-  sc_fifo<int>& a;
-  sc_fifo<int>& b;
-  sc_in<bool> clk;
+    sc_fifo<int> &a;
+    sc_fifo<int> &b;
+    sc_in<bool> clk;
 
-  int init;
+    int init;
 
-  p1(sc_module_name name,
-     sc_fifo<int>& A,
-     sc_fifo<int>& B, 
-     sc_signal_in_if<bool>& CLK,
-     int INIT)
-    : a(A), b(B)
-  {
-    clk(CLK);
-	init = INIT;
-    SC_THREAD( entry );
-    sensitive << clk;
-    // sensitive << b;
-  }
-
-  void entry() {
-    wait();
-    int i = init;
-    wait();
-    while (true) {
-      a.write(i);
-      int j = b.read();
-      cout << "Value sent = " << i << " Value read = " << j << endl;
-      wait(); i++;
+    p1(sc_module_name name,
+       sc_fifo<int> & A,
+       sc_fifo<int> & B,
+       sc_signal_in_if<bool> & CLK,
+       int INIT)
+        : a(A), b(B)
+    {
+        clk(CLK);
+        init = INIT;
+        SC_THREAD(entry);
+        sensitive << clk;
+        // sensitive << b;
     }
-  }
+
+    void entry()
+    {
+        wait();
+        int i = init;
+        wait();
+        while (true)
+        {
+            a.write(i);
+            int j = b.read();
+            cout << "Value sent = " << i << " Value read = " << j << endl;
+            wait();
+            i++;
+        }
+    }
 };
 
-SC_MODULE( p2 )
+SC_MODULE(p2)
 {
-  SC_HAS_PROCESS( p2 );
+    SC_HAS_PROCESS(p2);
 
-  sc_in_clk clk;
+    sc_in_clk clk;
 
-  sc_fifo<int>& a;
-  sc_fifo<int>& b;
+    sc_fifo<int> &a;
+    sc_fifo<int> &b;
 
-  int init;
+    int init;
 
-  p2 (sc_module_name name,
-      sc_clock& CLK,
-      sc_fifo<int>& A,
-      sc_fifo<int>& B,
-      int INIT)
-    : a(A), b(B)
-  {
-    clk(CLK);
-	SC_CTHREAD( entry, clk.pos() );
-    init = INIT;
-  }
-
-  void entry() {
-    int i = init;
-    wait();
-    while (true) {
-      a.write(i);
-      int j = b.read();
-      cout << "Value sent = " << i << " Value read = " << j << endl;
-      wait(); i++;
+    p2(sc_module_name name,
+       sc_clock & CLK,
+       sc_fifo<int> & A,
+       sc_fifo<int> & B,
+       int INIT)
+        : a(A), b(B)
+    {
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
+        init = INIT;
     }
-  }
+
+    void entry()
+    {
+        int i = init;
+        wait();
+        while (true)
+        {
+            a.write(i);
+            int j = b.read();
+            cout << "Value sent = " << i << " Value read = " << j << endl;
+            wait();
+            i++;
+        }
+    }
 };
-    
+
 int sc_main(int ac, char *av[])
 {
-  sc_fifo<int> a(2), b(2);
-  sc_clock clock("Clock", 20, SC_NS);
+    sc_fifo<int> a(2), b(2);
+    sc_clock clock("Clock", 20, SC_NS);
 
-  p1 Proc1("Proc1", a, b, clock, 10);
-  p2 Proc2("Proc2", clock, b, a, 129);
+    p1 Proc1("Proc1", a, b, clock, 10);
+    p2 Proc2("Proc2", clock, b, a, 129);
 
-  // sc_start(500, SC_NS);
-  sc_start(250, SC_NS);
+    // sc_start(500, SC_NS);
+    sc_start(250, SC_NS);
 
-  return 0;
+    return 0;
 }

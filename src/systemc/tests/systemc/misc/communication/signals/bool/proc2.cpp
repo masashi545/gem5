@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  proc2.cpp -- 
+  proc2.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,12 +37,13 @@
 
 #include "proc2.h"
 
-void
-proc2::entry()
+void proc2::entry()
 {
-    while( true ) {
-        if( ! ready.read() ) {
-            ack.write( true );
+    while (true)
+    {
+        if (!ready.read())
+        {
+            ack.write(true);
             cout << "if( !signal ) works" << endl;
         }
         wait();

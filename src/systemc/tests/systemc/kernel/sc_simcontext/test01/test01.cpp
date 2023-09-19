@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,7 +39,8 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a ) {
+SC_MODULE(mod_a)
+{
 
     sc_in_clk clk;
 
@@ -51,7 +52,8 @@ SC_MODULE( mod_a ) {
 
     void main_action_thread()
     {
-        while( true ) {
+        while (true)
+        {
             cout << sc_delta_count()
                  << " main_action_thread called" << endl;
             wait(); // for what?
@@ -60,28 +62,28 @@ SC_MODULE( mod_a ) {
 
     void main_action_cthread()
     {
-        while( true ) {
+        while (true)
+        {
             cout << sc_delta_count()
                  << " main_action_cthread called" << endl;
             wait();
         }
     }
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
-        SC_METHOD( main_action_method );
-        SC_THREAD( main_action_thread );
-        SC_CTHREAD( main_action_cthread, clk.pos() );
+        SC_METHOD(main_action_method);
+        SC_THREAD(main_action_thread);
+        SC_CTHREAD(main_action_cthread, clk.pos());
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_clock clk;
 
-    mod_a a( "a" );
-    a.clk( clk );
+    mod_a a("a");
+    a.clk(clk);
 
     sc_start(1, SC_NS);
 

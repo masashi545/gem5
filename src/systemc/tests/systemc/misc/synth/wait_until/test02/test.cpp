@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,25 +36,32 @@
  *****************************************************************************/
 
 #include "test.h"
- 
-void test::entry() 
-{
-  while (true) {
-  o1 = 0; o2 = 0;
-  wait();
-  wait();
-  wait ();
-  if (i1 == 5) {
-        do { wait(); } while  (cont1 == 0);
-        wait ();
-  } else {
-    wait ();
-  }
-  wait ();
-  o1 = 2;
-  wait ();
-  o2 = 3;
-  wait ();
-  }
-}
 
+void test::entry()
+{
+    while (true)
+    {
+        o1 = 0;
+        o2 = 0;
+        wait();
+        wait();
+        wait();
+        if (i1 == 5)
+        {
+            do
+            {
+                wait();
+            } while (cont1 == 0);
+            wait();
+        }
+        else
+        {
+            wait();
+        }
+        wait();
+        o1 = 2;
+        wait();
+        o2 = 3;
+        wait();
+    }
+}

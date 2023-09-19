@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stage1.cpp -- 
+  stage1.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,16 +42,16 @@
 
 void stage1::entry()
 {
-  double a, b;
+    double a, b;
 
-  a = 20.0;
-  b = 5.0;
-  while (true) {
-    sum.write(a+b);
-    diff.write(a-b);
-    wait();
-    a = in1.read();
-    b = in2.read();
-  }
+    a = 20.0;
+    b = 5.0;
+    while (true)
+    {
+        sum.write(a + b);
+        diff.write(a - b);
+        wait();
+        a = in1.read();
+        b = in2.read();
+    }
 } // end of entry function
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test2_imp.cpp -- 
+  test2_imp.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 

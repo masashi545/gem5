@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  extern2.cpp -- 
+  extern2.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,21 +38,22 @@
 #include "systemc.h"
 #include "extern.h"
 
-struct foo : sc_module {
-    sc_in_clk	clk;
-    sc_in<int>	a;
-    sc_in<int>	b;
-    sc_out<int>	c;
+struct foo : sc_module
+{
+    sc_in_clk clk;
+    sc_in<int> a;
+    sc_in<int> b;
+    sc_out<int> c;
 
-    SC_CTOR(foo) {
+    SC_CTOR(foo)
+    {
         SC_CTHREAD(entry, clk.pos());
     }
 
     void entry();
 };
 
-void
-foo::entry()
+void foo::entry()
 {
     int d;
     f(a.read(), b.read(), d);

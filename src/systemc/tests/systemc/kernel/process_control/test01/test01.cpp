@@ -33,10 +33,9 @@
       Name, Affiliation, Date:
   Description of Modification:
 
-  Revision log at end of the file to let __LINE__ give the same results 
+  Revision log at end of the file to let __LINE__ give the same results
   after a check-in.
  *****************************************************************************/
-
 
 #include "systemc.h"
 
@@ -44,14 +43,14 @@ SC_MODULE(DUT)
 {
     SC_CTOR(DUT)
     {
-        SC_CTHREAD(cthread,m_clk.pos());
+        SC_CTHREAD(cthread, m_clk.pos());
         SC_METHOD(dynamic_method);
         SC_THREAD(dynamic_thread);
         SC_METHOD(static_method);
         sensitive << m_clk.pos();
         SC_THREAD(static_thread);
         sensitive << m_clk.pos();
-        SC_CTHREAD(stimulus,m_clk.pos());
+        SC_CTHREAD(stimulus, m_clk.pos());
         reset_signal_is(m_reset, true);
     }
     void cthread()
@@ -60,72 +59,73 @@ SC_MODULE(DUT)
         for (;;)
         {
             wait();
-            cout << sc_time_stamp() << ":      cthread (" << __LINE__ << ")" 
+            cout << sc_time_stamp() << ":      cthread (" << __LINE__ << ")"
                  << endl;
         }
     }
     void dynamic_method()
     {
         static int state = 0;
-        switch ( state )
+        switch (state)
         {
-          case 0:
+        case 0:
             m_dynamic_method = sc_get_current_process_handle();
-            next_trigger( m_clk.posedge_event() );
-            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__ 
+            next_trigger(m_clk.posedge_event());
+            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__
                  << "," << state << ") initialization call " << endl;
             break;
-          case 1:
-            next_trigger( m_clk.posedge_event() );
-            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__ 
-                 << "," << state << ") after wait on m_clk.posedge_event() " 
+        case 1:
+            next_trigger(m_clk.posedge_event());
+            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__
+                 << "," << state << ") after wait on m_clk.posedge_event() "
                  << endl;
             break;
-          case 2:
-            next_trigger( m_clk.negedge_event() );
-            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__ 
-                 << "," << state << ") after wait on m_clk.posedge_event() " 
+        case 2:
+            next_trigger(m_clk.negedge_event());
+            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__
+                 << "," << state << ") after wait on m_clk.posedge_event() "
                  << endl;
             break;
-          case 3:
-            next_trigger( m_event1 & m_event2 );
-            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__ 
+        case 3:
+            next_trigger(m_event1 & m_event2);
+            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__
                  << "," << state << ") after wait on m_clk.negedge() " << endl;
             break;
-          case 4:
-            next_trigger( m_clk.posedge_event() );
-            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__ 
-                 << "," << state << ") after wait on m_event1 & m_event2 " 
+        case 4:
+            next_trigger(m_clk.posedge_event());
+            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__
+                 << "," << state << ") after wait on m_event1 & m_event2 "
                  << endl;
             break;
-          default:
-            next_trigger( m_clk.posedge_event() );
-            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__ 
-                 << "," << state << ") after wait on m_clk.posedge_event() " 
+        default:
+            next_trigger(m_clk.posedge_event());
+            cout << sc_time_stamp() << ":      dynamic method (" << __LINE__
+                 << "," << state << ") after wait on m_clk.posedge_event() "
                  << endl;
             break;
         }
         state = state + 1;
-        if ( state == 5 ) state = 1;
+        if (state == 5)
+            state = 1;
     }
     void dynamic_thread()
     {
         m_dynamic_thread = sc_get_current_process_handle();
-        cout << sc_time_stamp() << ":      dynamic thread (" << __LINE__ << ")" 
+        cout << sc_time_stamp() << ":      dynamic thread (" << __LINE__ << ")"
              << " initialization call " << endl;
         wait(m_clk.posedge_event());
         for (;;)
         {
-            cout << sc_time_stamp() << ":      dynamic thread (" << __LINE__ 
+            cout << sc_time_stamp() << ":      dynamic thread (" << __LINE__
                  << ") after wait on m_clk.posedge_event() " << endl;
             wait(m_clk.posedge_event());
-            cout << sc_time_stamp() << ":      dynamic thread (" << __LINE__ 
+            cout << sc_time_stamp() << ":      dynamic thread (" << __LINE__
                  << ") after wait on m_clk.posedge_event() " << endl;
             wait(m_clk.negedge_event());
-            cout << sc_time_stamp() << ":      dynamic thread (" << __LINE__ 
+            cout << sc_time_stamp() << ":      dynamic thread (" << __LINE__
                  << ") after wait on m_clk.negedge_event() " << endl;
-            wait(m_event1 & m_event2 );
-            cout << sc_time_stamp() << ":      dynamic thread (" << __LINE__ 
+            wait(m_event1 & m_event2);
+            cout << sc_time_stamp() << ":      dynamic thread (" << __LINE__
                  << ") after wait on m_event1 & m_event2 " << endl;
             wait(m_clk.posedge_event());
         }
@@ -133,7 +133,7 @@ SC_MODULE(DUT)
     void static_method()
     {
         m_static_method = sc_get_current_process_handle();
-        cout << sc_time_stamp() << ":      static method (" << __LINE__ << ")" 
+        cout << sc_time_stamp() << ":      static method (" << __LINE__ << ")"
              << endl;
     }
     void static_thread()
@@ -142,7 +142,7 @@ SC_MODULE(DUT)
         for (;;)
         {
             wait();
-            cout << sc_time_stamp() << ":      static thread (" << __LINE__ 
+            cout << sc_time_stamp() << ":      static thread (" << __LINE__
                  << ")" << endl;
         }
     }
@@ -167,7 +167,8 @@ SC_MODULE(DUT)
             m_dynamic_thread.resume();
             m_static_method.resume();
             m_static_thread.resume();
-            cout << endl << sc_time_stamp() << ": stimulus (" 
+            cout << endl
+                 << sc_time_stamp() << ": stimulus ("
                  << __LINE__ << ") - resuming all processes" << endl;
             wait();
             cout << sc_time_stamp() << ": stimulus ("
@@ -187,7 +188,8 @@ SC_MODULE(DUT)
             m_dynamic_thread.resume();
             m_static_method.resume();
             m_static_thread.resume();
-            cout << endl << sc_time_stamp() << ": stimulus (" 
+            cout << endl
+                 << sc_time_stamp() << ": stimulus ("
                  << __LINE__ << ") - resuming all processes" << endl;
             wait();
             m_event2.notify(SC_ZERO_TIME);
@@ -198,24 +200,24 @@ SC_MODULE(DUT)
             wait();
         }
     }
-    sc_in<bool>       m_clk;
+    sc_in<bool> m_clk;
     sc_process_handle m_cthread;
     sc_process_handle m_dynamic_method;
     sc_process_handle m_dynamic_thread;
-    sc_event          m_event1;
-    sc_event          m_event2;
-    sc_event          m_event3;
-    sc_event          m_event4;
-    sc_in<bool>       m_reset;
+    sc_event m_event1;
+    sc_event m_event2;
+    sc_event m_event3;
+    sc_event m_event4;
+    sc_in<bool> m_reset;
     sc_process_handle m_static_method;
     sc_process_handle m_static_thread;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
     sc_core::sc_allow_process_control_corners = true;
-    sc_clock        clock;
-    DUT             dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
     sc_signal<bool> reset;
 
     dut.m_clk(clock);

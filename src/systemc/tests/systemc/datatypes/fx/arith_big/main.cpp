@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,29 +36,27 @@
  *****************************************************************************/
 
 // This may look like C code, but it is really -*- C++ -*-
-// 
-// main.cxx<3> -- 
+//
+// main.cxx<3> --
 // Copyright Synopsys 1998
 // Author          : Ric Hilderink
 // Created On      : Mon Jan 11 13:25:23 1999
 // Status          : none
-// 
-
+//
 
 #define SC_INCLUDE_FX
 #include "systemc.h"
 
+extern void add_big(ostream &);
 
-extern void add_big(ostream&);
-
-int sc_main( int, char** )
+int sc_main(int, char **)
 {
-  ostream& out = cout;
+    ostream &out = cout;
 
-  out << "************* add_big\n";
-  sc_fxtype_params fooc(65, 33, SC_RND, SC_SAT);
-  
-  add_big(out);
-  out << "************* done\n";
-  return 0;
+    out << "************* add_big\n";
+    sc_fxtype_params fooc(65, 33, SC_RND, SC_SAT);
+
+    add_big(out);
+    out << "************* done\n";
+    return 0;
 }

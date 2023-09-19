@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  concat.cpp -- 
+  concat.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,18 +39,18 @@
 
 #define WIDTH 32
 
-int sc_main(int ac, char* av[] )
+int sc_main(int ac, char *av[])
 {
-    
-  sc_int_base a_si32(WIDTH), b_si32(WIDTH);
 
-  for(int i=0; i < WIDTH-1; i++ ){
-      cout << "i = " << i << endl;
-      a_si32 = i;
-      b_si32 = (a_si32.range(WIDTH-1,i+1), a_si32.range(i,0));
-      sc_assert( a_si32 == b_si32 );
-  }
+    sc_int_base a_si32(WIDTH), b_si32(WIDTH);
 
-  return 0;
+    for (int i = 0; i < WIDTH - 1; i++)
+    {
+        cout << "i = " << i << endl;
+        a_si32 = i;
+        b_si32 = (a_si32.range(WIDTH - 1, i + 1), a_si32.range(i, 0));
+        sc_assert(a_si32 == b_si32);
+    }
+
+    return 0;
 }
-  

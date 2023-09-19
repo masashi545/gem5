@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,13 +39,12 @@
 
 #include "systemc.h"
 
-void
-test_smaller( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
+void test_smaller(const sc_lv<4> &lv_one, const sc_lv<4> &lv_two)
 {
     cout << "*** smaller ***" << endl;
     {
-        sc_int<8> a( lv_one );
-        sc_int<8> b( lv_two );
+        sc_int<8> a(lv_one);
+        sc_int<8> b(lv_two);
         sc_int<8> c;
         sc_int<8> d;
         c = lv_one;
@@ -57,8 +56,8 @@ test_smaller( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
     cout << endl;
     {
-        sc_uint<8> a( lv_one );
-        sc_uint<8> b( lv_two );
+        sc_uint<8> a(lv_one);
+        sc_uint<8> b(lv_two);
         sc_uint<8> c;
         sc_uint<8> d;
         c = lv_one;
@@ -70,8 +69,8 @@ test_smaller( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
     cout << endl;
     {
-        sc_bigint<8> a( lv_one );
-        sc_bigint<8> b( lv_two );
+        sc_bigint<8> a(lv_one);
+        sc_bigint<8> b(lv_two);
         sc_bigint<8> c;
         sc_bigint<8> d;
         c = lv_one;
@@ -83,8 +82,8 @@ test_smaller( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
     cout << endl;
     {
-        sc_biguint<8> a( lv_one );
-        sc_biguint<8> b( lv_two );
+        sc_biguint<8> a(lv_one);
+        sc_biguint<8> b(lv_two);
         sc_biguint<8> c;
         sc_biguint<8> d;
         c = lv_one;
@@ -96,13 +95,12 @@ test_smaller( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
 }
 
-void
-test_equal( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
+void test_equal(const sc_lv<4> &lv_one, const sc_lv<4> &lv_two)
 {
     cout << "*** equal ***" << endl;
     {
-        sc_int<4> a( lv_one );
-        sc_int<4> b( lv_two );
+        sc_int<4> a(lv_one);
+        sc_int<4> b(lv_two);
         sc_int<4> c;
         sc_int<4> d;
         c = lv_one;
@@ -114,8 +112,8 @@ test_equal( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
     cout << endl;
     {
-        sc_uint<4> a( lv_one );
-        sc_uint<4> b( lv_two );
+        sc_uint<4> a(lv_one);
+        sc_uint<4> b(lv_two);
         sc_uint<4> c;
         sc_uint<4> d;
         c = lv_one;
@@ -127,8 +125,8 @@ test_equal( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
     cout << endl;
     {
-        sc_bigint<4> a( lv_one );
-        sc_bigint<4> b( lv_two );
+        sc_bigint<4> a(lv_one);
+        sc_bigint<4> b(lv_two);
         sc_bigint<4> c;
         sc_bigint<4> d;
         c = lv_one;
@@ -140,8 +138,8 @@ test_equal( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
     cout << endl;
     {
-        sc_biguint<4> a( lv_one );
-        sc_biguint<4> b( lv_two );
+        sc_biguint<4> a(lv_one);
+        sc_biguint<4> b(lv_two);
         sc_biguint<4> c;
         sc_biguint<4> d;
         c = lv_one;
@@ -153,13 +151,12 @@ test_equal( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
 }
 
-void
-test_larger( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
+void test_larger(const sc_lv<4> &lv_one, const sc_lv<4> &lv_two)
 {
     cout << "*** larger ***" << endl;
     {
-        sc_int<2> a( lv_one );
-        sc_int<2> b( lv_two );
+        sc_int<2> a(lv_one);
+        sc_int<2> b(lv_two);
         sc_int<2> c;
         sc_int<2> d;
         c = lv_one;
@@ -171,8 +168,8 @@ test_larger( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
     cout << endl;
     {
-        sc_uint<2> a( lv_one );
-        sc_uint<2> b( lv_two );
+        sc_uint<2> a(lv_one);
+        sc_uint<2> b(lv_two);
         sc_uint<2> c;
         sc_uint<2> d;
         c = lv_one;
@@ -184,8 +181,8 @@ test_larger( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
     cout << endl;
     {
-        sc_bigint<2> a( lv_one );
-        sc_bigint<2> b( lv_two );
+        sc_bigint<2> a(lv_one);
+        sc_bigint<2> b(lv_two);
         sc_bigint<2> c;
         sc_bigint<2> d;
         c = lv_one;
@@ -197,8 +194,8 @@ test_larger( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
     cout << endl;
     {
-        sc_biguint<2> a( lv_one );
-        sc_biguint<2> b( lv_two );
+        sc_biguint<2> a(lv_one);
+        sc_biguint<2> b(lv_two);
         sc_biguint<2> c;
         sc_biguint<2> d;
         c = lv_one;
@@ -210,15 +207,14 @@ test_larger( const sc_lv<4>& lv_one, const sc_lv<4>& lv_two )
     }
 }
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_lv<4> lv_one( "0101" );
-    sc_lv<4> lv_two( "1010" );
+    sc_lv<4> lv_one("0101");
+    sc_lv<4> lv_two("1010");
 
-    test_smaller( lv_one, lv_two );
-    test_equal( lv_one, lv_two );
-    test_larger( lv_one, lv_two );
+    test_smaller(lv_one, lv_two);
+    test_equal(lv_one, lv_two);
+    test_larger(lv_one, lv_two);
 
     return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  driver.cpp -- 
+  driver.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,23 +42,22 @@
 
 void driver::entry()
 {
-  control.write(true);
-  out.write(false);
-  wait();
-  cout << "Input is = " << in.read() << endl;
-    
-  control.write(false);
-  wait();
-  cout << "Input is = " << in.read() << endl;
+    control.write(true);
+    out.write(false);
+    wait();
+    cout << "Input is = " << in.read() << endl;
 
-  control.write(true);
-  out.write(true);
-  wait();
-  cout << "Input is = " << in.read() << endl;
-    
-  control.write(false);
-  wait();
-  cout << "Input is = " << in.read() << endl;
-  sc_stop();
+    control.write(false);
+    wait();
+    cout << "Input is = " << in.read() << endl;
+
+    control.write(true);
+    out.write(true);
+    wait();
+    cout << "Input is = " << in.read() << endl;
+
+    control.write(false);
+    wait();
+    cout << "Input is = " << in.read() << endl;
+    sc_stop();
 } // end of entry function
-

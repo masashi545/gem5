@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,7 +36,7 @@
  *****************************************************************************/
 
 //
-// bug in sc_vcd_trace::cycle() 
+// bug in sc_vcd_trace::cycle()
 //   in SystemC 1.2.1Beta  (also 1.0.2).
 // Simulates correctly (two clock edges at time 15).
 // But VCD is corrupt - has #0 instead of #15.
@@ -53,34 +53,37 @@
 // #include <iostream.h>
 
 // class foo: sc_module {
-class foo: public sc_module {
+class foo : public sc_module
+{
 public:
-    sc_in<bool>	clk1;
-    sc_in<bool>	clk2;
+    sc_in<bool> clk1;
+    sc_in<bool> clk2;
 
-    SC_CTOR(foo) {
+    SC_CTOR(foo)
+    {
         SC_METHOD(do_clk1);
         sensitive << clk1.pos();
         SC_METHOD(do_clk2);
         sensitive << clk2.pos();
     }
-    void do_clk1() { 
+    void do_clk1()
+    {
         cout << "foo: clk1 + " << sc_time_stamp() << endl;
     }
-    void do_clk2() {
+    void do_clk2()
+    {
         cout << "foo: clk2 + " << sc_time_stamp() << endl;
     }
 };
 
-int
-sc_main(int argc, char *argv[])
+int sc_main(int argc, char *argv[])
 {
     // sc_clock	clk1("clk1", 10, SC_NS, 0.5);
     // sc_clock	clk2("clk2", 12, SC_NS, 0.5);
-    sc_signal<bool> clk1( "clk1" );
-    sc_signal<bool> clk2( "clk2" );
+    sc_signal<bool> clk1("clk1");
+    sc_signal<bool> clk2("clk2");
 
-    foo		FOO("FOO");
+    foo FOO("FOO");
 
     FOO.clk1(clk1);
     FOO.clk2(clk2);
@@ -93,30 +96,30 @@ sc_main(int argc, char *argv[])
 
     sc_start(0, SC_NS);
 
-    clk1 = 0;                                         
-    clk2 = 0;                                          // 0 ns
+    clk1 = 0;
+    clk2 = 0; // 0 ns
     sc_start(3, SC_NS);
-    clk2 = 1;                                          // 3 ns +
+    clk2 = 1; // 3 ns +
     sc_start(2, SC_NS);
-    clk1 = 1;                                          // 5 ns +
+    clk1 = 1; // 5 ns +
     sc_start(4, SC_NS);
-    clk2 = 0;                                          // 9 ns
+    clk2 = 0; // 9 ns
     sc_start(1, SC_NS);
-    clk1 = 0;                                          // 10 ns
+    clk1 = 0; // 10 ns
     sc_start(5, SC_NS);
-    clk2 = 1;                                          // 15 ns +
+    clk2 = 1; // 15 ns +
     sc_start(0, SC_NS);
-    clk1 = 1;                                          // 15 ns +
+    clk1 = 1; // 15 ns +
     sc_start(5, SC_NS);
-    clk1 = 0;                                          // 20 ns
+    clk1 = 0; // 20 ns
     sc_start(1, SC_NS);
-    clk2 = 0;                                          // 21 ns
+    clk2 = 0; // 21 ns
     sc_start(4, SC_NS);
-    clk1 = 1;                                          // 25 ns +
+    clk1 = 1; // 25 ns +
     sc_start(2, SC_NS);
-    clk2 = 1;                                          // 27 ns +
+    clk2 = 1; // 27 ns +
     sc_start(3, SC_NS);
-    clk1 = 0;                                          // 30 ns
+    clk1 = 0; // 30 ns
 
     sc_close_vcd_trace_file(tf);
 

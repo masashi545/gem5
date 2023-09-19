@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,14 +40,14 @@
 #define SC_INCLUDE_FX
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_bv<24> x;
 
-    for( int i = 0; i < 3000000; ++ i ) {
-        sc_fixed_fast<24,3> tmp_fx = 0.3;
-        x = (sc_bv_base) tmp_fx.range( 23, 0 );
+    for (int i = 0; i < 3000000; ++i)
+    {
+        sc_fixed_fast<24, 3> tmp_fx = 0.3;
+        x = (sc_bv_base)tmp_fx.range(23, 0);
     }
 
     return 0;

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star102574.cpp -- 
+  star102574.cpp --
 
   Original Author: Preeti Panda, Synopsys, Inc., 2000-08-09
 
@@ -43,78 +43,92 @@
 void while_fsm::entry()
 {
 
-  int  i, inp_tmp;
+    int i, inp_tmp;
 
-  // reset_loop
-  if (reset.read()==true) {
-    result.write(0);
-    out_valid.write(false);
-    wait();
-  } else wait(); 
+    // reset_loop
+    if (reset.read() == true)
+    {
+        result.write(0);
+        out_valid.write(false);
+        wait();
+    }
+    else
+        wait();
 
-  //----------
-  // main loop
-  //----------
-  while(1) {
+    //----------
+    // main loop
+    //----------
+    while (1)
+    {
 
-    // read inputs
-    while (in_valid.read()==false) wait();
+        // read inputs
+        while (in_valid.read() == false)
+            wait();
 
-    // execution of for loop 
-    out_valid.write(true);
-    i=1;
-    wait();
-    while (i<=max) {
-      inp_tmp = in_value.read();
-      result.write(inp_tmp); 
-      i++;
-      wait();
-    };
-    out_valid.write(false);
-    wait();
+        // execution of for loop
+        out_valid.write(true);
+        i = 1;
+        wait();
+        while (i <= max)
+        {
+            inp_tmp = in_value.read();
+            result.write(inp_tmp);
+            i++;
+            wait();
+        };
+        out_valid.write(false);
+        wait();
 
-    // execution of for loop with continues
-    out_valid.write(true);
-    i=0;
-    wait();
-    do {
-      i++;
-      inp_tmp = in_value.read();
-      if (i==8) {
-	wait();
-	continue;
-      } else if (in_value.read()<5 && i!=1) {
-	wait();
-	continue;
-      } else {
-	result.write(inp_tmp);
-	wait();
-      }
-    } while (i<=max);
-    out_valid.write(false);
-    wait();
-    wait(3);
+        // execution of for loop with continues
+        out_valid.write(true);
+        i = 0;
+        wait();
+        do
+        {
+            i++;
+            inp_tmp = in_value.read();
+            if (i == 8)
+            {
+                wait();
+                continue;
+            }
+            else if (in_value.read() < 5 && i != 1)
+            {
+                wait();
+                continue;
+            }
+            else
+            {
+                result.write(inp_tmp);
+                wait();
+            }
+        } while (i <= max);
+        out_valid.write(false);
+        wait();
+        wait(3);
 
-    // for loop with break
-    out_valid.write(true);
-    i=0;
-    wait();
-    do {
-      i++;
-      inp_tmp = in_value.read();
-      if (inp_tmp==7) {
-	wait();
-	break;
-      } else {
-	result.write(inp_tmp);
-	wait();
-      };
-    } while (i<=max);
-    out_valid.write(false);
-    wait();
-
-  }
+        // for loop with break
+        out_valid.write(true);
+        i = 0;
+        wait();
+        do
+        {
+            i++;
+            inp_tmp = in_value.read();
+            if (inp_tmp == 7)
+            {
+                wait();
+                break;
+            }
+            else
+            {
+                result.write(inp_tmp);
+                wait();
+            };
+        } while (i <= max);
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-

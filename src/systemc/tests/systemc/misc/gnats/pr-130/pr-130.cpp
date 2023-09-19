@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-130.cpp -- 
+  pr-130.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,45 +37,45 @@
 
 #include "systemc.h"
 
-SC_MODULE( pr130 )
+SC_MODULE(pr130)
 {
-    SC_HAS_PROCESS( pr130 );
+    SC_HAS_PROCESS(pr130);
 
     sc_in_clk clk;
 
-    const sc_signal<bool>& x;
+    const sc_signal<bool> &x;
 
-    pr130( sc_module_name NAME,
-           sc_clock& CLK,
-           const sc_signal<bool>& X )
+    pr130(sc_module_name NAME,
+          sc_clock & CLK,
+          const sc_signal<bool> &X)
         : x(X)
     {
-      clk(CLK);
-	  SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
 };
 
-SC_MODULE( pr130_2 )
+SC_MODULE(pr130_2)
 {
-    SC_HAS_PROCESS( pr130_2 );
+    SC_HAS_PROCESS(pr130_2);
 
     sc_in_clk clk;
 
-    const sc_signal<bool>& x;
+    const sc_signal<bool> &x;
 
-    pr130_2( sc_module_name NAME,
-             sc_clock& CLK,
-             const sc_signal<bool>& X )
+    pr130_2(sc_module_name NAME,
+            sc_clock & CLK,
+            const sc_signal<bool> &X)
         : x(X)
     {
-      clk(CLK);
-	  SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
 };
- 
-int sc_main(int argc, char* argv[] )
+
+int sc_main(int argc, char *argv[])
 {
-   return 0;
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr213.cpp -- 
+  pr213.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,43 +37,44 @@
 
 #include "systemc.h"
 
-SC_MODULE( abc )
+SC_MODULE(abc)
 {
-    SC_HAS_PROCESS( abc );
+    SC_HAS_PROCESS(abc);
 
     sc_in_clk clk;
 
-    const sc_signal<bool>& a;
-    const sc_signal<bool>& b;
-          sc_signal<bool>& c;
+    const sc_signal<bool> &a;
+    const sc_signal<bool> &b;
+    sc_signal<bool> &c;
 
-    abc( sc_module_name NAME,
-         sc_clock& CLK,
+    abc(sc_module_name NAME,
+        sc_clock & CLK,
 
-         const sc_signal<bool>& A,
-         const sc_signal<bool>& B,
-               sc_signal<bool>& C )
+        const sc_signal<bool> &A,
+        const sc_signal<bool> &B,
+        sc_signal<bool> &C)
 
-        : 
-          a(A), b(B), c(C)
+        : a(A), b(B), c(C)
     {
-      clk(CLK);
-	  SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
 };
 
-void
-abc::entry()
+void abc::entry()
 {
     int i = 0, j = 0;
-    do {
+    do
+    {
         i++;
-        if (i == 5) continue;
-        if (i == 7) break;
+        if (i == 5)
+            continue;
+        if (i == 7)
+            break;
         j = j + 2;
         wait();
     } while (a.read() && b.read());
 }
 
-int sc_main( int, char** ) { return 0; }
+int sc_main(int, char **) { return 0; }

@@ -28,134 +28,141 @@
 
 #include "sysc/kernel/sc_attribute.h"
 
-namespace sc_core {
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_attr_base
-//
-//  Attribute base class.
-// ----------------------------------------------------------------------------
-
-// constructors
-
-sc_attr_base::sc_attr_base( const std::string& name_ )
-: m_name( name_ )
-{}
-
-sc_attr_base::sc_attr_base( const sc_attr_base& a )
-: m_name( a.m_name )
-{}
-
-
-// destructor (does nothing)
-
-sc_attr_base::~sc_attr_base()
-{}
-
-
-// get the name
-const std::string&
-sc_attr_base::name() const
+namespace sc_core
 {
-    return m_name;
-}
 
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_attr_base
+    //
+    //  Attribute base class.
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_attr_cltn
-//
-//  Attribute collection class. Stores pointers to attributes.
-//  Note: iterate over the collection by using iterators.
-// ----------------------------------------------------------------------------
+    // constructors
 
-// constructors
-
-sc_attr_cltn::sc_attr_cltn() : m_cltn()
-{}
-
-sc_attr_cltn::sc_attr_cltn( const sc_attr_cltn& a )
-: m_cltn( a.m_cltn )
-{}
-
-
-// destructor
-sc_attr_cltn::~sc_attr_cltn()
-{
-    remove_all();
-}
-
-
-// add attribute to the collection.
-// returns 'true' if the name of the attribute is unique,
-// returns 'false' otherwise (attribute is not added).
-
-bool
-sc_attr_cltn::push_back( sc_attr_base* attribute_ )
-{
-    if( attribute_ == 0 ) {
-	return false;
+    sc_attr_base::sc_attr_base(const std::string &name_)
+        : m_name(name_)
+    {
     }
-    for( int i = m_cltn.size() - 1; i >= 0; -- i ) {
-	if( attribute_->name() == m_cltn[i]->name() ) {
-	    return false;
-	}
+
+    sc_attr_base::sc_attr_base(const sc_attr_base &a)
+        : m_name(a.m_name)
+    {
     }
-    m_cltn.push_back( attribute_ );
-    return true;
-}
 
+    // destructor (does nothing)
 
-// get attribute by name.
-// returns pointer to attribute, or 0 if name does not exist.
-
-sc_attr_base*
-sc_attr_cltn::operator [] ( const std::string& name_ )
-{
-    for( int i = m_cltn.size() - 1; i >= 0; -- i ) {
-	if( name_ == m_cltn[i]->name() ) {
-	    return m_cltn[i];
-	}
+    sc_attr_base::~sc_attr_base()
+    {
     }
-    return 0;
-}
 
-const sc_attr_base*
-sc_attr_cltn::operator [] ( const std::string& name_ ) const
-{
-    for( int i = m_cltn.size() - 1; i >= 0; -- i ) {
-	if( name_ == m_cltn[i]->name() ) {
-	    return m_cltn[i];
-	}
+    // get the name
+    const std::string &
+    sc_attr_base::name() const
+    {
+        return m_name;
     }
-    return 0;
-}
 
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_attr_cltn
+    //
+    //  Attribute collection class. Stores pointers to attributes.
+    //  Note: iterate over the collection by using iterators.
+    // ----------------------------------------------------------------------------
 
-// remove attribute by name.
-// returns pointer to attribute, or 0 if name does not exist.
+    // constructors
 
-sc_attr_base*
-sc_attr_cltn::remove( const std::string& name_ )
-{
-    for( int i = m_cltn.size() - 1; i >= 0; -- i ) {
-	if( name_ == m_cltn[i]->name() ) {
-	    sc_attr_base* attribute = m_cltn[i];
-	    std::swap( m_cltn[i], m_cltn.back() );
-	    m_cltn.pop_back();
-	    return attribute;
-	}
+    sc_attr_cltn::sc_attr_cltn() : m_cltn()
+    {
     }
-    return 0;
-}
 
+    sc_attr_cltn::sc_attr_cltn(const sc_attr_cltn &a)
+        : m_cltn(a.m_cltn)
+    {
+    }
 
-// remove all attributes
+    // destructor
+    sc_attr_cltn::~sc_attr_cltn()
+    {
+        remove_all();
+    }
 
-void
-sc_attr_cltn::remove_all()
-{
-    m_cltn.clear();
-}
+    // add attribute to the collection.
+    // returns 'true' if the name of the attribute is unique,
+    // returns 'false' otherwise (attribute is not added).
+
+    bool
+    sc_attr_cltn::push_back(sc_attr_base *attribute_)
+    {
+        if (attribute_ == 0)
+        {
+            return false;
+        }
+        for (int i = m_cltn.size() - 1; i >= 0; --i)
+        {
+            if (attribute_->name() == m_cltn[i]->name())
+            {
+                return false;
+            }
+        }
+        m_cltn.push_back(attribute_);
+        return true;
+    }
+
+    // get attribute by name.
+    // returns pointer to attribute, or 0 if name does not exist.
+
+    sc_attr_base *
+    sc_attr_cltn::operator[](const std::string &name_)
+    {
+        for (int i = m_cltn.size() - 1; i >= 0; --i)
+        {
+            if (name_ == m_cltn[i]->name())
+            {
+                return m_cltn[i];
+            }
+        }
+        return 0;
+    }
+
+    const sc_attr_base *
+    sc_attr_cltn::operator[](const std::string &name_) const
+    {
+        for (int i = m_cltn.size() - 1; i >= 0; --i)
+        {
+            if (name_ == m_cltn[i]->name())
+            {
+                return m_cltn[i];
+            }
+        }
+        return 0;
+    }
+
+    // remove attribute by name.
+    // returns pointer to attribute, or 0 if name does not exist.
+
+    sc_attr_base *
+    sc_attr_cltn::remove(const std::string &name_)
+    {
+        for (int i = m_cltn.size() - 1; i >= 0; --i)
+        {
+            if (name_ == m_cltn[i]->name())
+            {
+                sc_attr_base *attribute = m_cltn[i];
+                std::swap(m_cltn[i], m_cltn.back());
+                m_cltn.pop_back();
+                return attribute;
+            }
+        }
+        return 0;
+    }
+
+    // remove all attributes
+
+    void
+    sc_attr_cltn::remove_all()
+    {
+        m_cltn.clear();
+    }
 
 } // namespace sc_core
 

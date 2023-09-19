@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Ucar Aziz, Synopsys, Inc., 2002-02-15
                    Martin Janssen, Synopsys, Inc., 2002-02-15
@@ -40,54 +40,52 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
 
-  sc_in<int> in;  
-  sc_out<int> out;
+    sc_in<int> in;
+    sc_out<int> out;
 
-  SC_CTOR( mod_a )
-  { }
+    SC_CTOR(mod_a)
+    {
+    }
 };
 
-SC_MODULE( mod_b )
+SC_MODULE(mod_b)
 {
 
-  sc_in<int> in;  
-  sc_out<int> out;
+    sc_in<int> in;
+    sc_out<int> out;
 
-  SC_CTOR( mod_b )
-  { }
+    SC_CTOR(mod_b)
+    {
+    }
 };
- 
+
 // parent model
-SC_MODULE( mod_c )
+SC_MODULE(mod_c)
 {
 
-  sc_in<int> input;  
-  sc_out<int> output;
-  sc_signal<int> buf;
-  mod_a module_a;
-  mod_b module_b;
-  
-  SC_CTOR( mod_c ):
-    module_a("module_a"),
-    module_b("module_b")
-  {
+    sc_in<int> input;
+    sc_out<int> output;
+    sc_signal<int> buf;
+    mod_a module_a;
+    mod_b module_b;
 
-    module_a.in(input);
-    module_a.out(buf);
-    module_b.in(buf);
-    module_b.out(output);
+    SC_CTOR(mod_c) : module_a("module_a"),
+                     module_b("module_b")
+    {
 
-   }
+        module_a.in(input);
+        module_a.out(buf);
+        module_b.in(buf);
+        module_b.out(output);
+    }
 };
 
-
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-  mod_c c("c");
-  cout << "binding of models to parent model is completed\n";
-  return 0;
+    mod_c c("c");
+    cout << "binding of models to parent model is completed\n";
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,38 +35,37 @@
 
  *****************************************************************************/
 
-                /***************************************/
-                /* Main Filename:       main.cc        */
-                /***************************************/
-                /*                                     */
-                /*      7-bit bool = int + int         */
-                /*                                     */
-		/*	Max addition is 63 + 63	       */
-                /*                                     */
-                /***************************************/
+/***************************************/
+/* Main Filename:       main.cc        */
+/***************************************/
+/*                                     */
+/*      7-bit bool = int + int         */
+/*                                     */
+/*	Max addition is 63 + 63	       */
+/*                                     */
+/***************************************/
 
- 
-#include "datawidth.h" 	
-#include "stimgen.h" 	
+#include "datawidth.h"
+#include "stimgen.h"
 
 int sc_main(int ac, char *av[])
 {
 
-// Signal Instantiation
-  sc_signal<int>   	  in1 		("in1");
-  sc_signal<int>   	  in2		("in2");
-  sc_signal_bool_vector   result 	("result");   
-  sc_signal<bool> 	  ready 	("ready");     
+    // Signal Instantiation
+    sc_signal<int> in1("in1");
+    sc_signal<int> in2("in2");
+    sc_signal_bool_vector result("result");
+    sc_signal<bool> ready("ready");
 
-// Clock Instantiation
-  sc_clock clk( "clock", 10, SC_NS, 0.5, 0, SC_NS); 
+    // Clock Instantiation
+    sc_clock clk("clock", 10, SC_NS, 0.5, 0, SC_NS);
 
-// Process Instantiation
-  datawidth	D1 ("D1", clk, in1, in2, ready, result);
+    // Process Instantiation
+    datawidth D1("D1", clk, in1, in2, ready, result);
 
-  stimgen	T1 ("T1", clk, result, in1, in2, ready);
+    stimgen T1("T1", clk, result, in1, in2, ready);
 
-// Simulation Run Control
-  sc_start(); 
-  return 0;
+    // Simulation Run Control
+    sc_start();
+    return 0;
 }

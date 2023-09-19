@@ -21,15 +21,15 @@
 
 #include "SimpleLTInitiator2.h"
 #include "SimpleLTTarget2.h"
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  SimpleLTInitiator2 initiator("initiator");
-  SimpleLTTarget2 target("target");
+    SimpleLTInitiator2 initiator("initiator");
+    SimpleLTTarget2 target("target");
 
-  initiator.socket(target.socket);
+    initiator.socket(target.socket);
 
-  sc_core::sc_start();
-  sc_core::sc_stop();
+    sc_core::sc_start();
+    sc_core::sc_stop();
 
-  return 0;
+    return 0;
 }

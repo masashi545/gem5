@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  reset_stim.cpp -- 
+  reset_stim.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -41,82 +41,85 @@
 /******************************************************************************/
 /***************************   reset_stim Function       **********************/
 /******************************************************************************/
-bool_vector8 mem[LIMIT + 1];  // Stimulus input memory
+bool_vector8 mem[LIMIT + 1]; // Stimulus input memory
 
-SC_MODULE( RESET_STIM )
+SC_MODULE(RESET_STIM)
 {
-    SC_HAS_PROCESS( RESET_STIM );
+    SC_HAS_PROCESS(RESET_STIM);
 
     sc_in_clk clk;
 
-  /*** Input and Output Ports ***/
-  sc_signal<bool>& 	ready;
-  sc_signal<bool>& 	reset;
-  sc_signal<int>&	addr;
+    /*** Input and Output Ports ***/
+    sc_signal<bool> &ready;
+    sc_signal<bool> &reset;
+    sc_signal<int> &addr;
 
-  /*** Constructor ***/
-  RESET_STIM (   sc_module_name    	NAME,
-                      sc_clock&         TICK_N,
-                      sc_signal<bool>&  READY,
-                      sc_signal<bool>&  RESET,
-  		      sc_signal<int>&	ADDR   )
- 
-    : 
-		ready (READY),
-		reset (RESET),
-		addr  (ADDR)
+    /*** Constructor ***/
+    RESET_STIM(sc_module_name NAME,
+               sc_clock & TICK_N,
+               sc_signal<bool> & READY,
+               sc_signal<bool> & RESET,
+               sc_signal<int> & ADDR)
+
+        : ready(READY),
+          reset(RESET),
+          addr(ADDR)
 
     {
-	    clk (TICK_N);
-        SC_CTHREAD( entry, clk.neg() );
+        clk(TICK_N);
+        SC_CTHREAD(entry, clk.neg());
     }
- 
-  /*** Call to Process Functionality ***/
-  void entry();
- 
+
+    /*** Call to Process Functionality ***/
+    void entry();
 };
- 
-void
-RESET_STIM::entry()
+
+void RESET_STIM::entry()
 {
 
-/**  LOAD MEMORY WITH DATA AT TIME ZERO  **/
+    /**  LOAD MEMORY WITH DATA AT TIME ZERO  **/
 
-  ifstream 		stimulus ("add_chain_FUNC/add_chain.dat");
-  char			buffer[WIDTH+1];
+    ifstream stimulus("add_chain_FUNC/add_chain.dat");
+    char buffer[WIDTH + 1];
 
-  for(int i=1; i < LIMIT+1; i++) {
-      stimulus >> buffer;
-      mem[i] = buffer;  
-  }
-  
-  stimulus.close();
- 
-/**  INITIALIZE reset AND addr, THEN REMOVE RESET AFTER 2 CLOCK CYCLES  **/ 
+    for (int i = 1; i < LIMIT + 1; i++)
+    {
+        stimulus >> buffer;
+        mem[i] = buffer;
+    }
 
-  reset.write(0);	// reset = 0
-  addr.write(1);	// addr = 1
-  wait(2);
+    stimulus.close();
 
-  reset.write(1);	// reset = 1
+    /**  INITIALIZE reset AND addr, THEN REMOVE RESET AFTER 2 CLOCK CYCLES  **/
 
-/** WAIT FOR LAST MEMORY ADDRESS, THEN 3 CLOCKS, THEN STOP SIMULATION  **/
+    reset.write(0); // reset = 0
+    addr.write(1);  // addr = 1
+    wait(2);
 
-// do { wait(); } while (addr == LIMIT);
-  do { wait(); } while (!(addr == LIMIT));
-  wait(LATENCY);
-  do { wait(); } while (ready != 1);			
-  sc_stop();
-  halt();
+    reset.write(1); // reset = 1
+
+    /** WAIT FOR LAST MEMORY ADDRESS, THEN 3 CLOCKS, THEN STOP SIMULATION  **/
+
+    // do { wait(); } while (addr == LIMIT);
+    do
+    {
+        wait();
+    } while (!(addr == LIMIT));
+    wait(LATENCY);
+    do
+    {
+        wait();
+    } while (ready != 1);
+    sc_stop();
+    halt();
 }
 
-void
-f_RESET_STIM (   const char*        NAME,
-                       sc_clock&    TICK,
-                       sc_signal<bool>&  READY,
-                       sc_signal<bool>&  RESET,
-  		       sc_signal<int>&	 ADDR   )
+void f_RESET_STIM(const char *NAME,
+                  sc_clock &TICK,
+                  sc_signal<bool> &READY,
+                  sc_signal<bool> &RESET,
+                  sc_signal<int> &ADDR)
 
 {
-	new RESET_STIM(NAME, TICK, READY,RESET, ADDR);
+    new RESET_STIM(NAME, TICK, READY, RESET, ADDR);
 }

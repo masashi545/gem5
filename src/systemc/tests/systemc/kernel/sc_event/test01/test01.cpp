@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -33,10 +33,10 @@
       Name, Affiliation, Date: Bishnupriya Bhattacharya, Cadence Design Systems,
                                September 5, 2003
   Description of Modification: - set stop mode to SC_STOP_IMMEDIATE;
-			       - add more output printout to make sure that
-				 the immdiate event notification of "e_b" after 
-				 issuing sc_stop() does not make the 
-				 sensitive process "thread_a" run
+                   - add more output printout to make sure that
+                 the immdiate event notification of "e_b" after
+                 issuing sc_stop() does not make the
+                 sensitive process "thread_a" run
 
  *****************************************************************************/
 
@@ -44,7 +44,7 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_event e_a;
     sc_event e_b;
@@ -53,22 +53,25 @@ SC_MODULE( mod_a )
 
     void thread_a()
     {
-        wait( SC_ZERO_TIME );
+        wait(SC_ZERO_TIME);
         n = 0;
-        while( true ) {
-            n ++;
+        while (true)
+        {
+            n++;
             e_a.notify();
-            wait( e_b );
-	    cout << "Triggered by event e_b" << endl;
+            wait(e_b);
+            cout << "Triggered by event e_b" << endl;
         }
     }
 
     void thread_b()
     {
-        while( true ) {
-            wait( e_a );
+        while (true)
+        {
+            wait(e_a);
             cout << sc_delta_count() << " " << n << endl;
-            if( n == 20 ) {
+            if (n == 20)
+            {
                 cout << "Issuing sc_stop() " << endl;
                 sc_stop();
             }
@@ -76,17 +79,16 @@ SC_MODULE( mod_a )
         }
     }
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
-        SC_THREAD( thread_a );
-        SC_THREAD( thread_b );
+        SC_THREAD(thread_a);
+        SC_THREAD(thread_b);
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    mod_a a( "a" );
+    mod_a a("a");
 
     sc_set_stop_mode(SC_STOP_IMMEDIATE);
     sc_start();

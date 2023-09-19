@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star109218.cpp -- 
+  star109218.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,17 +37,14 @@
 
 #include "systemc.h"
 
-void
-star109218_imp(bool SignA, bool SignB, bool& SignC)
+void star109218_imp(bool SignA, bool SignB, bool &SignC)
 {
     sc_uint<1> tmpC;
     tmpC[0] = SignA ^ SignB;
     SignC = tmpC[0] ? 1 : 0;
 }
 
-
-void
-star109218_ref(bool SignA, bool SignB, bool& SignC)
+void star109218_ref(bool SignA, bool SignB, bool &SignC)
 {
     SignC = (SignA != SignB);
 }

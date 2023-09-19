@@ -30,97 +30,102 @@
 #include "sysc/kernel/sc_process_handle.h"
 #include "sysc/communication/sc_signal_resolved.h"
 
-namespace sc_core {
-
-// Note that we assume that two drivers driving the resolved signal to a 1 or
-// 0 is O.K. This might not be true for all technologies, but is certainly
-// true for CMOS, the predominant technology in use today.
-
-const sc_dt::sc_logic_value_t
-sc_logic_resolution_tbl[4][4] =
-{   //    0      1      Z      X
-    { sc_dt::Log_0, sc_dt::Log_X, sc_dt::Log_0, sc_dt::Log_X }, // 0
-    { sc_dt::Log_X, sc_dt::Log_1, sc_dt::Log_1, sc_dt::Log_X }, // 1
-    { sc_dt::Log_0, sc_dt::Log_1, sc_dt::Log_Z, sc_dt::Log_X }, // Z
-    { sc_dt::Log_X, sc_dt::Log_X, sc_dt::Log_X, sc_dt::Log_X }  // X
-};
-
-
-// ----------------------------------------------------------------------------
-//  FUNCTION : sc_logic_resolve
-//
-//  Resolution function for sc_dt::sc_logic.
-// ----------------------------------------------------------------------------
-
-// resolves sc_dt::sc_logic values and returns the resolved value
-
-static void
-sc_logic_resolve( sc_dt::sc_logic& result_,
-                  const std::vector<sc_dt::sc_logic>& values_ )
+namespace sc_core
 {
-    int sz = values_.size();
 
-    assert( sz != 0 );
+    // Note that we assume that two drivers driving the resolved signal to a 1 or
+    // 0 is O.K. This might not be true for all technologies, but is certainly
+    // true for CMOS, the predominant technology in use today.
 
-    if( sz == 1 ) {
-	result_ = values_[0];
-	return;
+    const sc_dt::sc_logic_value_t
+        sc_logic_resolution_tbl[4][4] =
+            {
+                //    0      1      Z      X
+                {sc_dt::Log_0, sc_dt::Log_X, sc_dt::Log_0, sc_dt::Log_X}, // 0
+                {sc_dt::Log_X, sc_dt::Log_1, sc_dt::Log_1, sc_dt::Log_X}, // 1
+                {sc_dt::Log_0, sc_dt::Log_1, sc_dt::Log_Z, sc_dt::Log_X}, // Z
+                {sc_dt::Log_X, sc_dt::Log_X, sc_dt::Log_X, sc_dt::Log_X}  // X
+    };
+
+    // ----------------------------------------------------------------------------
+    //  FUNCTION : sc_logic_resolve
+    //
+    //  Resolution function for sc_dt::sc_logic.
+    // ----------------------------------------------------------------------------
+
+    // resolves sc_dt::sc_logic values and returns the resolved value
+
+    static void
+    sc_logic_resolve(sc_dt::sc_logic &result_,
+                     const std::vector<sc_dt::sc_logic> &values_)
+    {
+        int sz = values_.size();
+
+        assert(sz != 0);
+
+        if (sz == 1)
+        {
+            result_ = values_[0];
+            return;
+        }
+
+        sc_dt::sc_logic_value_t res = values_[0].value();
+        for (int i = sz - 1; i > 0 && res != sc_dt::Log_X; --i)
+        {
+            res = sc_logic_resolution_tbl[res][values_[i].value()];
+        }
+        result_ = res;
     }
 
-    sc_dt::sc_logic_value_t res = values_[0].value();
-    for( int i = sz - 1; i > 0 && res != sc_dt::Log_X; -- i ) {
-       res = sc_logic_resolution_tbl[res][values_[i].value()];
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_signal_resolved
+    //
+    //  The resolved signal class.
+    // ----------------------------------------------------------------------------
+
+    // write the new value
+
+    void
+    sc_signal_resolved::write(const data_type &value_)
+    {
+        sc_process_b *cur_proc = sc_get_current_process_b();
+
+        bool value_changed = false;
+        bool found = false;
+
+        for (int i = m_proc_vec.size() - 1; i >= 0; --i)
+        {
+            if (cur_proc == m_proc_vec[i])
+            {
+                if (value_ != m_val_vec[i])
+                {
+                    m_val_vec[i] = value_;
+                    value_changed = true;
+                }
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            m_proc_vec.push_back(cur_proc);
+            m_val_vec.push_back(value_);
+            value_changed = true;
+        }
+
+        if (value_changed)
+        {
+            request_update();
+        }
     }
-    result_ = res;
-}
 
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_signal_resolved
-//
-//  The resolved signal class.
-// ----------------------------------------------------------------------------
-
-// write the new value
-
-void
-sc_signal_resolved::write( const data_type& value_ )
-{
-    sc_process_b* cur_proc = sc_get_current_process_b();
-
-    bool value_changed = false;
-    bool found = false;
-    
-    for( int i = m_proc_vec.size() - 1; i >= 0; -- i ) {
-	if( cur_proc == m_proc_vec[i] ) {
-	    if( value_ != m_val_vec[i] ) {
-		m_val_vec[i] = value_;
-		value_changed = true;
-	    }
-	    found = true;
-	    break;
-	}
+    void
+    sc_signal_resolved::update()
+    {
+        sc_logic_resolve(m_new_val, m_val_vec);
+        base_type::update();
     }
-    
-    if( ! found ) {
-	m_proc_vec.push_back( cur_proc );
-	m_val_vec.push_back( value_ );
-	value_changed = true;
-    }
-    
-    if( value_changed ) {
-	request_update();
-    }
-}
-
-
-void
-sc_signal_resolved::update()
-{
-    sc_logic_resolve( m_new_val, m_val_vec );
-    base_type::update();
-}
-
 
 } // namespace sc_core
 

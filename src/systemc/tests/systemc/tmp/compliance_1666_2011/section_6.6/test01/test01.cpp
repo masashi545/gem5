@@ -44,63 +44,64 @@ using std::endl;
 
 SC_MODULE(Top)
 {
-  SC_CTOR(Top)
-  {
-    SC_THREAD(gen);
-    SC_THREAD(T1);
-      h1 = sc_get_current_process_handle();
-    SC_THREAD(T2);
-      h2 = sc_get_current_process_handle();
-  }
-
-  sc_event ev;
-
-  sc_process_handle h1, h2;
-
-  void gen()
-  {
-    for (;;)
+    SC_CTOR(Top)
     {
-      wait(10, SC_NS);
-      ev.notify();
+        SC_THREAD(gen);
+        SC_THREAD(T1);
+        h1 = sc_get_current_process_handle();
+        SC_THREAD(T2);
+        h2 = sc_get_current_process_handle();
     }
-  }
 
-  void T1()
-  {
-    wait(25, SC_NS);
-    cout << "suspend: time = " << sc_time_stamp() << endl;
-    h2.suspend();
-    wait(20, SC_NS);
-    cout << "resume: time = " << sc_time_stamp() << endl;
-    h2.resume();
-    wait(20, SC_NS);
+    sc_event ev;
 
-    cout << "disable: time = " << sc_time_stamp() << endl;
-    h2.disable();
-    wait(20, SC_NS);
-    cout << "enable: time = " << sc_time_stamp() << endl;
-    h2.enable();
-    wait(20, SC_NS);
-    sc_stop();
-  }
+    sc_process_handle h1, h2;
 
-  void T2()
-  {
-    for (;;)
+    void gen()
     {
-      wait(ev);
-      cout << "T2: time = " << sc_time_stamp() << endl;
+        for (;;)
+        {
+            wait(10, SC_NS);
+            ev.notify();
+        }
     }
-  }
+
+    void T1()
+    {
+        wait(25, SC_NS);
+        cout << "suspend: time = " << sc_time_stamp() << endl;
+        h2.suspend();
+        wait(20, SC_NS);
+        cout << "resume: time = " << sc_time_stamp() << endl;
+        h2.resume();
+        wait(20, SC_NS);
+
+        cout << "disable: time = " << sc_time_stamp() << endl;
+        h2.disable();
+        wait(20, SC_NS);
+        cout << "enable: time = " << sc_time_stamp() << endl;
+        h2.enable();
+        wait(20, SC_NS);
+        sc_stop();
+    }
+
+    void T2()
+    {
+        for (;;)
+        {
+            wait(ev);
+            cout << "T2: time = " << sc_time_stamp() << endl;
+        }
+    }
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  Top top("top");
-  sc_core::sc_allow_process_control_corners = true;
-  sc_start();
+    Top top("top");
+    sc_core::sc_allow_process_control_corners = true;
+    sc_start();
 
-  cout << endl << "End Of Test" << endl;
-  return 0;
+    cout << endl
+         << "End Of Test" << endl;
+    return 0;
 }

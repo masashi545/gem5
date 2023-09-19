@@ -30,106 +30,107 @@
 
 SC_MODULE(module)
 {
-  sc_core::sc_in<bool> rst_in;
-  sc_core::sc_event    ev;
+    sc_core::sc_in<bool> rst_in;
+    sc_core::sc_event ev;
 
-  SC_CTOR(module)
-    : rst_in("rst_in")
-    , ev("ev")
-  {
-    SC_THREAD(thread0);
-      sensitive << ev;
-      async_reset_signal_is(rst_in,true);
-
-    SC_THREAD(thread1);
-      sensitive << ev;
-      async_reset_signal_is(rst_in,true);
-      dont_initialize();
-
-    SC_METHOD(method0);
-      sensitive << ev;
-      async_reset_signal_is(rst_in,true);
-
-    SC_METHOD(method1);
-      sensitive << ev;
-      async_reset_signal_is(rst_in,true);
-      dont_initialize();
-  }
-
-  void thread0() { do_thread(); }
-  void thread1() { do_thread(); }
-
-  void do_thread()
-  {
-    print( "reset state" );
-    wait();
-    print( "reset done" );
-
-    while(1) // main loop
+    SC_CTOR(module)
+        : rst_in("rst_in"), ev("ev")
     {
-      wait();
-      print( "continuing" );
+        SC_THREAD(thread0);
+        sensitive << ev;
+        async_reset_signal_is(rst_in, true);
+
+        SC_THREAD(thread1);
+        sensitive << ev;
+        async_reset_signal_is(rst_in, true);
+        dont_initialize();
+
+        SC_METHOD(method0);
+        sensitive << ev;
+        async_reset_signal_is(rst_in, true);
+
+        SC_METHOD(method1);
+        sensitive << ev;
+        async_reset_signal_is(rst_in, true);
+        dont_initialize();
     }
-  }
 
-  void method0() { do_method(); }
-  void method1() { do_method(); }
+    void thread0() { do_thread(); }
+    void thread1() { do_thread(); }
 
-  void do_method()
-  {
-    if( rst_in.read() ) {
-      print("reset state");
-    } else {
-      print("running");
+    void do_thread()
+    {
+        print("reset state");
+        wait();
+        print("reset done");
+
+        while (1) // main loop
+        {
+            wait();
+            print("continuing");
+        }
     }
-  }
 
-  void print(const char* msg)
-  {
-    using namespace sc_core;
-    using namespace std;
-    cout
-      << setw(6) << sc_time_stamp()
-      << " (" << sc_delta_count() << "): "
-      << sc_get_current_process_handle().name() << ": "
-      << msg
-      << endl;
-  }
+    void method0() { do_method(); }
+    void method1() { do_method(); }
+
+    void do_method()
+    {
+        if (rst_in.read())
+        {
+            print("reset state");
+        }
+        else
+        {
+            print("running");
+        }
+    }
+
+    void print(const char *msg)
+    {
+        using namespace sc_core;
+        using namespace std;
+        cout
+            << setw(6) << sc_time_stamp()
+            << " (" << sc_delta_count() << "): "
+            << sc_get_current_process_handle().name() << ": "
+            << msg
+            << endl;
+    }
 }; // SC_MODULE(module)
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  using namespace sc_core;
-  using namespace std;
+    using namespace sc_core;
+    using namespace std;
 
-  sc_signal<bool> rst_sig;
-  rst_sig.write(true);
+    sc_signal<bool> rst_sig;
+    rst_sig.write(true);
 
-  module top("top");
-  top.rst_in(rst_sig);
+    module top("top");
+    top.rst_in(rst_sig);
 
-  cout << "Starting simulation ... " << endl;
+    cout << "Starting simulation ... " << endl;
 
-  sc_start(10, SC_NS);
-  top.ev.notify(SC_ZERO_TIME);
-  sc_start(10, SC_NS);
+    sc_start(10, SC_NS);
+    top.ev.notify(SC_ZERO_TIME);
+    sc_start(10, SC_NS);
 
-  rst_sig.write(false); // releasing reset
+    rst_sig.write(false); // releasing reset
 
-  sc_start(10, SC_NS);
-  top.ev.notify(SC_ZERO_TIME);
-  sc_start(10, SC_NS);
-  top.ev.notify(SC_ZERO_TIME);
-  sc_start(10, SC_NS);
+    sc_start(10, SC_NS);
+    top.ev.notify(SC_ZERO_TIME);
+    sc_start(10, SC_NS);
+    top.ev.notify(SC_ZERO_TIME);
+    sc_start(10, SC_NS);
 
-  rst_sig.write(true);  // entering reset
+    rst_sig.write(true); // entering reset
 
-  sc_start(10, SC_NS);
-  top.ev.notify(SC_ZERO_TIME);
-  sc_start(10, SC_NS);
+    sc_start(10, SC_NS);
+    top.ev.notify(SC_ZERO_TIME);
+    sc_start(10, SC_NS);
 
-  cout << "... done." << endl;
-  sc_stop();
-  return 0;
+    cout << "... done." << endl;
+    sc_stop();
+    return 0;
 }
-

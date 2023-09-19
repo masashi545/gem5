@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  ts_buf.cpp -- 
+  ts_buf.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,19 +42,20 @@
 
 void ts_buf::entry()
 {
-  bool c;
-  bool bus_val;
-  sc_logic val;
+    bool c;
+    bool bus_val;
+    sc_logic val;
 
-  c = control.read();
+    c = control.read();
 
-  if (c == false) {
-    ts_out.write(sc_logic('Z'));
-  }
-  else {
-    bus_val = in.read(); 
-    val = bus_val; // automatic type conversion
-    ts_out.write(val);
-  }
+    if (c == false)
+    {
+        ts_out.write(sc_logic('Z'));
+    }
+    else
+    {
+        bus_val = in.read();
+        val = bus_val; // automatic type conversion
+        ts_out.write(val);
+    }
 } // end of entry function
-

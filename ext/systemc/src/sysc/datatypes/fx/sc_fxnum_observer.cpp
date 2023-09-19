@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  sc_fxnum_observer.cpp - 
+  sc_fxnum_observer.cpp -
 
   Original Author: Martin Janssen, Synopsys, Inc.
 
@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 // $Log: sc_fxnum_observer.cpp,v $
 // Revision 1.1.1.1  2006/12/15 20:20:04  acg
 // SystemC 2.3
@@ -47,28 +46,25 @@
 
 #include "sysc/datatypes/fx/sc_fxnum_observer.h"
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_fxnum_observer
-//
-//  Abstract base class for fixed-point types observers; arbitrary precision.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_fxnum_observer
+    //
+    //  Abstract base class for fixed-point types observers; arbitrary precision.
+    // ----------------------------------------------------------------------------
 
-sc_fxnum_observer* (*sc_fxnum_observer::default_observer) () = 0;
+    sc_fxnum_observer *(*sc_fxnum_observer::default_observer)() = 0;
 
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_fxnum_fast_observer
+    //
+    //  Abstract base class for fixed-point types observers; limited precision.
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_fxnum_fast_observer
-//
-//  Abstract base class for fixed-point types observers; limited precision.
-// ----------------------------------------------------------------------------
-
-sc_fxnum_fast_observer* (*sc_fxnum_fast_observer::default_observer) () = 0;
+    sc_fxnum_fast_observer *(*sc_fxnum_fast_observer::default_observer)() = 0;
 
 } // namespace sc_dt
-
 
 // Taf!

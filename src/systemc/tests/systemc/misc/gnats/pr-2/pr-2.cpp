@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-2.cpp -- 
+  pr-2.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,38 +37,36 @@
 
 #include "systemc.h"
 
-SC_MODULE( foo )
+SC_MODULE(foo)
 {
-    SC_HAS_PROCESS( foo );
+    SC_HAS_PROCESS(foo);
 
     sc_in_clk clk;
 
-    const sc_signal<bool>& a;
-    const sc_signal<bool>& b;
-          sc_signal<bool>& c;
+    const sc_signal<bool> &a;
+    const sc_signal<bool> &b;
+    sc_signal<bool> &c;
 
     sc_signed x;
     sc_unsigned y;
-//    sc_logic_vector z;
-//    sc_bool_vector v;
+    //    sc_logic_vector z;
+    //    sc_bool_vector v;
 
-    foo( sc_module_name name,
-         sc_clock& CLK,
-         const sc_signal<bool>& A,
-         const sc_signal<bool>& B,
-               sc_signal<bool>& C )
-        : 
-          a(A), b(B), c(C),
+    foo(sc_module_name name,
+        sc_clock & CLK,
+        const sc_signal<bool> &A,
+        const sc_signal<bool> &B,
+        sc_signal<bool> &C)
+        : a(A), b(B), c(C),
           x(13), y(15) // , z(8), v(11)
     {
-      clk(CLK);
-	  SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
 };
 
-void
-foo::entry()
+void foo::entry()
 {
     sc_signed x2(13);
     sc_unsigned y2(15);
@@ -77,7 +75,7 @@ foo::entry()
     y2 = y; // should have no converts here
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

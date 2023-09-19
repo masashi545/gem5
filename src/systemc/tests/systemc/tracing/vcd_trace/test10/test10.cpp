@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test10.cpp -- 
+  test10.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,71 +37,73 @@
 
 #include "systemc.h"
 
-SC_MODULE( proc1 )
+SC_MODULE(proc1)
 {
-  SC_HAS_PROCESS( proc1 );
+    SC_HAS_PROCESS(proc1);
 
-  sc_in<bool> clk;
+    sc_in<bool> clk;
 
-  enum Ttype {
-    OK,
-    NOTOK,
-    SOSO
-  };
+    enum Ttype
+    {
+        OK,
+        NOTOK,
+        SOSO
+    };
 
-  unsigned obj1;
+    unsigned obj1;
 
-  proc1( sc_module_name NAME,
-	 sc_signal<bool>& CLK )
-  {
-    clk(CLK);
-    SC_THREAD( entry );
-    sensitive << clk;
-    obj1 = OK;
-  }
+    proc1(sc_module_name NAME,
+          sc_signal<bool> & CLK)
+    {
+        clk(CLK);
+        SC_THREAD(entry);
+        sensitive << clk;
+        obj1 = OK;
+    }
 
-  void entry();
+    void entry();
 };
-  
-void proc1::entry() 
+
+void proc1::entry()
 {
-  wait();
-  while(true) {
-    obj1 = OK;
     wait();
-    obj1 = NOTOK;
-    wait();
-    obj1 = SOSO;
-    wait();
-  }
+    while (true)
+    {
+        obj1 = OK;
+        wait();
+        obj1 = NOTOK;
+        wait();
+        obj1 = SOSO;
+        wait();
+    }
 }
-  
 
 int sc_main(int ac, char *av[])
 {
-  sc_trace_file *tf;
-  sc_signal<bool> clock;
+    sc_trace_file *tf;
+    sc_signal<bool> clock;
 
-  char *enum_literals[4];
-  enum_literals[0] = "OK";
-  enum_literals[1] = "NOTOK";
-  enum_literals[2] = "SOSO";
-  enum_literals[3] = 0;
+    char *enum_literals[4];
+    enum_literals[0] = "OK";
+    enum_literals[1] = "NOTOK";
+    enum_literals[2] = "SOSO";
+    enum_literals[3] = 0;
 
-  proc1 P1("P1", clock);
+    proc1 P1("P1", clock);
 
-  tf = sc_create_vcd_trace_file("test10");
-  sc_trace(tf, P1.obj1, "Enum", (const char **) enum_literals);
-  sc_trace(tf, clock, "Clock");
+    tf = sc_create_vcd_trace_file("test10");
+    sc_trace(tf, P1.obj1, "Enum", (const char **)enum_literals);
+    sc_trace(tf, clock, "Clock");
 
-  clock.write(0);
-  sc_start(0, SC_NS);
-  for (int i = 0; i< 10; i++) {
-    clock.write(1);
-    sc_start(10, SC_NS);
     clock.write(0);
-    sc_start(10, SC_NS);
-  }
-  sc_close_vcd_trace_file( tf );
-  return 0;
+    sc_start(0, SC_NS);
+    for (int i = 0; i < 10; i++)
+    {
+        clock.write(1);
+        sc_start(10, SC_NS);
+        clock.write(0);
+        sc_start(10, SC_NS);
+    }
+    sc_close_vcd_trace_file(tf);
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-52.cpp -- 
+  pr-52.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,8 +38,8 @@
 #include "systemc.h"
 
 sc_signed
-pr_52( const sc_signed& x,
-       const sc_signed& y )
+pr_52(const sc_signed &x,
+      const sc_signed &y)
 {
     return (x + y + 4);
 }

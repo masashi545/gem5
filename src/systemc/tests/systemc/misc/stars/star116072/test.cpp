@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -45,10 +45,9 @@ where the last char in the line is a caro in my shell. It should be
 sc_bit(1).to_char() = 1
 */
 
-
 #include <systemc.h>
 
-int sc_main(int argc, char* arg[]) 
+int sc_main(int argc, char *arg[])
 {
     sc_report_handler::set_actions("/IEEE_Std_1666/deprecated", SC_DO_NOTHING);
     cout << "sc_bit(1).to_char() = " << sc_bit(1).to_char() << endl;

@@ -16,13 +16,13 @@
   permissions and limitations under the License.
 
  *****************************************************************************/
-    
+
 /*****************************************************************************
 
   test05.cpp -- Test using SC_FORK and SC_CJOIN macros.
 
   Original Author: Andy Goodrich, Forte Design Systems, 29 April 2004
-    
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -31,52 +31,52 @@
   changes you are making here.
 
       Name, Affiliation, Date:
-  Description of Modification:    
-    
+  Description of Modification:
+
  *****************************************************************************/
 
 #include "systemc.h"
 
 SC_MODULE(X)
 {
-	SC_CTOR(X)
-	{
-		SC_CTHREAD(cwaiting,m_clk.pos());
-	}
-	void cwaiting()
-	{
-		SC_FORK
-			sc_spawn( sc_bind(&X::sync, this, 3 ) ) ,
-			sc_spawn( sc_bind(&X::sync, this, 4 ) ) ,
-			sc_spawn( sc_bind(&X::sync, this, 5 ) ) ,
-			sc_spawn( sc_bind(&X::sync, this, 5 ) ) ,
-			sc_spawn( sc_bind(&X::sync, this, 7 ) ) ,
-			sc_spawn( sc_bind(&X::sync, this, 11 ) ) ,
-			sc_spawn( sc_bind(&X::sync, this, 21 ) ) 
-		SC_CJOIN
-		cout << sc_time_stamp() << ": clocked wait waking" << endl;
-	}
+    SC_CTOR(X)
+    {
+        SC_CTHREAD(cwaiting, m_clk.pos());
+    }
+    void cwaiting()
+    {
+        SC_FORK
+        sc_spawn(sc_bind(&X::sync, this, 3)),
+            sc_spawn(sc_bind(&X::sync, this, 4)),
+            sc_spawn(sc_bind(&X::sync, this, 5)),
+            sc_spawn(sc_bind(&X::sync, this, 5)),
+            sc_spawn(sc_bind(&X::sync, this, 7)),
+            sc_spawn(sc_bind(&X::sync, this, 11)),
+            sc_spawn(sc_bind(&X::sync, this, 21))
+                    SC_CJOIN
+                        cout
+                << sc_time_stamp() << ": clocked wait waking" << endl;
+    }
 
-	void sync(int context)
-	{
-		for ( int i = 0; i < context; i++ ) 
-		{
-			wait(m_clk.posedge_event());
-		}
-		cout << sc_time_stamp() << ": sync(" << context << ") terminating" << endl;
-	}
-	sc_in_clk m_clk;
+    void sync(int context)
+    {
+        for (int i = 0; i < context; i++)
+        {
+            wait(m_clk.posedge_event());
+        }
+        cout << sc_time_stamp() << ": sync(" << context << ") terminating" << endl;
+    }
+    sc_in_clk m_clk;
 };
 
-int sc_main( int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-	sc_clock clock;
-	X x("x");
-	x.m_clk(clock);
+    sc_clock clock;
+    X x("x");
+    x.m_clk(clock);
 
-	sc_start(1000, SC_NS);
+    sc_start(1000, SC_NS);
 
-	cout << "Program completed" << endl;
-	return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }
-

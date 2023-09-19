@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,28 +42,27 @@
 
 int sc_main(int ac, char *av[])
 {
-  sc_signal<bool> tx;
-  sc_signal<bool> wr;
-  sc_signal<int>  dout;
-  sc_signal<bool> two_stop_bits;
-  sc_clock clock("CLK", 10.0, SC_NS, 0.5, 0.0, SC_NS);
-  sc_trace_file *tf = sc_create_wif_trace_file("pct1");
+    sc_signal<bool> tx;
+    sc_signal<bool> wr;
+    sc_signal<int> dout;
+    sc_signal<bool> two_stop_bits;
+    sc_clock clock("CLK", 10.0, SC_NS, 0.5, 0.0, SC_NS);
+    sc_trace_file *tf = sc_create_wif_trace_file("pct1");
 
-  tx = true;
-  wr = true;
-  dout = 0;
+    tx = true;
+    wr = true;
+    dout = 0;
 
-  two_stop_bits = true;
-  sio_tx TX("Transmitter", clock, two_stop_bits, tx);
-  monitor MON("Monitor", clock, tx, dout, wr);
+    two_stop_bits = true;
+    sio_tx TX("Transmitter", clock, two_stop_bits, tx);
+    monitor MON("Monitor", clock, tx, dout, wr);
 
-  //  sc_trace(tf, clock.signal(), "Clock");
-  sc_trace(tf, tx, "Tx");
-  sc_trace(tf, dout, "dout");
-  sc_trace(tf, wr, "wr");
+    //  sc_trace(tf, clock.signal(), "Clock");
+    sc_trace(tf, tx, "Tx");
+    sc_trace(tf, dout, "dout");
+    sc_trace(tf, wr, "wr");
 
-  sc_start(500, SC_NS);
-  sc_close_wif_trace_file( tf );
-  return 0;
+    sc_start(500, SC_NS);
+    sc_close_wif_trace_file(tf);
+    return 0;
 }
-

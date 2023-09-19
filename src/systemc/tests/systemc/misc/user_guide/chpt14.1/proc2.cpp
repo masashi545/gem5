@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  proc2.cpp -- 
+  proc2.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,23 +42,29 @@
 
 void proc2::entry()
 {
-  int i;
+    int i;
 
-  data_ack.write(false);
-  wait();
-  
-  while (true) {
-    do { wait(); } while (data_ready != true);
-    i = data.read();
-    cout << "Proc2: Received data = " << i << " at time " << 
-      sc_time_stamp() << endl;
-    if (i > 12) {
-      sc_stop();
-    }
-    data_ack.write(true);
-    wait();
-    do { wait(); } while (data_ready != false);
     data_ack.write(false);
-  }
-} // end of entry function
+    wait();
 
+    while (true)
+    {
+        do
+        {
+            wait();
+        } while (data_ready != true);
+        i = data.read();
+        cout << "Proc2: Received data = " << i << " at time " << sc_time_stamp() << endl;
+        if (i > 12)
+        {
+            sc_stop();
+        }
+        data_ack.write(true);
+        wait();
+        do
+        {
+            wait();
+        } while (data_ready != false);
+        data_ack.write(false);
+    }
+} // end of entry function

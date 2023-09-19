@@ -39,45 +39,44 @@
 
 using sc_core::sc_vector;
 
-SC_MODULE( sub_module )
+SC_MODULE(sub_module)
 {
-  sc_in<bool> in;
-  SC_CTOR(sub_module) {}
+    sc_in<bool> in;
+    SC_CTOR(sub_module) {}
 };
 
-SC_MODULE( module )
+SC_MODULE(module)
 {
-  // vector of sub-modules
-  sc_vector< sub_module > m_sub_vec;
+    // vector of sub-modules
+    sc_vector<sub_module> m_sub_vec;
 
-  // vector of ports
-  sc_vector< sc_in<bool> > in_vec;
+    // vector of ports
+    sc_vector<sc_in<bool>> in_vec;
 
-  module( sc_core::sc_module_name, unsigned n_sub )
-    : m_sub_vec( "sub_modules", n_sub ) // set name prefix, and create sub-modules
-    // , in_vec()                       // use default constructor
-    // , in_vec( "in_vec" )             // set name prefix
-  {
-    // delayed initialisation of port vector
-    // here with default prefix sc_core::sc_gen_unique_name("vector")
-    in_vec.init( n_sub );
+    module(sc_core::sc_module_name, unsigned n_sub) :m_sub_vec("sub_modules", n_sub) // set name prefix, and create sub-modules
+                                                                                     // , in_vec()                       // use default constructor
+                                                                                     // , in_vec( "in_vec" )             // set name prefix
+    {
+        // delayed initialisation of port vector
+        // here with default prefix sc_core::sc_gen_unique_name("vector")
+        in_vec.init(n_sub);
 
-    // bind ports of sub-modules -- sc_assemble_vector
-    sc_assemble_vector( m_sub_vec, &sub_module::in ).bind( in_vec );
-  }
+        // bind ports of sub-modules -- sc_assemble_vector
+        sc_assemble_vector(m_sub_vec, &sub_module::in).bind(in_vec);
+    }
 };
 
-int sc_main(int , char* [])
+int sc_main(int, char *[])
 {
-  module m("dut", 4);
+    module m("dut", 4);
 
-  std::vector<sc_object*> children = m.get_child_objects();
+    std::vector<sc_object *> children = m.get_child_objects();
 
-  for (size_t i=0; i<children.size(); ++i )
-    cout << children[i]->name() << " - "
-         << children[i]->kind()
-         << endl;
+    for (size_t i = 0; i < children.size(); ++i)
+        cout << children[i]->name() << " - "
+             << children[i]->kind()
+             << endl;
 
-  cout << "Program completed" << endl;
-  return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }

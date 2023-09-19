@@ -18,11 +18,11 @@
  *****************************************************************************/
 
 /*****************************************************************************
- 
+
   speed.cpp -- Definition of the speedometer.
- 
+
   Original Author: Ali Dasdan, Synopsys, Inc.
- 
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -58,35 +58,35 @@
 // Find the elapsed_time between NUM_PULSES_FOR_SPEED pulses.
 void speed_mod::find_time_proc()
 {
-  elapsed_time = elapsed_time + 1;
+    elapsed_time = elapsed_time + 1;
 }
 
 // Compute speed.
-void
-speed_mod::read_speed_proc()
+void speed_mod::read_speed_proc()
 {
-  wait();
+    wait();
 
-  double speed = 0.0;
+    double speed = 0.0;
 
-  while (true) {
+    while (true)
+    {
 
-    // More than one pulse is needed to compute a distance and 
-    // consequently, speed. This function collects NUM_PULSES_FOR_SPEED
-    // pulses for that purpose.
-    AWAIT(NUM_PULSES_FOR_SPEED);
+        // More than one pulse is needed to compute a distance and
+        // consequently, speed. This function collects NUM_PULSES_FOR_SPEED
+        // pulses for that purpose.
+        AWAIT(NUM_PULSES_FOR_SPEED);
 
-    speed = DIST_BETWEEN_TWO_PULSES * PERIODS_PER_HOUR / elapsed_time;
+        speed = DIST_BETWEEN_TWO_PULSES * PERIODS_PER_HOUR / elapsed_time;
 
-    // Reset timer.
-    elapsed_time = 0;
+        // Reset timer.
+        elapsed_time = 0;
 
-    cout << "Current speed displayed = " 
-         << speed << " km/h @ " << sc_time_stamp() << endl;
-    cout << "Current speedometer angle = " 
-         << speed * MAX_ANGLE / MAX_SPEED 
-         << " degrees @ " << sc_time_stamp() << endl;
-  }
+        cout << "Current speed displayed = "
+             << speed << " km/h @ " << sc_time_stamp() << endl;
+        cout << "Current speedometer angle = "
+             << speed * MAX_ANGLE / MAX_SPEED
+             << " degrees @ " << sc_time_stamp() << endl;
+    }
 }
 
 // End of file

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stimulus.cpp -- 
+  stimulus.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-09
 
@@ -37,52 +37,54 @@
 
 #include "stimulus.h"
 
-void stimulus::entry() {
-  sc_bigint<4>    send_value1;
-  sc_biguint<5>   send_value2;
-  sc_bigint<6>    send_value3;
-  sc_biguint<7>   send_value4;
-  sc_biguint<8>   send_value5;
+void stimulus::entry()
+{
+    sc_bigint<4> send_value1;
+    sc_biguint<5> send_value2;
+    sc_bigint<6> send_value3;
+    sc_biguint<7> send_value4;
+    sc_biguint<8> send_value5;
 
-
-  // sending some reset values
-  reset.write(true);
-  out_valid.write(false);
-  send_value1 = 0;
-  send_value2 = 0;
-  send_value3 = 0;
-  send_value4 = 0;
-  send_value5 = 0;
-  out_stimulus1.write(0);
-  out_stimulus2.write(0);
-  out_stimulus3.write(0);
-  out_stimulus4.write(0);
-  out_stimulus5.write(0);
-  wait(3);
-  reset.write(false);
-  // sending normal mode values
-  while(true){
-    wait(20);
-    out_stimulus1.write( send_value1 );
-    out_stimulus2.write( send_value2 );
-    out_stimulus3.write( send_value3 );
-    out_stimulus4.write( send_value4 );
-    out_stimulus5.write( send_value5 );
-    out_valid.write( true );
-    cout << "Stimuli : " << send_value1 << " "
-	 << send_value2 << " "
-	 << send_value3 << " "
-	 << send_value4 << " "
-	 << send_value5 << " " << " at "
-         << sc_time_stamp() << endl;
-    send_value1 = send_value1+1;
-    send_value2 = send_value2+1;
-    send_value3 = send_value3+1;
-    send_value4 = send_value4+1;
-    send_value5 = send_value5+1;
-    wait();
-    out_valid.write( false );
-  }
+    // sending some reset values
+    reset.write(true);
+    out_valid.write(false);
+    send_value1 = 0;
+    send_value2 = 0;
+    send_value3 = 0;
+    send_value4 = 0;
+    send_value5 = 0;
+    out_stimulus1.write(0);
+    out_stimulus2.write(0);
+    out_stimulus3.write(0);
+    out_stimulus4.write(0);
+    out_stimulus5.write(0);
+    wait(3);
+    reset.write(false);
+    // sending normal mode values
+    while (true)
+    {
+        wait(20);
+        out_stimulus1.write(send_value1);
+        out_stimulus2.write(send_value2);
+        out_stimulus3.write(send_value3);
+        out_stimulus4.write(send_value4);
+        out_stimulus5.write(send_value5);
+        out_valid.write(true);
+        cout << "Stimuli : " << send_value1 << " "
+             << send_value2 << " "
+             << send_value3 << " "
+             << send_value4 << " "
+             << send_value5 << " "
+             << " at "
+             << sc_time_stamp() << endl;
+        send_value1 = send_value1 + 1;
+        send_value2 = send_value2 + 1;
+        send_value3 = send_value3 + 1;
+        send_value4 = send_value4 + 1;
+        send_value5 = send_value5 + 1;
+        wait();
+        out_valid.write(false);
+    }
 }
 
 // EOF

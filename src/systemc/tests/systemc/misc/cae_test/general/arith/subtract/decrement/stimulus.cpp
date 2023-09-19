@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stimulus.cpp -- 
+  stimulus.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-14
 
@@ -35,10 +35,10 @@
 
  *****************************************************************************/
 
-
 #include "stimulus.h"
 
-void stimulus::entry() {
+void stimulus::entry()
+{
 
     reset.write(true);
     wait();
@@ -50,17 +50,20 @@ void stimulus::entry() {
     tmp1 = 0;
     tmp2 = "0001";
 
-
-    while(true){
-       out_valid.write(true);    
-       out_value1.write(tmp1);
-       out_value2.write(tmp2);
-       cout << "Stimuli: " << tmp1 << " " << tmp2 << endl;
-       tmp1 = tmp1 + 1;
-       tmp2 = tmp2 + 1;
-       do { wait(); } while (in_ack==false);
-       out_valid.write(false);
-       wait();
+    while (true)
+    {
+        out_valid.write(true);
+        out_value1.write(tmp1);
+        out_value2.write(tmp2);
+        cout << "Stimuli: " << tmp1 << " " << tmp2 << endl;
+        tmp1 = tmp1 + 1;
+        tmp2 = tmp2 + 1;
+        do
+        {
+            wait();
+        } while (in_ack == false);
+        out_valid.write(false);
+        wait();
     }
 }
 // EOF

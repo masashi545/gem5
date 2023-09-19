@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test3.cpp -- 
+  test3.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,23 +36,27 @@
  *****************************************************************************/
 
 #include "test.h"
- 
-void t::entry() 
+
+void t::entry()
 {
-  wait();
-  while (1) {
-    if (i2 == 1)
-      continue; 
-    /* error: do { wait(); } while  transformation does not allow continue stmt
-       before it if no wait follows the do { wait(); } while  */
-    do { wait(); } while (cont1 == 0);
-    if (i2 == 1)
-      break;
-  }
-  wait();
+    wait();
+    while (1)
+    {
+        if (i2 == 1)
+            continue;
+        /* error: do { wait(); } while  transformation does not allow continue stmt
+           before it if no wait follows the do { wait(); } while  */
+        do
+        {
+            wait();
+        } while (cont1 == 0);
+        if (i2 == 1)
+            break;
+    }
+    wait();
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

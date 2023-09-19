@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,49 +38,65 @@
 #include "test.h"
 
 /* From Test Case 51.sc */
-void test::entry() 
+void test::entry()
 {
-  while (true) {
+    while (true)
+    {
 
-  do { wait(); } while  (cont1 == 0);
-  wait();
-  o1 = 0;
-  o2 = 0;
-  o3 = 0;
-  o4 = 0;
-  o5 = 0;
-  wait ();
-  if (i1 == 25) {
-        if (i2 == 15) {
-                  if (i3 == 5) {
-                        wait ();
-                  } else {
-                        if (i4 == 1) {
-                                wait ();
-                                o5 = 2;
-                        } else {
-                                do { wait(); } while  (cont2 != 8);
-                        }
-                  }
+        do
+        {
+            wait();
+        } while (cont1 == 0);
+        wait();
+        o1 = 0;
+        o2 = 0;
+        o3 = 0;
+        o4 = 0;
+        o5 = 0;
+        wait();
+        if (i1 == 25)
+        {
+            if (i2 == 15)
+            {
+                if (i3 == 5)
+                {
+                    wait();
+                }
+                else
+                {
+                    if (i4 == 1)
+                    {
+                        wait();
+                        o5 = 2;
+                    }
+                    else
+                    {
+                        do
+                        {
+                            wait();
+                        } while (cont2 != 8);
+                    }
+                }
                 o1 = 9;
                 o2 = 10;
-        } else {
+            }
+            else
+            {
                 wait();
                 wait();
+            }
+            o3 = 5;
+            o4 = 20;
+            wait();
+            wait();
         }
-        o3 = 5;
-        o4 = 20;
+        else
+        {
+            wait();
+        }
+        o5 = 6;
         wait();
         wait();
-  } else {
         wait();
-  }
-  o5 = 6;
-  wait ();
-  wait ();
-  wait ();
-
-
-  }
+    }
 }
-

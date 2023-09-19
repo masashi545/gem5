@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  datawidth.cpp -- 
+  datawidth.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,31 +35,34 @@
 
  *****************************************************************************/
 
-                /*******************************************/
-                /* Implementation Filename:  datawidth.cc  */
-                /*******************************************/
- 
+/*******************************************/
+/* Implementation Filename:  datawidth.cc  */
+/*******************************************/
+
 #include "datawidth.h"
- 
-void
-datawidth::entry()
+
+void datawidth::entry()
 {
-  sc_signed   tmp_a (in1_width);
-  sc_signed   tmp_b (in2_width);
-  sc_signed   tmp_result (result_width);
+    sc_signed tmp_a(in1_width);
+    sc_signed tmp_b(in2_width);
+    sc_signed tmp_result(result_width);
 
-  while (true) {
-    
-    // HANDSHAKING
-    do { wait(); } while (ready != 1);
+    while (true)
+    {
 
-    // COMPUTATION
-    tmp_a = in1.read();
-    tmp_b = in2.read();
-    tmp_result = tmp_a + tmp_b;
+        // HANDSHAKING
+        do
+        {
+            wait();
+        } while (ready != 1);
 
-    // WRITE OUTPUT
-    result.write(tmp_result);		// result = in1 + in2
-    wait();
-  }
+        // COMPUTATION
+        tmp_a = in1.read();
+        tmp_b = in2.read();
+        tmp_result = tmp_a + tmp_b;
+
+        // WRITE OUTPUT
+        result.write(tmp_result); // result = in1 + in2
+        wait();
+    }
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -43,21 +43,22 @@
 
 int sc_main(int ac, char *av[])
 {
-  sc_signal<bool> handshake ("HS");
-  sc_signal<bool> found;
-  sc_signal<char> stream ("ST");
+    sc_signal<bool> handshake("HS");
+    sc_signal<bool> found;
+    sc_signal<char> stream("ST");
 
-  sc_clock clk("Clock", 20, SC_NS, 0.5, 0.0, SC_NS);
+    sc_clock clk("Clock", 20, SC_NS, 0.5, 0.0, SC_NS);
 
-  counter cnt("COUNTER", clk, found);
-  fsm_recognizer fsm("Recog", clk, stream, handshake, found);
-  stimgen chargen("TESTB", clk, stream, handshake);
+    counter cnt("COUNTER", clk, found);
+    fsm_recognizer fsm("Recog", clk, stream, handshake, found);
+    stimgen chargen("TESTB", clk, stream, handshake);
 
-  int n;
-  if (ac == 2) n = atoi(av[1]);
-  else n = 6340;
-  sc_start(n, SC_NS);
-  cout << endl;
-  return 0;
+    int n;
+    if (ac == 2)
+        n = atoi(av[1]);
+    else
+        n = 6340;
+    sc_start(n, SC_NS);
+    cout << endl;
+    return 0;
 }
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  rgb.cpp -- 
+  rgb.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,47 +37,47 @@
 
 #include "rgb.h"
 
-ostream& 
-operator<<(ostream& os, struct rgb_t &r)
+ostream &
+operator<<(ostream &os, struct rgb_t &r)
 {
-  os << r.red << " " << r.green << " " << r.blue << endl;
-  return os;
+    os << r.red << " " << r.green << " " << r.blue << endl;
+    return os;
 }
 
-void sc_trace(sc_trace_file* tf,const rgb_t& s, const std::string& NAME) {
-  sc_trace(tf, s.red, NAME + ".red");
-  sc_trace(tf, s.green, NAME + ".green");
-  sc_trace(tf, s.blue, NAME + ".blue");
+void sc_trace(sc_trace_file *tf, const rgb_t &s, const std::string &NAME)
+{
+    sc_trace(tf, s.red, NAME + ".red");
+    sc_trace(tf, s.green, NAME + ".green");
+    sc_trace(tf, s.blue, NAME + ".blue");
 }
-
 
 void some_process::entry()
 {
-  rgb_t clin;
-  rgb_t clout;
-  
-  while(true) {
-    clin = color_in.read();
-    clout = clin;
-    clout.red >>= 1;
-    clout.green >>=2;
-    clout.blue <<= 1;
-    color_out.write(clout);
-    wait();
+    rgb_t clin;
+    rgb_t clout;
 
-  }
+    while (true)
+    {
+        clin = color_in.read();
+        clout = clin;
+        clout.red >>= 1;
+        clout.green >>= 2;
+        clout.blue <<= 1;
+        color_out.write(clout);
+        wait();
+    }
 }
 
-int sc_main(int ac, char* av[])
+int sc_main(int ac, char *av[])
 {
-  sc_fifo<rgb_t> in;
-  sc_fifo<rgb_t> out;
+    sc_fifo<rgb_t> in;
+    sc_fifo<rgb_t> out;
 
-  sc_clock clk("CLK");
+    sc_clock clk("CLK");
 
-  some_process foo("FOO", clk, in, out);
-  
-  sc_start(1000, SC_NS);
+    some_process foo("FOO", clk, in, out);
 
-  return 0;
+    sc_start(1000, SC_NS);
+
+    return 0;
 }

@@ -21,7 +21,7 @@
 
   test03 -- test for unsigned data values
 
-  Original Author: 
+  Original Author:
 
  *****************************************************************************/
 
@@ -37,35 +37,36 @@
 
 #include "systemc.h"
 
-int sc_main(int argc, char** argv) { 
-    sc_int<16> a, tmp; 
-    sc_bigint<16> biga, bigtmp; 
-	sc_biguint<6> bigu6;
-	sc_biguint<16> bigu16;
- 
-     a = 97; // 0b1100001 
-     biga = 97; 
-	 bigu6 = 97;
-  
-  tmp = a.range( 5,0 ); // results in 33 - 0b100001, not sign extended 
-   bigtmp = biga.range( 5,0 ); // results in 65505, sign extended 
-   cout << hex << tmp << " " << bigtmp << endl;
-    
-  tmp = biga.range( 5,0 ); // results in 33 - 0b100001, not sign extended 
-   bigtmp = a.range( 5,0 ); // results in 65505, sign extended 
-   cout << hex << tmp << " " << bigtmp << endl;
-    
-	cout << hex << a.range(5,0) << " " << biga.range(5,0) << endl;
+int sc_main(int argc, char **argv)
+{
+    sc_int<16> a, tmp;
+    sc_bigint<16> biga, bigtmp;
+    sc_biguint<6> bigu6;
+    sc_biguint<16> bigu16;
 
-	bigtmp = bigu6;
-	cout << hex << bigtmp << endl;
+    a = 97; // 0b1100001
+    biga = 97;
+    bigu6 = 97;
 
-	bigu16 = biga.range(5,0);
-	cout << bigu16 << endl;
+    tmp = a.range(5, 0);       // results in 33 - 0b100001, not sign extended
+    bigtmp = biga.range(5, 0); // results in 65505, sign extended
+    cout << hex << tmp << " " << bigtmp << endl;
 
-	bigu16 = a.range(5,0);
-	cout << hex << bigu16 << endl;
+    tmp = biga.range(5, 0); // results in 33 - 0b100001, not sign extended
+    bigtmp = a.range(5, 0); // results in 65505, sign extended
+    cout << hex << tmp << " " << bigtmp << endl;
 
-    sc_start(1, SC_NS); 
-    return 0; 
+    cout << hex << a.range(5, 0) << " " << biga.range(5, 0) << endl;
+
+    bigtmp = bigu6;
+    cout << hex << bigtmp << endl;
+
+    bigu16 = biga.range(5, 0);
+    cout << bigu16 << endl;
+
+    bigu16 = a.range(5, 0);
+    cout << hex << bigu16 << endl;
+
+    sc_start(1, SC_NS);
+    return 0;
 }

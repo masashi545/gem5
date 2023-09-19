@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -49,22 +49,22 @@
 
 #include <systemc.h>
 
-int sc_main(int, char**)
+int sc_main(int, char **)
 {
-  sc_int<32> i;
-  sc_uint<32> u;
-  sc_bigint<32> bi;
-  sc_biguint<32> bu;
-  sc_lv<32> lv;
-  sc_bv<32> bv;
-  int I = 42;
+    sc_int<32> i;
+    sc_uint<32> u;
+    sc_bigint<32> bi;
+    sc_biguint<32> bu;
+    sc_lv<32> lv;
+    sc_bv<32> bv;
+    int I = 42;
 
-  i.range(14,1) = I;
-  u.range(14,1) = I;
-  bi.range(14,1) = I;
-  bu.range(14,1) = I;
-  lv.range(14,1) = I; // ERROR
-  bv.range(14,1) = I; // ERROR
+    i.range(14, 1) = I;
+    u.range(14, 1) = I;
+    bi.range(14, 1) = I;
+    bu.range(14, 1) = I;
+    lv.range(14, 1) = I; // ERROR
+    bv.range(14, 1) = I; // ERROR
 
-  return 0;
+    return 0;
 }

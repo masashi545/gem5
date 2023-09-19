@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test06.cpp -- 
+  test06.cpp --
 
   Original Author: Ucar Aziz, Synopsys, Inc., 2002-02-15
                    Martin Janssen, Synopsys, Inc., 2002-02-15
@@ -40,21 +40,18 @@
 
 #include "systemc.h"
 
+SC_MODULE(mod_a){
 
-SC_MODULE( mod_a )
-{
+    mod_a(const std::string &m) : sc_module(m){end_module();
+}
+}
+;
 
-    mod_a(const std::string &m) : sc_module(m) 
-      { end_module(); }
-
-};
-
-
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     const std::string nm = "module_a";
-    mod_a a(nm );
-    cout<<a.name()<<endl;;      
+    mod_a a(nm);
+    cout << a.name() << endl;
+    ;
     return 0;
 }

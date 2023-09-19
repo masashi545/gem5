@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -45,77 +45,86 @@
 //	Date Created: 05 APR 99
 //
 
-
 #include "test.h"
- 
-void test::entry() 
+
+void test::entry()
 {
-  int i,j;
-  int a[10],b[10];
-   
+    int i, j;
+    int a[10], b[10];
 
-  do { wait(); } while  (cont1 == 0);
-  wait ();
+    do
+    {
+        wait();
+    } while (cont1 == 0);
+    wait();
 
-  i = 0;
-  wait ();
-  for (; i < 3; /*i++*/) {
+    i = 0;
+    wait();
+    for (; i < 3; /*i++*/)
+    {
         a[i] = 11;
         i += 2;
-	wait ();
-  }
- 
-  for (i=0; i < 3; i ++) {
+        wait();
+    }
+
+    for (i = 0; i < 3; i++)
+    {
         a[i] = 1;
-  }
- 
- for (i=0; i < 3;) {
+    }
+
+    for (i = 0; i < 3;)
+    {
         a[i] = 2;
         ++i;
-  }
- 
-  i = 0;
-  for (; i < 3; ) {
+    }
+
+    i = 0;
+    for (; i < 3;)
+    {
         a[i] = 3;
         i += 2;
-  }
- 
-  if (i) 
+    }
+
+    if (i)
         j = 1;
-  else 
+    else
         j = 3;
-  
-  wait();
-  for (; i < 5;++i) {
+
+    wait();
+    for (; i < 5; ++i)
+    {
         a[i] = 8;
-	wait();
-  }
-  if (i) 
+        wait();
+    }
+    if (i)
         i = 1;
-  else 
+    else
         j = 3;
-  i = 0;
-  for (; i < 3;++i) {
+    i = 0;
+    for (; i < 3; ++i)
+    {
         a[i] = 9;
-  }
- 
-  i = j;
-  if (j) {
+    }
+
+    i = j;
+    if (j)
+    {
         i = 0;
-        for (; i < 3;++i) {
-                a[i] = 10;
+        for (; i < 3; ++i)
+        {
+            a[i] = 10;
         }
-  }
- 
-  for (j = 0; j < 2; j++) {
+    }
+
+    for (j = 0; j < 2; j++)
+    {
         i = 0;
-        for (; i < 3;++i) {
-                a[i] = 11;
+        for (; i < 3; ++i)
+        {
+            a[i] = 11;
         }
         b[j] = i;
-  }
+    }
 
-  wait();
-
+    wait();
 }
- 

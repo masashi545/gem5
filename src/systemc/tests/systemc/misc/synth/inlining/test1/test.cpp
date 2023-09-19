@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,18 +38,17 @@
 #include "systemc.h"
 #include "define.h"
 #include "test.h"
- 
-int incr (int x, int y)
+
+int incr(int x, int y)
 {
-  return x + y;
+    return x + y;
 }
 
-
-void test::entry() 
+void test::entry()
 {
-  int i;
+    int i;
 
-  wait();
+    wait();
 
-  o1 = incr (i1.read(), i2.read());
+    o1 = incr(i1.read(), i2.read());
 }

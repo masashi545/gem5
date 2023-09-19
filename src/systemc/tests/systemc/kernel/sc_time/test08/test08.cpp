@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test08.cpp -- 
+  test08.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,11 +39,10 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_time t1( 1.2345, SC_NS );
-    sc_set_time_resolution( 10, SC_FS );
+    sc_time t1(1.2345, SC_NS);
+    sc_set_time_resolution(10, SC_FS);
     cout << t1;
 
     return 0;

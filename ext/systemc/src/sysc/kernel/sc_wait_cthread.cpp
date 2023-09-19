@@ -27,93 +27,116 @@
   CHANGE LOG AT THE END OF THE FILE
  *****************************************************************************/
 
-
-
 #include "sysc/kernel/sc_kernel_ids.h"
 #include "sysc/kernel/sc_cthread_process.h"
 #include "sysc/kernel/sc_simcontext_int.h"
 #include "sysc/kernel/sc_wait_cthread.h"
 #include "sysc/communication/sc_port.h"
 #include "sysc/kernel/sc_wait.h"
-namespace sc_core 
+namespace sc_core
 {
 
-// for SC_CTHREADs
+    // for SC_CTHREADs
 
-void
-halt( sc_simcontext* simc )
-{
-    sc_curr_proc_handle cpi = simc->get_curr_proc_info();
-    switch( cpi->kind ) {
-    case SC_CTHREAD_PROC_: {
-	RCAST<sc_cthread_handle>( cpi->process_handle )->wait_halt();
-	break;
+    void
+    halt(sc_simcontext *simc)
+    {
+        sc_curr_proc_handle cpi = simc->get_curr_proc_info();
+        switch (cpi->kind)
+        {
+        case SC_CTHREAD_PROC_:
+        {
+            RCAST<sc_cthread_handle>(cpi->process_handle)->wait_halt();
+            break;
+        }
+        default:
+            SC_REPORT_ERROR(SC_ID_HALT_NOT_ALLOWED_, 0);
+            break;
+        }
     }
-    default:
-	SC_REPORT_ERROR( SC_ID_HALT_NOT_ALLOWED_, 0 );
-	break;
+
+    void
+    wait(int n, sc_simcontext *simc)
+    {
+        sc_curr_proc_handle cpi = simc->get_curr_proc_info();
+        if (n <= 0)
+        {
+            char msg[BUFSIZ];
+            std::sprintf(msg, "n = %d", n);
+            SC_REPORT_ERROR(SC_ID_WAIT_N_INVALID_, msg);
+        }
+        switch (cpi->kind)
+        {
+        case SC_THREAD_PROC_:
+        case SC_CTHREAD_PROC_:
+            RCAST<sc_cthread_handle>(cpi->process_handle)->wait_cycles(n);
+            break;
+        default:
+            SC_REPORT_ERROR(SC_ID_WAIT_NOT_ALLOWED_, "\n        "
+                                                     "in SC_METHODs use next_trigger() instead");
+            break;
+        }
     }
-}
 
-
-void
-wait( int n, sc_simcontext* simc )
-{
-    sc_curr_proc_handle cpi = simc->get_curr_proc_info();
-    if( n <= 0 ) {
-	char msg[BUFSIZ];
-	std::sprintf( msg, "n = %d", n );
-	SC_REPORT_ERROR( SC_ID_WAIT_N_INVALID_, msg );
+    void
+    at_posedge(const sc_signal_in_if<bool> &s, sc_simcontext *simc)
+    {
+        if (s.read() == true)
+            do
+            {
+                wait(simc);
+            } while (s.read() == true);
+        do
+        {
+            wait(simc);
+        } while (s.read() == false);
     }
-    switch( cpi->kind ) {
-      case SC_THREAD_PROC_: 
-      case SC_CTHREAD_PROC_: 
-	RCAST<sc_cthread_handle>( cpi->process_handle )->wait_cycles( n );
-        break;
-      default:
-        SC_REPORT_ERROR( SC_ID_WAIT_NOT_ALLOWED_, "\n        "
-	                 "in SC_METHODs use next_trigger() instead" );
-        break;
+
+    void
+    at_posedge(const sc_signal_in_if<sc_dt::sc_logic> &s, sc_simcontext *simc)
+    {
+        if (s.read() == '1')
+            do
+            {
+                wait(simc);
+            } while (s.read() == '1');
+        do
+        {
+            wait(simc);
+        } while (s.read() == '0');
     }
-}
 
+    void
+    at_negedge(const sc_signal_in_if<bool> &s, sc_simcontext *simc)
+    {
+        if (s.read() == false)
+            do
+            {
+                wait(simc);
+            } while (s.read() == false);
+        do
+        {
+            wait(simc);
+        } while (s.read() == true);
+    }
 
-void
-at_posedge( const sc_signal_in_if<bool>& s, sc_simcontext* simc )
-{
-    if( s.read() == true ) 
-        do { wait(simc); } while ( s.read() == true );
-    do { wait(simc); } while ( s.read() == false );
-}
-
-void
-at_posedge( const sc_signal_in_if<sc_dt::sc_logic>& s, sc_simcontext* simc )
-{
-    if( s.read() == '1' ) 
-        do { wait(simc); } while ( s.read() == '1' );
-    do { wait(simc); } while ( s.read() == '0' );
-}
-
-void
-at_negedge( const sc_signal_in_if<bool>& s, sc_simcontext* simc )
-{
-    if( s.read() == false ) 
-        do { wait(simc); } while ( s.read() == false );
-    do { wait(simc); } while ( s.read() == true );
-}
-
-void
-at_negedge( const sc_signal_in_if<sc_dt::sc_logic>& s, sc_simcontext* simc )
-{
-    if( s.read() == '0' ) 
-        do { wait(simc); } while ( s.read() == '0' );
-    do { wait(simc); } while ( s.read() == '1' );
-}
-
+    void
+    at_negedge(const sc_signal_in_if<sc_dt::sc_logic> &s, sc_simcontext *simc)
+    {
+        if (s.read() == '0')
+            do
+            {
+                wait(simc);
+            } while (s.read() == '0');
+        do
+        {
+            wait(simc);
+        } while (s.read() == '1');
+    }
 
 } // namespace sc_core
 
-/* 
+/*
 $Log: sc_wait_cthread.cpp,v $
 Revision 1.6  2011/08/26 20:46:11  acg
  Andy Goodrich: moved the modification log to the end of the file to

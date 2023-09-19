@@ -48,41 +48,41 @@
 
 SC_MODULE(DUT)
 {
-	SC_CTOR(DUT) 
-	{
-		SC_METHOD(catcher);
-		sensitive << m_event;
-		dont_initialize();
-		SC_CTHREAD(thrower,m_clk.pos());
-	}
-	void catcher()
-	{
-		cout << sc_time_stamp() << " caught" << endl;
-	}
-	void thrower()
-	{
-		sc_time minus_four(-4.0, SC_NS);
-		wait(7);
-		for (;;)
-		{
-			wait();
-			cout << sc_time_stamp() << " throwing" << endl;
-			m_event.notify(minus_four);
-		}
-	}
-	sc_in<bool> m_clk;
-	sc_event    m_event;
+    SC_CTOR(DUT)
+    {
+        SC_METHOD(catcher);
+        sensitive << m_event;
+        dont_initialize();
+        SC_CTHREAD(thrower, m_clk.pos());
+    }
+    void catcher()
+    {
+        cout << sc_time_stamp() << " caught" << endl;
+    }
+    void thrower()
+    {
+        sc_time minus_four(-4.0, SC_NS);
+        wait(7);
+        for (;;)
+        {
+            wait();
+            cout << sc_time_stamp() << " throwing" << endl;
+            m_event.notify(minus_four);
+        }
+    }
+    sc_in<bool> m_clk;
+    sc_event m_event;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-	sc_clock        clock;
-	DUT             dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
 
-	dut.m_clk(clock);
+    dut.m_clk(clock);
 
-	sc_start(11, SC_NS);
+    sc_start(11, SC_NS);
 
-	cout << "Program completed" << endl;
-	return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }

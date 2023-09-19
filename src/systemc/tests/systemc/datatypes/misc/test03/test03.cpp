@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test03.cpp -- 
+  test03.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-03-19
 
@@ -40,30 +40,32 @@
 
 #include "systemc.h"
 
-void
-test_sc_length_param()
+void test_sc_length_param()
 {
     cout << "\n*** test_sc_length_param ***" << endl;
 
     sc_length_param a;
     cout << a << endl;
 
-    sc_length_param b( 5 );
+    sc_length_param b(5);
     cout << b << endl;
 
-    try {
-        sc_length_param c( -1 );
+    try
+    {
+        sc_length_param c(-1);
         cout << c << endl;
-    } catch( sc_report x ) {
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
 
-    sc_length_param d( b );
+    sc_length_param d(b);
     cout << d << endl;
 
     sc_dt::sc_without_context foo;
-    sc_length_param e( foo );
+    sc_length_param e(foo);
     cout << e << endl;
 
     e = b;
@@ -73,7 +75,7 @@ test_sc_length_param()
     cout << (e != b) << endl;
 
     cout << e.len() << endl;
-    e.len( 42 );
+    e.len(42);
     cout << e.len() << endl;
 
     cout << e.to_string() << endl;
@@ -83,32 +85,32 @@ test_sc_length_param()
     e.dump();
 }
 
-#define TEST_DEFAULT_CTOR(tp)                                                 \
-{                                                                             \
-    cout << "\n" << #tp << endl;                                              \
-                                                                              \
-    tp a;                                                                     \
-    cout << a.length() << endl;                                               \
-                                                                              \
-    sc_length_context con1( sc_length_param( 5 ) );                           \
-    tp b;                                                                     \
-    cout << b.length() << endl;                                               \
-                                                                              \
-    sc_length_context con2( sc_length_param( 42 ) );                          \
-    tp c;                                                                     \
-    cout << c.length() << endl;                                               \
-                                                                              \
-    con2.end();                                                               \
-    tp d;                                                                     \
-    cout << d.length() << endl;                                               \
-                                                                              \
-    con1.end();                                                               \
-    tp e;                                                                     \
-    cout << e.length() << endl;                                               \
-}
+#define TEST_DEFAULT_CTOR(tp)                        \
+    {                                                \
+        cout << "\n"                                 \
+             << #tp << endl;                         \
+                                                     \
+        tp a;                                        \
+        cout << a.length() << endl;                  \
+                                                     \
+        sc_length_context con1(sc_length_param(5));  \
+        tp b;                                        \
+        cout << b.length() << endl;                  \
+                                                     \
+        sc_length_context con2(sc_length_param(42)); \
+        tp c;                                        \
+        cout << c.length() << endl;                  \
+                                                     \
+        con2.end();                                  \
+        tp d;                                        \
+        cout << d.length() << endl;                  \
+                                                     \
+        con1.end();                                  \
+        tp e;                                        \
+        cout << e.length() << endl;                  \
+    }
 
-void
-test_default_ctors()
+void test_default_ctors()
 {
     cout << "\n*** test_default_ctors ***" << endl;
 
@@ -121,8 +123,7 @@ test_default_ctors()
     TEST_DEFAULT_CTOR(sc_unsigned);
 }
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     test_sc_length_param();
     test_default_ctors();

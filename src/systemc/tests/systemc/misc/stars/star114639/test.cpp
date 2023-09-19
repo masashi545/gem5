@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,13 +37,12 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_signal <sc_lv<4> > tmp;
+    sc_signal<sc_lv<4>> tmp;
 
-    sc_clock clk( "clk" );
-    sc_start( 100, SC_NS );
+    sc_clock clk("clk");
+    sc_start(100, SC_NS);
 
     return 0;
 }

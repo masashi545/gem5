@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  a2901_edge.cpp -- 
+  a2901_edge.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,45 +37,50 @@
 
 #include "a2901_edge.h"
 
-
-void
-a2901_edge::entry()
+void a2901_edge::entry()
 {
-    i86 = I.read().range(8,6);
-    i87 = I.read().range(8,7);
-    q31 = Q.read().range(3,1);
-    q20 = Q.read().range(2,0);
-    f31 = F.read().range(3,1);
+    i86 = I.read().range(8, 6);
+    i87 = I.read().range(8, 7);
+    q31 = Q.read().range(3, 1);
+    q20 = Q.read().range(2, 0);
+    f31 = F.read().range(3, 1);
 
-    switch ((int)i87) {
+    switch ((int)i87)
+    {
     case 0:
-	RAM[Badd.read()] = RAM[Badd.read()];
-	break;
+        RAM[Badd.read()] = RAM[Badd.read()];
+        break;
     case 1:
-	RAM[Badd.read()] = F.read();
-	break;
+        RAM[Badd.read()] = F.read();
+        break;
     case 2:
-	RAM[Badd.read()] = (RAM3.read(),f31);
-	break;
+        RAM[Badd.read()] = (RAM3.read(), f31);
+        break;
     case 3:
-	RAM[Badd.read()] = (f20, RAM0.read());
-	break;
+        RAM[Badd.read()] = (f20, RAM0.read());
+        break;
     }
-      
+
 #if SUN_HAS_FIXED_THIS_BUG_IN_SC62
-    Q.write( (i86 == 0x0) ? F.read() :
-	     (i86 == 0x4) ? sc_uint<4>((Q3.read(),q31)) :
-	     (i86 == 0x6) ? sc_uint<4>((q20,Q0.read())) :
-	     Q.read());
+    Q.write((i86 == 0x0) ? F.read() : (i86 == 0x4) ? sc_uint<4>((Q3.read(), q31))
+                                  : (i86 == 0x6)   ? sc_uint<4>((q20, Q0.read()))
+                                                   : Q.read());
 #else
-    if( i86 == 0x0 ) {
-        Q.write( F.read() );
-    } else if( i86 == 0x4 ) {
-        Q.write( ( Q3.read(), q31 ) );
-    } else if( i86 == 0x6 ) {
-        Q.write( ( q20, Q0.read() ) );
-    } else {
-        Q.write( Q.read() );
+    if (i86 == 0x0)
+    {
+        Q.write(F.read());
+    }
+    else if (i86 == 0x4)
+    {
+        Q.write((Q3.read(), q31));
+    }
+    else if (i86 == 0x6)
+    {
+        Q.write((q20, Q0.read()));
+    }
+    else
+    {
+        Q.write(Q.read());
     }
 #endif
 }

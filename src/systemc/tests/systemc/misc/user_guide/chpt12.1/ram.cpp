@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  ram.cpp -- 
+  ram.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -44,17 +44,19 @@ extern int global_mem[];
 
 void ram::entry()
 {
-  int address;
+    int address;
 
-  if (cs.read() == true) { // Block selected
-    address = addr.read().to_int();
-    if (we.read() == true) { // Write operation
-      global_mem[address] = datain.read().to_int();
+    if (cs.read() == true)
+    { // Block selected
+        address = addr.read().to_int();
+        if (we.read() == true)
+        { // Write operation
+            global_mem[address] = datain.read().to_int();
+        }
+        else
+        { // Read operation
+            dataout.write(global_mem[address]);
+        }
     }
-    else { // Read operation
-      dataout.write(global_mem[address]);
-    }
-  }
-  // else block not selected
+    // else block not selected
 } // end of entry function
-

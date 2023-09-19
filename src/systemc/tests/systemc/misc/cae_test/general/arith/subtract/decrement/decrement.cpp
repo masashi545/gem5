@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  decrement.cpp -- 
+  decrement.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-14
 
@@ -35,58 +35,62 @@
 
  *****************************************************************************/
 
-
 #include "decrement.h"
 
-void decrement::entry(){
-  
-  #define ONE 1
-  const int       eins = 1;
-  int             tmp1;
-  sc_bigint<4>    tmp2;
+void decrement::entry()
+{
 
-  // reset_loop
-  if (reset.read() == true) {
-    out_valid.write(false);
-    out_ack.write(false);
-    wait();
-  } else wait();
+#define ONE 1
+    const int eins = 1;
+    int tmp1;
+    sc_bigint<4> tmp2;
 
-  //
-  // main loop
-  //
-    
- while(1) {
-    while(in_valid.read()==false) wait();
-    wait();
+    // reset_loop
+    if (reset.read() == true)
+    {
+        out_valid.write(false);
+        out_ack.write(false);
+        wait();
+    }
+    else
+        wait();
 
-    //reading the inputs
-    tmp1 = in_value1.read();
-    tmp2 = in_value2.read();
+    //
+    // main loop
+    //
 
-    //execute simple operations
-    tmp1 = tmp1 - 1;
-    tmp1 = tmp1 - ONE;
-    tmp1 = tmp1 - eins;
-    tmp1--;
-    tmp2 = tmp2 - 1;
-    tmp2 = tmp2 - ONE;
-    tmp2 = tmp2 - eins;
-    tmp2--;
+    while (1)
+    {
+        while (in_valid.read() == false)
+            wait();
+        wait();
 
-    out_ack.write(true);
+        // reading the inputs
+        tmp1 = in_value1.read();
+        tmp2 = in_value2.read();
 
-    // write outputs
-    out_value1.write(tmp1);
-    out_value2.write(tmp2);
+        // execute simple operations
+        tmp1 = tmp1 - 1;
+        tmp1 = tmp1 - ONE;
+        tmp1 = tmp1 - eins;
+        tmp1--;
+        tmp2 = tmp2 - 1;
+        tmp2 = tmp2 - ONE;
+        tmp2 = tmp2 - eins;
+        tmp2--;
 
-    out_valid.write(true);
-    wait();
-    out_ack.write(false);
-    out_valid.write(false);
-    wait();
-  }
+        out_ack.write(true);
+
+        // write outputs
+        out_value1.write(tmp1);
+        out_value2.write(tmp2);
+
+        out_valid.write(true);
+        wait();
+        out_ack.write(false);
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test6.cpp -- 
+  test6.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,20 +36,22 @@
  *****************************************************************************/
 
 #include "test1.h"
- 
-void t::a() 
-{
-  do { wait(); } while (cont1 == 1);
 
+void t::a()
+{
+    do
+    {
+        wait();
+    } while (cont1 == 1);
 }
 
-void t::entry() 
+void t::entry()
 {
-  a();
-  wait();
+    a();
+    wait();
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

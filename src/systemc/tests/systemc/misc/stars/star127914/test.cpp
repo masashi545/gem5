@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,7 +37,7 @@
 
 /*
 When I do an  sc_biguint + sc_int  addition, then the
-code is compiled fine but links fails because the 
+code is compiled fine but links fails because the
 operator was never defined.
 
 This happens with SystemC 1.0.2 on Solaris with both
@@ -46,17 +46,17 @@ gcc and Sun SC compiler.
 
 #include <systemc.h>
 
-int sc_main(int, char**)
+int sc_main(int, char **)
 {
-  sc_int<8> i8;
-  sc_biguint<8> bu8;
+    sc_int<8> i8;
+    sc_biguint<8> bu8;
 
-  i8=2;
-  bu8=3;
-  bu8 = bu8 + i8;
-  cout << "sum is " << bu8 << "\n";
+    i8 = 2;
+    bu8 = 3;
+    bu8 = bu8 + i8;
+    cout << "sum is " << bu8 << "\n";
 
-  return 0;
+    return 0;
 }
 
 /*

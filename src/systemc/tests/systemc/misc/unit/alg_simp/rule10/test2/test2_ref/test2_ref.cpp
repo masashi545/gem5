@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test2_ref.cpp -- 
+  test2_ref.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 

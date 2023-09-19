@@ -29,21 +29,21 @@
 SC_MODULE(mod)
 {
     sc_in<bool> p;
-    SC_CTOR(mod){}
+    SC_CTOR(mod) {}
 };
 
-int sc_main(int,char*[])
+int sc_main(int, char *[])
 {
     typedef sc_vector<mod> module_vec;
-    typedef sc_vector_assembly<mod,sc_in<bool> > module_port_vec;
+    typedef sc_vector_assembly<mod, sc_in<bool>> module_port_vec;
 
-    module_vec mv("sigs",5);
+    module_vec mv("sigs", 5);
     module_vec::const_iterator citr = mv.begin();
-    module_vec::iterator       itr = mv.begin();
+    module_vec::iterator itr = mv.begin();
 
     module_port_vec mpv = sc_assemble_vector(mv, &mod::p);
     module_port_vec::const_iterator cpitr = mpv.cbegin();
-    module_port_vec::iterator       pitr  = mpv.begin();
+    module_port_vec::iterator pitr = mpv.begin();
 
     sc_assert(itr == citr);
     sc_assert(citr == itr);

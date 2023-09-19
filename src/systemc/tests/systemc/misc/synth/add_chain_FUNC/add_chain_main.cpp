@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  add_chain_main.cpp -- 
+  add_chain_main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -55,14 +55,13 @@
 
 #include "common.h"
 #include "add_chain.h"
-#include "add_chain_tb.h" 	/** Definition of testbench Structure **/
+#include "add_chain_tb.h" /** Definition of testbench Structure **/
 
-int
-sc_main(int ac, char *av[])
+int sc_main(int ac, char *av[])
 {
-  sc_clock clk( "CLOCK", 20, SC_NS, 0.5, 10, SC_NS); // Clock function
-  testbench tb1("TB1", clk );	// Testbench Instance
-  sc_start();	 // Simulation runs forever 
-					 // due to negative value
-  return 0;
+    sc_clock clk("CLOCK", 20, SC_NS, 0.5, 10, SC_NS); // Clock function
+    testbench tb1("TB1", clk);                        // Testbench Instance
+    sc_start();                                       // Simulation runs forever
+                // due to negative value
+    return 0;
 }

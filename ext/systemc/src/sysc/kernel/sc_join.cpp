@@ -26,7 +26,6 @@
  CHANGE LOG APPEARS AT THE END OF THE FILE
  *****************************************************************************/
 
-
 #include <cassert>
 #include <cstdlib>
 #include <cstddef>
@@ -38,80 +37,80 @@
 #include "sysc/kernel/sc_thread_process.h"
 #include "sysc/kernel/sc_join.h"
 
-namespace sc_core {
-
-//------------------------------------------------------------------------------
-//"sc_join::sc_join"
-//
-// This is the object instance constructor for this class.
-//------------------------------------------------------------------------------
-sc_join::sc_join()
-  : m_join_event( (std::string(SC_KERNEL_EVENT_PREFIX)+"_join_event").c_str() )
-  , m_threads_n(0)
-{}
-
-//------------------------------------------------------------------------------
-//"sc_join::add_process - sc_process_b*"
-//
-// This method adds a process to this join object instance. This consists of
-// incrementing the count of processes in the join process and adding this 
-// object instance to the supplied thread's monitoring queue.
-//     process_p -> thread to be monitored.
-//------------------------------------------------------------------------------
-void sc_join::add_process( sc_process_b* process_p )
+namespace sc_core
 {
-    sc_thread_handle handle = DCAST<sc_thread_handle>(process_p);
-    assert( handle != 0 );
-    m_threads_n++;
-    handle->add_monitor( this );
-}
 
-
-//------------------------------------------------------------------------------
-//"sc_join::add_process - sc_process_handle"
-//
-// This method adds a process to this join object instance. This consists of
-// incrementing the count of processes in the join process and adding this 
-// object instance to the supplied thread's monitoring queue.
-//     process_h = handle for process to be monitored.
-//------------------------------------------------------------------------------
-void sc_join::add_process( sc_process_handle process_h )
-{
-    sc_thread_handle thread_p; // Thread within process_h.
-
-    thread_p = process_h.operator sc_thread_handle();
-    if ( thread_p )
+    //------------------------------------------------------------------------------
+    //"sc_join::sc_join"
+    //
+    // This is the object instance constructor for this class.
+    //------------------------------------------------------------------------------
+    sc_join::sc_join()
+        : m_join_event((std::string(SC_KERNEL_EVENT_PREFIX) + "_join_event").c_str()), m_threads_n(0)
     {
+    }
+
+    //------------------------------------------------------------------------------
+    //"sc_join::add_process - sc_process_b*"
+    //
+    // This method adds a process to this join object instance. This consists of
+    // incrementing the count of processes in the join process and adding this
+    // object instance to the supplied thread's monitoring queue.
+    //     process_p -> thread to be monitored.
+    //------------------------------------------------------------------------------
+    void sc_join::add_process(sc_process_b *process_p)
+    {
+        sc_thread_handle handle = DCAST<sc_thread_handle>(process_p);
+        assert(handle != 0);
         m_threads_n++;
-        thread_p->add_monitor( this );
+        handle->add_monitor(this);
     }
-    else
-    {
-        SC_REPORT_ERROR( SC_ID_JOIN_ON_METHOD_HANDLE_, 0 ); 
-    }
-}
 
-
-//------------------------------------------------------------------------------
-//"sc_join::signal"
-//
-// This virtual method is called when a process being monitored by this object
-// instance sends a signal. If the signal type is spm_exit and the count of 
-// threads that we are waiting to terminate on goes to zero we fire our join 
-// event.
-//     thread_p -> thread that is signalling.
-//     type     =  type of signal being sent.
-//------------------------------------------------------------------------------
-void sc_join::signal(sc_thread_handle thread_p, int type)
-{
-    switch ( type )
+    //------------------------------------------------------------------------------
+    //"sc_join::add_process - sc_process_handle"
+    //
+    // This method adds a process to this join object instance. This consists of
+    // incrementing the count of processes in the join process and adding this
+    // object instance to the supplied thread's monitoring queue.
+    //     process_h = handle for process to be monitored.
+    //------------------------------------------------------------------------------
+    void sc_join::add_process(sc_process_handle process_h)
     {
-      case sc_process_monitor::spm_exit:
-        thread_p->remove_monitor(this);
-        if ( --m_threads_n == 0 ) m_join_event.notify();
-        break;
+        sc_thread_handle thread_p; // Thread within process_h.
+
+        thread_p = process_h.operator sc_thread_handle();
+        if (thread_p)
+        {
+            m_threads_n++;
+            thread_p->add_monitor(this);
+        }
+        else
+        {
+            SC_REPORT_ERROR(SC_ID_JOIN_ON_METHOD_HANDLE_, 0);
+        }
     }
-}
+
+    //------------------------------------------------------------------------------
+    //"sc_join::signal"
+    //
+    // This virtual method is called when a process being monitored by this object
+    // instance sends a signal. If the signal type is spm_exit and the count of
+    // threads that we are waiting to terminate on goes to zero we fire our join
+    // event.
+    //     thread_p -> thread that is signalling.
+    //     type     =  type of signal being sent.
+    //------------------------------------------------------------------------------
+    void sc_join::signal(sc_thread_handle thread_p, int type)
+    {
+        switch (type)
+        {
+        case sc_process_monitor::spm_exit:
+            thread_p->remove_monitor(this);
+            if (--m_threads_n == 0)
+                m_join_event.notify();
+            break;
+        }
+    }
 
 } // namespace sc_core
 

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  bubble.cpp -- 
+  bubble.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,16 +37,15 @@
 
 #include "display.h"
 #include "stim.h"
-#include "bubble.h" 	
+#include "bubble.h"
 #include "tb.h"
 
-int
-sc_main(int ac, char *av[])
+int sc_main(int ac, char *av[])
 {
-  sc_clock clk( "clk", 20, SC_NS, 0.5, 0, SC_NS, false); // Clock function
+    sc_clock clk("clk", 20, SC_NS, 0.5, 0, SC_NS, false); // Clock function
 
-  TESTBENCH tb("TB", clk );
+    TESTBENCH tb("TB", clk);
 
-  sc_start(); 
-  return 0;
+    sc_start();
+    return 0;
 }

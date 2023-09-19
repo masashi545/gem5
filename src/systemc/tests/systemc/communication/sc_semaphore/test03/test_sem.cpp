@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test_sem.cpp -- 
+  test_sem.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,37 +37,37 @@
 
 #include "test_sem.h"
 
-TestSem::TestSem( sc_module_name )
-        :sem_1(5)
+TestSem::TestSem(sc_module_name)
+    : sem_1(5)
 {
-	SC_THREAD(body_1);
-	sensitive << clk.pos();
+    SC_THREAD(body_1);
+    sensitive << clk.pos();
     SC_THREAD(body_2);
-	sensitive << clk.pos();
+    sensitive << clk.pos();
 }
 
 void TestSem::body_1()
 {
-    unsigned int loop_counter=0;
+    unsigned int loop_counter = 0;
     char buf[BUFSIZ];
-    
-    while (loop_counter++<10 && !sem_1.wait())
+
+    while (loop_counter++ < 10 && !sem_1.wait())
     {
         sprintf(buf, "time %f => thread1 : took semaphore %d times\n",
                 sc_time_stamp().to_double(), loop_counter);
         cout << buf << flush;
-}
+    }
 
     sprintf(buf, "time %f => thread1 : value of semaphore = %d\n",
             sc_time_stamp().to_double(), sem_1.get_value());
     cout << buf << flush;
-    
+
     sc_stop();
 }
 
 void TestSem::body_2()
 {
-    unsigned int loop_counter=0;
+    unsigned int loop_counter = 0;
     char buf[BUFSIZ];
 
     do
@@ -77,8 +77,7 @@ void TestSem::body_2()
         sprintf(buf, "time %f => thread2 : posted semaphore 1\n",
                 sc_time_stamp().to_double());
         cout << buf << flush;
-    }
-    while (loop_counter++ < 5);
+    } while (loop_counter++ < 5);
 
     wait(100);
 }

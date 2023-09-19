@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  balancing.cpp -- 
+  balancing.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-22
 
@@ -35,101 +35,120 @@
 
  *****************************************************************************/
 
-
 #include "balancing.h"
 
-void balancing::entry(){
+void balancing::entry()
+{
 
-  sc_biguint<4>   tmp1;
-  sc_biguint<4>   tmp2;
-  sc_biguint<4>   tmp3;
-  sc_unsigned     out_tmp2(12);
-  sc_unsigned     out_tmp3(12);
+    sc_biguint<4> tmp1;
+    sc_biguint<4> tmp2;
+    sc_biguint<4> tmp3;
+    sc_unsigned out_tmp2(12);
+    sc_unsigned out_tmp3(12);
 
-  // reset_loop
-    if (reset.read() == true) {
-      out_value1.write(0);
-      out_value2.write(0);
-      out_value3.write(0);
-      out_valid1.write(false);
-      out_valid2.write(false);
-      out_valid3.write(false);
-      wait();
-    } else wait();
+    // reset_loop
+    if (reset.read() == true)
+    {
+        out_value1.write(0);
+        out_value2.write(0);
+        out_value3.write(0);
+        out_valid1.write(false);
+        out_valid2.write(false);
+        out_valid3.write(false);
+        wait();
+    }
+    else
+        wait();
 
-  //
-  // main loop
-  //
-  while(1) {
-    do { wait(); } while  (in_valid == false);
+    //
+    // main loop
+    //
+    while (1)
+    {
+        do
+        {
+            wait();
+        } while (in_valid == false);
 
-    //reading inputs
-    tmp1 = in_value1.read();
+        // reading inputs
+        tmp1 = in_value1.read();
 
-    //easy, just a bunch of different waits
-    out_valid1.write(true);
-    if (tmp1 == 4) {
-      wait();
-      wait();
-      wait();
-      wait();
-      out_value1.write(3);
-      wait();
-    } else if (tmp1 == 3) {
-      out_value1.write(2);
-      wait();
-      wait();
-      wait();
-    } else if (tmp1 == 2) {
-      out_value1.write(1);
-      wait();
-      wait();
-    } else {
-      out_value1.write(tmp1);
-      wait();
-    };
-    out_valid1.write(false);
-    wait();
+        // easy, just a bunch of different waits
+        out_valid1.write(true);
+        if (tmp1 == 4)
+        {
+            wait();
+            wait();
+            wait();
+            wait();
+            out_value1.write(3);
+            wait();
+        }
+        else if (tmp1 == 3)
+        {
+            out_value1.write(2);
+            wait();
+            wait();
+            wait();
+        }
+        else if (tmp1 == 2)
+        {
+            out_value1.write(1);
+            wait();
+            wait();
+        }
+        else
+        {
+            out_value1.write(tmp1);
+            wait();
+        };
+        out_valid1.write(false);
+        wait();
 
-    //the first branch should be pushed out in latency due to long delay
-    tmp2 = in_value2.read();
-    out_valid2.write(true);
-    wait();
-    if (tmp2<4) {
-      //long operation should extent latency
-      out_tmp2 = tmp2*tmp2*tmp2;
-      wait();
-    } else if (tmp2<8) {
-      //short operation should not extent latency
-      out_tmp2 = 4;
-      wait();
-    } else if (tmp2<12) {
-      //wait statements should extent latency
-      out_tmp2 = 1;
-      wait();
-      wait();
-      wait();
-    }; 
-    wait();
+        // the first branch should be pushed out in latency due to long delay
+        tmp2 = in_value2.read();
+        out_valid2.write(true);
+        wait();
+        if (tmp2 < 4)
+        {
+            // long operation should extent latency
+            out_tmp2 = tmp2 * tmp2 * tmp2;
+            wait();
+        }
+        else if (tmp2 < 8)
+        {
+            // short operation should not extent latency
+            out_tmp2 = 4;
+            wait();
+        }
+        else if (tmp2 < 12)
+        {
+            // wait statements should extent latency
+            out_tmp2 = 1;
+            wait();
+            wait();
+            wait();
+        };
+        wait();
 
-    out_value2.write( sc_biguint<4>( out_tmp2 ) );
-    out_valid2.write(false);
-    wait();
+        out_value2.write(sc_biguint<4>(out_tmp2));
+        out_valid2.write(false);
+        wait();
 
-    //if branch without else
-    tmp3 = in_value3.read();
-    out_valid3.write(true);
-    wait();
-    if (tmp3<8) {
-      out_tmp3 = 4;
-      wait();
-    } 
+        // if branch without else
+        tmp3 = in_value3.read();
+        out_valid3.write(true);
+        wait();
+        if (tmp3 < 8)
+        {
+            out_tmp3 = 4;
+            wait();
+        }
 
-    out_value3.write( sc_biguint<4>( out_tmp3 ) );
-    wait();
-    out_valid3.write(false);
-  }
+        out_value3.write(sc_biguint<4>(out_tmp3));
+        wait();
+        out_valid3.write(false);
+    }
 }
 
 // EOF
-

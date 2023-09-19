@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,8 +39,7 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_bv<32> bv = 10;
     sc_bv<32> lv = 11;
@@ -59,25 +58,25 @@ sc_main( int, char*[] )
     bv2 = bv;
     bv1 &= I;
     bv2 = bv2 & I;
-    sc_assert( bv1 == bv2 );
+    sc_assert(bv1 == bv2);
 
     bv1 = bv;
     bv2 = bv;
     bv1 &= U;
     bv2 = bv2 & U;
-    sc_assert( bv1 == bv2 );
+    sc_assert(bv1 == bv2);
 
     lv1 = lv;
     lv2 = lv;
     lv1 &= I;
     lv2 = lv2 & I;
-    sc_assert( lv1 == lv2 );
+    sc_assert(lv1 == lv2);
 
     lv1 = lv;
     lv2 = lv;
     lv1 &= U;
     lv2 = lv2 & U;
-    sc_assert( lv1 == lv2 );
+    sc_assert(lv1 == lv2);
 
     // |
 
@@ -85,25 +84,25 @@ sc_main( int, char*[] )
     bv2 = bv;
     bv1 |= I;
     bv2 = bv2 | I;
-    sc_assert( bv1 == bv2 );
+    sc_assert(bv1 == bv2);
 
     bv1 = bv;
     bv2 = bv;
     bv1 |= U;
     bv2 = bv2 | U;
-    sc_assert( bv1 == bv2 );
+    sc_assert(bv1 == bv2);
 
     lv1 = lv;
     lv2 = lv;
     lv1 |= I;
     lv2 = lv2 | I;
-    sc_assert( lv1 == lv2 );
+    sc_assert(lv1 == lv2);
 
     lv1 = lv;
     lv2 = lv;
     lv1 |= U;
     lv2 = lv2 | U;
-    sc_assert( lv1 == lv2 );
+    sc_assert(lv1 == lv2);
 
     // ^
 
@@ -111,25 +110,25 @@ sc_main( int, char*[] )
     bv2 = bv;
     bv1 ^= I;
     bv2 = bv2 ^ I;
-    sc_assert( bv1 == bv2 );
+    sc_assert(bv1 == bv2);
 
     bv1 = bv;
     bv2 = bv;
     bv1 ^= U;
     bv2 = bv2 ^ U;
-    sc_assert( bv1 == bv2 );
+    sc_assert(bv1 == bv2);
 
     lv1 = lv;
     lv2 = lv;
     lv1 ^= I;
     lv2 = lv2 ^ I;
-    sc_assert( lv1 == lv2 );
+    sc_assert(lv1 == lv2);
 
     lv1 = lv;
     lv2 = lv;
     lv1 ^= U;
     lv2 = lv2 ^ U;
-    sc_assert( lv1 == lv2 );
+    sc_assert(lv1 == lv2);
 
     cout << "OK" << endl;
 

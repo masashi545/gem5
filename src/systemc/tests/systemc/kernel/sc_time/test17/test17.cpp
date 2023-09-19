@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test17.cpp -- 
+  test17.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,10 +39,9 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_set_default_time_unit( 10, SC_MS );
+    sc_set_default_time_unit(10, SC_MS);
     cout << sc_get_default_time_unit() << endl;
 
     return 0;

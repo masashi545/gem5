@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stimulus.cpp -- 
+  stimulus.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-30
 
@@ -35,34 +35,35 @@
 
  *****************************************************************************/
 
-
 #include "stimulus.h"
 
-void stimulus::entry() {
+void stimulus::entry()
+{
 
-int i;
+    int i;
 
-  // sending some reset values
-  reset.write(true);
-  stim1.write(0);
-  stim2.write(0);
-  stim3.write(0);
-  wait();
-  reset.write(false);
-  wait();
-  for  (i=0; i<= 15; i++) {
-    stim1.write(i);
-    stim2.write(i);
-    stim3.write(i);
-    input_valid.write(true);
-    cout << "Stimuli: stim1= " << i << " stim2= " << i << " stim3= " << i 
-	 << " at " << sc_time_stamp() << endl; 
+    // sending some reset values
+    reset.write(true);
+    stim1.write(0);
+    stim2.write(0);
+    stim3.write(0);
     wait();
-    input_valid.write(false);
-    wait(15);
-  }
- 
-  sc_stop();
+    reset.write(false);
+    wait();
+    for (i = 0; i <= 15; i++)
+    {
+        stim1.write(i);
+        stim2.write(i);
+        stim3.write(i);
+        input_valid.write(true);
+        cout << "Stimuli: stim1= " << i << " stim2= " << i << " stim3= " << i
+             << " at " << sc_time_stamp() << endl;
+        wait();
+        input_valid.write(false);
+        wait(15);
+    }
+
+    sc_stop();
 }
 
 // EOF

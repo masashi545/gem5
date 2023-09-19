@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-25.cpp -- 
+  pr-25.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,22 +37,21 @@
 
 #include "systemc.h"
 
-SC_MODULE( t )
+SC_MODULE(t)
 {
-    SC_HAS_PROCESS( t );
+    SC_HAS_PROCESS(t);
 
     sc_in_clk clk;
 
-    sc_signal<bool>& a;
+    sc_signal<bool> &a;
 
-    t( sc_module_name NAME,
-       sc_clock& CLK,
-       sc_signal<bool>& A )
-        : 
-          a(A)
+    t(sc_module_name NAME,
+      sc_clock & CLK,
+      sc_signal<bool> & A)
+        : a(A)
     {
-      clk(CLK);
-	  SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
 };
@@ -68,7 +67,7 @@ void t::entry()
     wait();
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

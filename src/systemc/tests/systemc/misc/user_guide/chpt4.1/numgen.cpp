@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  numgen.cpp -- 
+  numgen.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,15 +42,15 @@
 
 void numgen::entry()
 {
-  double a = 134.56;
-  double b = 98.24;
+    double a = 134.56;
+    double b = 98.24;
 
-  while (true) {
-    a -= 1.5;
-    b -= 2.8;
-    out1.write(a);
-    out2.write(b);
-    wait();
-  }
+    while (true)
+    {
+        a -= 1.5;
+        b -= 2.8;
+        out1.write(a);
+        out2.write(b);
+        wait();
+    }
 } // end of entry function
-

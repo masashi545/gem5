@@ -26,59 +26,67 @@
   CHANGE LOG AT THE END OF THE FILE
  *****************************************************************************/
 
-
 #include "sysc/kernel/sc_kernel_ids.h"
 #include "sysc/kernel/sc_name_gen.h"
 #include "sysc/utils/sc_iostream.h"
 
 #if defined(_MSC_VER) && _MSC_VER >= 1310
 // "C4351: new behavior: elements of array will be default initialized"
-#pragma warning(disable: 4351)
+#pragma warning(disable : 4351)
 #endif
 
-namespace sc_core {
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_name_gen
-//
-//  Unique name generator class.
-// ----------------------------------------------------------------------------
-
-sc_name_gen::sc_name_gen() : m_unique_name_map(), m_unique_name()
-{}
-
-sc_name_gen::~sc_name_gen()
+namespace sc_core
 {
-    sc_strhash<int*>::iterator it( m_unique_name_map );
-    for( ; ! it.empty(); it ++ ) {
-	delete it.contents();
+
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_name_gen
+    //
+    //  Unique name generator class.
+    // ----------------------------------------------------------------------------
+
+    sc_name_gen::sc_name_gen() : m_unique_name_map(), m_unique_name()
+    {
     }
-    m_unique_name_map.erase();
-}
 
-
-// to generate unique names for objects in an MT-Safe way
-
-const char*
-sc_name_gen::gen_unique_name( const char* basename_, bool preserve_first )
-{
-    if( basename_ == 0 ) {
-	SC_REPORT_ERROR( SC_ID_GEN_UNIQUE_NAME_, 0 );
-    }
-    int* c = m_unique_name_map[basename_];
-    if( c == 0 ) {
-	c = new int( 0 );
-	m_unique_name_map.insert( CCAST<char*>( basename_ ), c );
-	if (preserve_first) {
-	    std::sprintf( m_unique_name, "%s", basename_ );
-	} else {    
-            std::sprintf( m_unique_name, "%s_%d", basename_, *c );
+    sc_name_gen::~sc_name_gen()
+    {
+        sc_strhash<int *>::iterator it(m_unique_name_map);
+        for (; !it.empty(); it++)
+        {
+            delete it.contents();
         }
-    } else {
-        std::sprintf( m_unique_name, "%s_%d", basename_, ++ (*c) );
+        m_unique_name_map.erase();
     }
-    return m_unique_name;
-}
+
+    // to generate unique names for objects in an MT-Safe way
+
+    const char *
+    sc_name_gen::gen_unique_name(const char *basename_, bool preserve_first)
+    {
+        if (basename_ == 0)
+        {
+            SC_REPORT_ERROR(SC_ID_GEN_UNIQUE_NAME_, 0);
+        }
+        int *c = m_unique_name_map[basename_];
+        if (c == 0)
+        {
+            c = new int(0);
+            m_unique_name_map.insert(CCAST<char *>(basename_), c);
+            if (preserve_first)
+            {
+                std::sprintf(m_unique_name, "%s", basename_);
+            }
+            else
+            {
+                std::sprintf(m_unique_name, "%s_%d", basename_, *c);
+            }
+        }
+        else
+        {
+            std::sprintf(m_unique_name, "%s_%d", basename_, ++(*c));
+        }
+        return m_unique_name;
+    }
 
 } // namespace sc_core
 

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test1.cpp -- 
+  test1.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,21 +37,22 @@
 
 #include "systemc.h"
 
-int
-sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
     sc_signed x(7);
 
     x = -34;
     cout << x << endl;
     x.dump(cout);
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 5; ++i)
+    {
         sc_signed y(7);
         y = x >> i;
         cout << y << endl;
         y.dump(cout);
     }
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 5; ++i)
+    {
         x = x >> 1;
         cout << x << endl;
         x.dump(cout);

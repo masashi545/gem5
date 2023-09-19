@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,10 +37,9 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_bv<40> a( -1 );
+    sc_bv<40> a(-1);
     cout << a << endl;
     cout << a.to_int() << endl;
     cout << a.to_uint() << endl;

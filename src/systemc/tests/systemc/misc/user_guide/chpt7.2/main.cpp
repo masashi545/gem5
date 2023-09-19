@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,18 +42,18 @@
 
 int sc_main(int ac, char *av[])
 {
-  sc_signal<int> a;
-  sc_signal<int> b;
-  sc_signal<int> c;
-  sc_signal<int> d;
-  sc_signal<int> sum;
-  sc_signal<bool> ready;
-  sc_signal<bool> done;
-  sc_clock clock("Clock", 10, SC_NS, 0.5, 0, SC_NS);
+    sc_signal<int> a;
+    sc_signal<int> b;
+    sc_signal<int> c;
+    sc_signal<int> d;
+    sc_signal<int> sum;
+    sc_signal<bool> ready;
+    sc_signal<bool> done;
+    sc_clock clock("Clock", 10, SC_NS, 0.5, 0, SC_NS);
 
-  testbench T("TB", clock, sum, d, done, a, b, c, ready);
-  adder_sub AS("AS", clock, a, b, c, ready, d, sum, done);
+    testbench T("TB", clock, sum, d, done, a, b, c, ready);
+    adder_sub AS("AS", clock, a, b, c, ready, d, sum, done);
 
-  sc_start();
-  return 0;
+    sc_start();
+    return 0;
 }

@@ -38,21 +38,20 @@
 #include "systemc.h"
 #define TERM(EXPR) cout << #EXPR << " " << hex << (EXPR) << endl
 
-
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-    sc_biguint<31>  a;
-    sc_bigint<4>   b = 0xa;
-    sc_bigint<5>   c = 0x0a;
-    sc_biguint<4>  d = 0x0a;
+    sc_biguint<31> a;
+    sc_bigint<4> b = 0xa;
+    sc_bigint<5> c = 0x0a;
+    sc_biguint<4> d = 0x0a;
     a = 0x12345678;
-    a.range(15,8) = b;
+    a.range(15, 8) = b;
     cout << hex << a << endl;
     a = 0x12345678;
-    a.range(15,8) = c;
+    a.range(15, 8) = c;
     cout << hex << a << endl;
     a = 0x12345678;
-    a.range(15,8) = d;
+    a.range(15, 8) = d;
     cout << hex << a << endl;
 
     cout << "Program completed" << endl;

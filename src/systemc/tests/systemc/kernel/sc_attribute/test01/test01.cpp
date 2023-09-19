@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,36 +39,38 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_clock clk;
 
-    sc_attribute<int> a1( "a1", 42 );
-    sc_attribute<std::string> a2( "a2", "foobar" );
+    sc_attribute<int> a1("a1", 42);
+    sc_attribute<std::string> a2("a2", "foobar");
 
-    clk.add_attribute( a1 );
-    clk.add_attribute( a2 );
+    clk.add_attribute(a1);
+    clk.add_attribute(a2);
 
-    sc_attr_base* p = clk.get_attribute( "a1" );
+    sc_attr_base *p = clk.get_attribute("a1");
     cout << p->name() << endl;
-    sc_attribute<int>* pi = dynamic_cast<sc_attribute<int>*>( p );
-    if( pi != 0 ) {
+    sc_attribute<int> *pi = dynamic_cast<sc_attribute<int> *>(p);
+    if (pi != 0)
+    {
         cout << pi->value << endl;
     }
-    sc_attribute<std::string>* ps = dynamic_cast<sc_attribute<std::string>*>( p );
-    if( ps != 0 ) {
+    sc_attribute<std::string> *ps = dynamic_cast<sc_attribute<std::string> *>(p);
+    if (ps != 0)
+    {
         cout << ps->value << endl;
     }
 
-    const sc_attr_cltn& attrs = clk.attr_cltn();
+    const sc_attr_cltn &attrs = clk.attr_cltn();
     sc_attr_cltn::const_iterator it = attrs.begin();
-    for( ; it != attrs.end(); ++ it ) {
+    for (; it != attrs.end(); ++it)
+    {
         cout << (*it)->name() << endl;
     }
 
-    clk.remove_attribute( "a1" );
-    clk.remove_attribute( "a2" );
+    clk.remove_attribute("a1");
+    clk.remove_attribute("a2");
 
     return 0;
 }

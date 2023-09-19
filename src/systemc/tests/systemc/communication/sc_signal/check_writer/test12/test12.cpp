@@ -41,20 +41,19 @@
 #include "systemc.h"
 typedef sc_uint<5> target;
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_in_clk clk;
 
-    sc_out<target>      out_target;
-    sc_out<target>      out_target2;
+    sc_out<target> out_target;
+    sc_out<target> out_target2;
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_clock clk;
 

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,15 +37,15 @@
 
 #include "test_sem.h"
 
-int sc_main (int argc , char *argv[])
+int sc_main(int argc, char *argv[])
 {
-    sc_clock clock1("clock1",10,SC_PS);
+    sc_clock clock1("clock1", 10, SC_PS);
 
     TestSem my_block("test_sem");
-    
+
     my_block.clk(clock1);
-    
+
     sc_start(3000, SC_PS);
-    
+
     return 0;
 }

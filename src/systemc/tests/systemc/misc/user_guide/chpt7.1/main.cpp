@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -41,10 +41,10 @@
 
 int sc_main(int ac, char *av[])
 {
-  sc_clock clock("Clock", 10, SC_NS, 0.5, 0, SC_NS);
+    sc_clock clock("Clock", 10, SC_NS, 0.5, 0, SC_NS);
 
-  testbench T("TB", clock);
+    testbench T("TB", clock);
 
-  sc_start();
-  return 0;
+    sc_start();
+    return 0;
 }

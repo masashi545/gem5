@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  a2901_alu_inputs.cpp -- 
+  a2901_alu_inputs.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,43 +37,44 @@
 
 #include "a2901_alu_inputs.h"
 
-void
-a2901_alu_inputs::entry()
+void a2901_alu_inputs::entry()
 {
     int4 Av;
     int4 B;
 
     Av = RAM[Aadd.read()];
-    B  = RAM[Badd.read()];
+    B = RAM[Badd.read()];
     A.write(Av);
 
-    switch((int)(I.read().range(2,0))) {
+    switch ((int)(I.read().range(2, 0)))
+    {
     case 0x0:
-    case 0x1:  
-      RE.write(Av);
-      break;
+    case 0x1:
+        RE.write(Av);
+        break;
     case 0x2:
     case 0x3:
     case 0x4:
-      RE.write(0x0);
-      break;
+        RE.write(0x0);
+        break;
     default:
-      RE.write(D.read());
+        RE.write(D.read());
     }
 
-    switch((int)(I.read().range(2,0))) {
+    switch ((int)(I.read().range(2, 0)))
+    {
     case 0x4:
-    case 0x5:  
-      S.write(Av);
-      break;
+    case 0x5:
+        S.write(Av);
+        break;
     case 0x1:
     case 0x3:
-      S.write(B);
-      break;
+        S.write(B);
+        break;
     case 0x7:
-      S.write(0x0);
-      break;
+        S.write(0x0);
+        break;
     default:
-      S.write(Q.read());
+        S.write(Q.read());
     }
 }

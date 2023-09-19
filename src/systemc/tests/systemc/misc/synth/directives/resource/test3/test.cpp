@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,27 +35,25 @@
 
  *****************************************************************************/
 
-/* 
+/*
    Verifies resource directive
-   Author: PRP 
+   Author: PRP
    From Test Case resource: 28.cc
 */
 #include "systemc.h"
 #include "test.h"
 
-void test::entry() 
+void test::entry()
 {
-  int i,j,y,z;
- 
- 
-        YY: for (i = 0; i < 7; i++)
-        {
-                y = i - 1;
-                j = i + 2;
-        }
-  o1 = y + j;
- 
-  wait();
+    int i, j, y, z;
 
+YY:
+    for (i = 0; i < 7; i++)
+    {
+        y = i - 1;
+        j = i + 2;
+    }
+    o1 = y + j;
 
+    wait();
 }

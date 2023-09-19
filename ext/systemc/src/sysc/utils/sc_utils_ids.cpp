@@ -26,15 +26,14 @@
   CHANGE LOG AT END OF FILE
  *****************************************************************************/
 
-
 #include <cstdlib>
 #include <cstring>
 
 #include "sysc/utils/sc_report.h"
 
-
-namespace sc_core {
-#define SC_DEFINE_MESSAGE(id,unused,text) extern const char id[] = text;
+namespace sc_core
+{
+#define SC_DEFINE_MESSAGE(id, unused, text) extern const char id[] = text;
 #include "sysc/utils/sc_utils_ids.h"
 #include "sysc/kernel/sc_kernel_ids.h"
 #include "sysc/communication/sc_communication_ids.h"
@@ -44,10 +43,9 @@ namespace sc_core {
 #include "sysc/tracing/sc_tracing_ids.h"
 #undef SC_DEFINE_MESSAGE
 
-
-static sc_msg_def texts[] = {
-#define SC_DEFINE_MESSAGE(id,n,unused) \
-    { (id), 0u, {0u}, 0u, {0u}, 0u, 0u, {0u}, 0, n },
+    static sc_msg_def texts[] = {
+#define SC_DEFINE_MESSAGE(id, n, unused) \
+    {(id), 0u, {0u}, 0u, {0u}, 0u, 0u, {0u}, 0, n},
 
 #undef SC_UTILS_IDS_H
 #include "sysc/utils/sc_utils_ids.h"
@@ -71,28 +69,25 @@ static sc_msg_def texts[] = {
 #include "sysc/tracing/sc_tracing_ids.h"
 
 #undef SC_DEFINE_MESSAGE
-};
-static sc_report_handler::msg_def_items items = {
-    texts, sizeof(texts)/sizeof(*texts), false, 0
-};
+    };
+    static sc_report_handler::msg_def_items items = {
+        texts, sizeof(texts) / sizeof(*texts), false, 0};
 
-static
-int initialize()
-{
-    sc_report_handler::add_static_msg_types(&items);
-
-    // PROCESS ANY ENVIRONMENTAL OVERRIDES:
-
-    const char* deprecation_warn = std::getenv("SC_DEPRECATION_WARNINGS");
-    if ( (deprecation_warn!=0) && !std::strcmp(deprecation_warn,"DISABLE") )
+    static int initialize()
     {
-        sc_report_handler::set_actions( SC_ID_IEEE_1666_DEPRECATION_
-                                      , SC_DO_NOTHING);
-    }
-    return 42;
-}
+        sc_report_handler::add_static_msg_types(&items);
 
-static int forty_two = initialize();
+        // PROCESS ANY ENVIRONMENTAL OVERRIDES:
+
+        const char *deprecation_warn = std::getenv("SC_DEPRECATION_WARNINGS");
+        if ((deprecation_warn != 0) && !std::strcmp(deprecation_warn, "DISABLE"))
+        {
+            sc_report_handler::set_actions(SC_ID_IEEE_1666_DEPRECATION_, SC_DO_NOTHING);
+        }
+        return 42;
+    }
+
+    static int forty_two = initialize();
 
 } // namespace sc_core
 
@@ -106,9 +101,8 @@ static int forty_two = initialize();
 
   Alex Riesen, Synopsys, Inc., 2003-02-02
   ported to SystemC 2.1 exception reporting.
-    
- *****************************************************************************/
 
+ *****************************************************************************/
 
 // $Log: sc_utils_ids.cpp,v $
 // Revision 1.5  2011/08/26 20:46:19  acg

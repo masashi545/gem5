@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  T_1_1_2_6.cpp -- 
+  T_1_1_2_6.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,46 +37,47 @@
 
 #include "systemc.h"
 
-SC_MODULE( inverter )
+SC_MODULE(inverter)
 {
-    SC_HAS_PROCESS( inverter );
+    SC_HAS_PROCESS(inverter);
 
     sc_in_clk clk;
 
-    const sc_signal<bool>& input;
-    sc_signal<bool>& output;
+    const sc_signal<bool> &input;
+    sc_signal<bool> &output;
 
-    inverter( sc_module_name NAME,
-	      sc_clock& CLK,
-	      const sc_signal<bool>& INPUT,
-	      sc_signal<bool>& OUTPUT )
+    inverter(sc_module_name NAME,
+             sc_clock & CLK,
+             const sc_signal<bool> &INPUT,
+             sc_signal<bool> &OUTPUT)
         : input(INPUT), output(OUTPUT)
     {
         clk(CLK);
-		SC_CTHREAD( entry, clk.pos() );
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
 };
 
-class foo: public sc_module {
+class foo : public sc_module
+{
 public:
-
     sc_signal<bool> sig;
 
     inverter I1, I2;
 
-    foo(const char* NAME,
-	sc_clock& CLK,
-	const sc_signal<bool>& input,
-	sc_signal<bool>& output )
+    foo(const char *NAME,
+        sc_clock &CLK,
+        const sc_signal<bool> &input,
+        sc_signal<bool> &output)
         : sc_module(NAME),
-	  I1("I1", CLK, input, sig),
-	  I2("I2", CLK, sig, output) {
-	end_module();
+          I1("I1", CLK, input, sig),
+          I2("I2", CLK, sig, output)
+    {
+        end_module();
     }
 };
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

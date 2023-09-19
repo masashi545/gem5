@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-14
 
@@ -35,53 +35,53 @@
 
  *****************************************************************************/
 
-
 #include "stimulus.h"
 #include "display.h"
 #include "decrement.h"
 
-int sc_main(int argc , char *argv[]) {
-  sc_clock        clock;
-  sc_signal<bool> reset;
-  sc_signal<int>              stimulus_line1;
-  sc_signal_bool_vector       stimulus_line2;
-  sc_signal<bool>             input_valid;
-  sc_signal<bool>             ack;
-  sc_signal<bool>             output_valid;
-  sc_signal<int>              result_line1;
-  sc_signal_bool_vector       result_line2;
+int sc_main(int argc, char *argv[])
+{
+    sc_clock clock;
+    sc_signal<bool> reset;
+    sc_signal<int> stimulus_line1;
+    sc_signal_bool_vector stimulus_line2;
+    sc_signal<bool> input_valid;
+    sc_signal<bool> ack;
+    sc_signal<bool> output_valid;
+    sc_signal<int> result_line1;
+    sc_signal_bool_vector result_line2;
 
-  // initialization to fix regressions - ali
-  output_valid = false;
+    // initialization to fix regressions - ali
+    output_valid = false;
 
-  stimulus stimulus1("stimulus_block",
-                      clock,
-		      reset,
-                      stimulus_line1,
-                      stimulus_line2,
-		      input_valid,
-                      ack);
-
-  decrement decrement1( "process_body",
-                       clock, 
-		       reset,
+    stimulus stimulus1("stimulus_block",
+                       clock,
+                       reset,
                        stimulus_line1,
                        stimulus_line2,
-		       input_valid,
-                       ack,
-                       result_line1, 
-                       result_line2, 
-		       output_valid);
+                       input_valid,
+                       ack);
 
-  display  display1( "display_block",
-                       clock,
-		       result_line1,
-		       result_line2,
-		       output_valid);
+    decrement decrement1("process_body",
+                         clock,
+                         reset,
+                         stimulus_line1,
+                         stimulus_line2,
+                         input_valid,
+                         ack,
+                         result_line1,
+                         result_line2,
+                         output_valid);
 
-  sc_start();
+    display display1("display_block",
+                     clock,
+                     result_line1,
+                     result_line2,
+                     output_valid);
 
-  return 0;
+    sc_start();
+
+    return 0;
 }
 
 // EOF

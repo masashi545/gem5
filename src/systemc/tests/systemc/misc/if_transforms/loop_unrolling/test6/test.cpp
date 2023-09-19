@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -45,39 +45,37 @@
 //	Date Created: 05 APR 99
 //
 
-
 #include "test.h"
- 
-void test::entry() 
+
+void test::entry()
 {
-  int i,j,k,m;
-  int a[10];
+    int i, j, k, m;
+    int a[10];
 
-  a[0] = a[1] = i1;
-  a[2] = a[3] = i2;
-  a[4] = a[5] = i3;
-  a[6] = a[7] = i4;
-  a[8] = a[9] = i5;
+    a[0] = a[1] = i1;
+    a[2] = a[3] = i2;
+    a[4] = a[5] = i3;
+    a[6] = a[7] = i4;
+    a[8] = a[9] = i5;
 
-  wait ();
+    wait();
 
-  for (i = 0; i < 2; i++)
+    for (i = 0; i < 2; i++)
         for (j = 0; j < 3; j++)
-                for (k = 0; k < 4; k++)
-                        a[i] = 5;
- 
-  for (i = 0; i < 2; i++)
+            for (k = 0; k < 4; k++)
+                a[i] = 5;
+
+    for (i = 0; i < 2; i++)
         for (j = 0; j < 3; j++)
-                for (k = 0; k < 4; k++)
-                        for (m = 0; m < 2; m++)
-                                a[i] = 6;
+            for (k = 0; k < 4; k++)
+                for (m = 0; m < 2; m++)
+                    a[i] = 6;
 
-  o1 = a[0];
-  o2 = a[2];
-  o3 = a[4];
-  o4 = a[6];
-  o5 = a[8];
+    o1 = a[0];
+    o2 = a[2];
+    o3 = a[4];
+    o4 = a[6];
+    o5 = a[8];
 
-  wait();
+    wait();
 }
- 

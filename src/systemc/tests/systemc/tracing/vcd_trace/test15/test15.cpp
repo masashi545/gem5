@@ -39,18 +39,19 @@
 
 SC_MODULE(trace_delta_test)
 {
-    sc_signal <int> sig;
-    sc_inout<int > iport;
+    sc_signal<int> sig;
+    sc_inout<int> iport;
 
     SC_CTOR(trace_delta_test)
-      : sig("sig",0)
+        : sig("sig", 0)
     {
         iport.bind(sig);
         iport.initialize(1);
         SC_THREAD(test_thread);
     }
 
-    void test_thread() {
+    void test_thread()
+    {
         cout << "initial sig value is " << sig.read() << endl;
         sig = 2;
         wait(SC_ZERO_TIME);
@@ -77,15 +78,13 @@ SC_MODULE(trace_delta_test)
         cout << "stop at " << sc_time_stamp() << endl;
         sc_stop();
     }
-
 };
-
 
 int sc_main(int argc, char **argv)
 {
     trace_delta_test test_top("test_top");
-    sc_trace_file* tf = sc_create_vcd_trace_file("test15");
-    sc_trace_delta_cycles(tf,true);
+    sc_trace_file *tf = sc_create_vcd_trace_file("test15");
+    sc_trace_delta_cycles(tf, true);
     sc_trace(tf, test_top.sig, test_top.sig.name());
     sc_start();
     return 0;

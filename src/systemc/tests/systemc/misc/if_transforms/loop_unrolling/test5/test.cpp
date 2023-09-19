@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -45,52 +45,53 @@
 //	Date Created: 05 APR 99
 //
 
-
 #include "test.h"
- 
-void test::entry() 
+
+void test::entry()
 {
-  int i,j,k,m;
-  int a[10],b[10];
-   
+    int i, j, k, m;
+    int a[10], b[10];
 
-  do { wait(); } while  (cont1 == 0);
-  wait ();
+    do
+    {
+        wait();
+    } while (cont1 == 0);
+    wait();
 
-  for (i = 0; i < 2; i++) {
+    for (i = 0; i < 2; i++)
+    {
         if (i == 1)
-                continue;
+            continue;
         a[i] = 5;
- 
+
         wait();
-  }
-  for (i = 0; i < 2; i++) {
+    }
+    for (i = 0; i < 2; i++)
+    {
         if (i == 1)
-                break;
+            break;
         a[i] = 10;
- 
+
         wait();
-  }
- 
-  for (i = 0; i < 2; i++)
+    }
+
+    for (i = 0; i < 2; i++)
         a[i] = 6;
- 
-  for (i = 0; i < 2; i++) {
-        for (j = 0; j < 2; j++) {
-                a[j] = 8;
-                if (j == 1)
-                        continue;
-                a[j] = 7;
- 
-                wait();
+
+    for (i = 0; i < 2; i++)
+    {
+        for (j = 0; j < 2; j++)
+        {
+            a[j] = 8;
+            if (j == 1)
+                continue;
+            a[j] = 7;
+
+            wait();
         }
         for (j = 0; j < 2; j++)
-                a[j] = 8;
-  }
+            a[j] = 8;
+    }
 
-
-
-  wait();
-
+    wait();
 }
- 

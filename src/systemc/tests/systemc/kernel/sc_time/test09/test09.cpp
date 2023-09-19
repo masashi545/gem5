@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test09.cpp -- 
+  test09.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,10 +39,9 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_set_time_resolution( 0.1, SC_FS );
+    sc_set_time_resolution(0.1, SC_FS);
 
     return 0;
 }

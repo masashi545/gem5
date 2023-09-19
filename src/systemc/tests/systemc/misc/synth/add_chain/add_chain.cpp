@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  add_chain.cpp -- 
+  add_chain.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -60,14 +60,13 @@
 #include "data_gen.h"
 #include "reset_stim.h"
 #include "add_chain.h"
-#include "tb.h" 	
+#include "tb.h"
 
-int
-sc_main(int ac, char *av[])
+int sc_main(int ac, char *av[])
 {
-  sc_clock clk( "CLOCK", 20, SC_NS, 0.5, 0, SC_NS, false);  // Clock function
-  testbench tb1("TB1", clk );	// Testbench Instance
+    sc_clock clk("CLOCK", 20, SC_NS, 0.5, 0, SC_NS, false); // Clock function
+    testbench tb1("TB1", clk);                              // Testbench Instance
 
-  sc_start();   
-  return 0;
+    sc_start();
+    return 0;
 }

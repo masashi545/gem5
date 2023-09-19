@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  array_range.cpp -- 
+  array_range.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,43 +35,42 @@
 
  *****************************************************************************/
 
-                /*******************************************/
-                /* Implementation Filename:  array_range.cc  */
-                /*******************************************/
- 
+/*******************************************/
+/* Implementation Filename:  array_range.cc  */
+/*******************************************/
+
 #include "array_range.h"
- 
-void
-array_range::entry()
+
+void array_range::entry()
 {
-  bool_vector8	a;
-  bool_vector4	b;
-  bool_vector4	c;
-  bool_vector8	d;
-  bool_vector8	e;
-  bool_vector8	f;
-  // bool_vector0 	nullbv;	// Null vector to make scalar concat work
+    bool_vector8 a;
+    bool_vector4 b;
+    bool_vector4 c;
+    bool_vector8 d;
+    bool_vector8 e;
+    bool_vector8 f;
+    // bool_vector0 	nullbv;	// Null vector to make scalar concat work
 
-  wait();
+    wait();
 
-  a = in1.read();
+    a = in1.read();
 
-  b = a.range(7,4);	c = a.range(3,0);			// sub vectors
- 
-  d = a.range(0,7);						// bit reverse
+    b = a.range(7, 4);
+    c = a.range(3, 0); // sub vectors
 
-  // e = (nullbv, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);	
-  e = (a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);	
-       						// bit reverse concat
+    d = a.range(0, 7); // bit reverse
 
-  f = (a.range(3,1), a.range(7,6), a[0], a.range(4,5));		// shuffle
+    // e = (nullbv, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
+    e = (a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
+    // bit reverse concat
 
-  o1.write(b);
-  o2.write(c);
-  o3.write(d);
-  o4.write(e);
-  o5.write(f);
+    f = (a.range(3, 1), a.range(7, 6), a[0], a.range(4, 5)); // shuffle
 
-  wait();
+    o1.write(b);
+    o2.write(c);
+    o3.write(d);
+    o4.write(e);
+    o5.write(f);
 
+    wait();
 }

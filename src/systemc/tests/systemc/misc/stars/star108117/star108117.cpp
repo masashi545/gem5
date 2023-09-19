@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star108117.cpp -- 
+  star108117.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,23 +37,18 @@
 
 #include "bv_arith.h"
 
-
-
-
 /* ----- insert bv_arith_bv_arith_40.cc ----- */
 
 #include <systemc.h>
 
-
 void bv_arith::COMBI()
 {
 
-  sc_bigint<80>  XX_;
+    sc_bigint<80> XX_;
 
-  {
-    /* ===== Default Ports to 0 ===== */
+    {
+        /* ===== Default Ports to 0 ===== */
 
-    XX_ = sc_bigint<80> (0);
-
-  }
+        XX_ = sc_bigint<80>(0);
+    }
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stimulus.cpp -- 
+  stimulus.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-14
 
@@ -35,10 +35,10 @@
 
  *****************************************************************************/
 
-
 #include "stimulus.h"
 
-void stimulus::entry() {
+void stimulus::entry()
+{
 
     reset.write(true);
     wait();
@@ -56,22 +56,26 @@ void stimulus::entry() {
     tmp4 = "0b0000011";
     tmp5 = "0b00000100";
 
-    while(true){
-       out_valid.write(true);    
-       out_value1.write(tmp1);
-       out_value2.write(tmp2);
-       out_value3.write(tmp3);
-       out_value4.write(tmp4);
-       out_value5.write(tmp5);
-       cout << "Stimuli: " << tmp1 << " " << tmp2 << " " << tmp3 << " " << tmp4 << " " << tmp5 << endl;
-       tmp1 = tmp1 + 1;
-       tmp2 = tmp2 + 1;
-       tmp3 = tmp3 + 1;
-       tmp4 = tmp4 + 1;
-       tmp5 = tmp5 + 1;
-       do { wait(); } while (in_ack==false);
-       out_valid.write(false);
-       wait();
+    while (true)
+    {
+        out_valid.write(true);
+        out_value1.write(tmp1);
+        out_value2.write(tmp2);
+        out_value3.write(tmp3);
+        out_value4.write(tmp4);
+        out_value5.write(tmp5);
+        cout << "Stimuli: " << tmp1 << " " << tmp2 << " " << tmp3 << " " << tmp4 << " " << tmp5 << endl;
+        tmp1 = tmp1 + 1;
+        tmp2 = tmp2 + 1;
+        tmp3 = tmp3 + 1;
+        tmp4 = tmp4 + 1;
+        tmp5 = tmp5 + 1;
+        do
+        {
+            wait();
+        } while (in_ack == false);
+        out_valid.write(false);
+        wait();
     }
 }
 // EOF

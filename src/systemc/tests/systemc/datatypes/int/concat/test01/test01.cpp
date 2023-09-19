@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,8 +39,7 @@
 
 #include "systemc.h"
 
-void
-test_concat( const sc_int<8>& a )
+void test_concat(const sc_int<8> &a)
 {
     sc_int<8> b;
     sc_int<4> c;
@@ -50,152 +49,151 @@ test_concat( const sc_int<8>& a )
 
     cout << "*** sc_int_base" << endl;
 
-    ( c, d ) = a;
+    (c, d) = a;
     cout << c << endl;
     cout << d << endl;
 
-    b = ( d, c );
+    b = (d, c);
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( c, d[1] ) = a.range( 4, 0 );
+    (c, d[1]) = a.range(4, 0);
     cout << c << endl;
     cout << d << endl;
 
-    b.range( 4, 0 ) = ( c, d[1] );
+    b.range(4, 0) = (c, d[1]);
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( c, d.range( 1, 0 ) ) = a.range( 5, 0 );
+    (c, d.range(1, 0)) = a.range(5, 0);
     cout << c << endl;
     cout << d << endl;
 
-    b.range( 5, 0 ) = ( c, d.range( 1, 0 ) );
+    b.range(5, 0) = (c, d.range(1, 0));
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( c, ( d[0], d[1] ) ) = a.range( 5, 0 );
+    (c, (d[0], d[1])) = a.range(5, 0);
     cout << c << endl;
     cout << d << endl;
 
-    b.range( 5, 0 ) = ( c, ( d[0], d[1] ) );
+    b.range(5, 0) = (c, (d[0], d[1]));
     cout << b << endl;
 
     cout << "*** sc_int_bitref" << endl;
 
-    ( d[1], c ) = a.range( 4, 0 );
+    (d[1], c) = a.range(4, 0);
     cout << c << endl;
     cout << d << endl;
 
-    b.range( 4, 0 ) = ( d[1], c );
+    b.range(4, 0) = (d[1], c);
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( d[0], d[1] ) = a.range( 1,0 );
+    (d[0], d[1]) = a.range(1, 0);
     cout << d << endl;
 
-    b.range( 1, 0 ) = ( d[1], d[0] );
+    b.range(1, 0) = (d[1], d[0]);
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( d[0], c.range( 3, 0 ) ) = a.range( 4, 0 );
+    (d[0], c.range(3, 0)) = a.range(4, 0);
     cout << c << endl;
     cout << d << endl;
 
-    b.range( 4, 0 ) = ( d[0], c.range( 3, 0 ) );
+    b.range(4, 0) = (d[0], c.range(3, 0));
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( d[0], ( d[1], d[2], d[3] ) ) = a.range( 3, 0 );
+    (d[0], (d[1], d[2], d[3])) = a.range(3, 0);
     cout << d << endl;
 
-    b.range( 3, 0 ) = ( d[3], ( d[2], d[1], d[0] ) );
+    b.range(3, 0) = (d[3], (d[2], d[1], d[0]));
     cout << b << endl;
 
     cout << "*** sc_int_subref" << endl;
 
-    ( c.range( 3, 0 ), d ) = a;
+    (c.range(3, 0), d) = a;
     cout << c << endl;
     cout << d << endl;
 
-    b = ( c.range( 3, 0 ), d );
+    b = (c.range(3, 0), d);
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( c.range( 3, 0 ), d[1] ) = a.range( 4, 0 );
+    (c.range(3, 0), d[1]) = a.range(4, 0);
     cout << c << endl;
     cout << d << endl;
 
-    b.range( 4, 0 ) = ( c.range( 3, 0 ), d[1] );
+    b.range(4, 0) = (c.range(3, 0), d[1]);
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( c.range( 3, 0 ), d.range( 3, 0 ) ) = a;
+    (c.range(3, 0), d.range(3, 0)) = a;
     cout << c << endl;
     cout << d << endl;
 
-    b = ( d.range( 3, 0 ), c.range( 3, 0 ) );
+    b = (d.range(3, 0), c.range(3, 0));
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( c.range( 3, 0 ), ( d[0], d[1] ) ) = a.range( 5, 0 );
+    (c.range(3, 0), (d[0], d[1])) = a.range(5, 0);
     cout << c << endl;
     cout << d << endl;
 
-    b.range( 5, 0 ) = ( c.range( 3, 0 ), ( d[1], d[0] ) );
+    b.range(5, 0) = (c.range(3, 0), (d[1], d[0]));
     cout << b << endl;
 
     cout << "*** sc_int_concat" << endl;
 
-    ( ( c[1], c[0] ), d ) = a.range( 5, 0 );
+    ((c[1], c[0]), d) = a.range(5, 0);
     cout << c << endl;
     cout << d << endl;
 
-    b.range( 5, 0 ) = ( ( c[0], c[1] ), d );
+    b.range(5, 0) = ((c[0], c[1]), d);
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( ( c[1], c[0] ), d[0] ) = a.range( 2, 0 );
+    ((c[1], c[0]), d[0]) = a.range(2, 0);
     cout << c << endl;
     cout << d << endl;
 
-    b.range( 2, 0 ) = ( ( c[0], c[1] ), d[0] );
+    b.range(2, 0) = ((c[0], c[1]), d[0]);
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( ( c[1], c[0] ), d.range( 3, 0 ) ) = a.range( 5, 0 );
+    ((c[1], c[0]), d.range(3, 0)) = a.range(5, 0);
     cout << c << endl;
     cout << d << endl;
 
-    b.range( 5, 0 ) = ( ( c[0], c[1] ), d.range( 3, 0 ) );
+    b.range(5, 0) = ((c[0], c[1]), d.range(3, 0));
     cout << b << endl;
 
     cout << "---" << endl;
 
-    ( ( c[0], c[1] ), ( c[2], c[3] ) ) = a.range( 3, 0 );
+    ((c[0], c[1]), (c[2], c[3])) = a.range(3, 0);
     cout << c << endl;
 
-    b.range( 3, 0 ) = ( ( c[3], c[2] ), ( c[1], c[0] ) );
+    b.range(3, 0) = ((c[3], c[2]), (c[1], c[0]));
     cout << b << endl;
 }
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_int<8> a( 33 );
+    sc_int<8> a(33);
 
-    test_concat( a );
+    test_concat(a);
 
     return 0;
 }

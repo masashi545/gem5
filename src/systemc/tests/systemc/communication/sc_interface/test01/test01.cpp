@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -41,11 +41,11 @@
 #include "systemc.h"
 
 class channel
-: virtual public sc_interface
-{};
+    : virtual public sc_interface
+{
+};
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     channel c;
 

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test_int.cpp -- 
+  test_int.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,201 +37,193 @@
 
 #include "systemc.h"
 
-
-int sc_main( int ac, char *av[] )
+int sc_main(int ac, char *av[])
 {
-  sc_int_base a(8),b(8);
-  int x;
+    sc_int_base a(8), b(8);
+    int x;
 
-  
+    x = 8;
+    a = 8;
+    sc_assert(x == a);
 
-  x = 8;
-  a = 8;
-  sc_assert( x == a);
-  
-  cout << "x + a = " << x + a << endl;
-  cout << "++a = " << ++a << endl;
-  cout << "a-- = " << a-- << endl;
-  
-  // bit-select on L.H.S.
-  a[0] = 1;
-  cout << "a = " << a << endl;
+    cout << "x + a = " << x + a << endl;
+    cout << "++a = " << ++a << endl;
+    cout << "a-- = " << a-- << endl;
 
-  // bitselect on R.H.S.
-  cout << "a[3] = " << a[3] << endl;
+    // bit-select on L.H.S.
+    a[0] = 1;
+    cout << "a = " << a << endl;
 
+    // bitselect on R.H.S.
+    cout << "a[3] = " << a[3] << endl;
 
-  // part-select on R.H.S
-  cout << "a.range(4,0) = " << a.range(4,0) << endl;
-  cout << "a = " << a << endl;  
-  
-  sc_int_base c(5);
-  c = a.range(4,0);
-  cout << "c = " << c << endl;
+    // part-select on R.H.S
+    cout << "a.range(4,0) = " << a.range(4, 0) << endl;
+    cout << "a = " << a << endl;
 
-  // part-select on L.H.S.
-  a.range(2,0) = 7;
-  cout << "a = " << a << endl;
+    sc_int_base c(5);
+    c = a.range(4, 0);
+    cout << "c = " << c << endl;
 
-  a.range(4,2) = 5;
-  cout << "a = " << a << endl;
+    // part-select on L.H.S.
+    a.range(2, 0) = 7;
+    cout << "a = " << a << endl;
 
-  a.range(7,4) = 8;
-  cout << "a = " << a << endl;
+    a.range(4, 2) = 5;
+    cout << "a = " << a << endl;
 
-  // concat on R.H.S.
-  sc_int_base sx(4); 
-  sx = 1;
-  sc_int_base sy(4);
-  sy = 3;
-  a = ( sx, sy );
+    a.range(7, 4) = 8;
+    cout << "a = " << a << endl;
 
-  cout << "a = " << a << endl;
-  
-  sc_int_base sb(8);
-  // concat of part-selects
-  sb = ( a.range(7,4), a.range(3,0) );
-  
-  cout << "sb = " << sb << endl;
+    // concat on R.H.S.
+    sc_int_base sx(4);
+    sx = 1;
+    sc_int_base sy(4);
+    sy = 3;
+    a = (sx, sy);
 
-  ( sx, sy ) = 17;
+    cout << "a = " << a << endl;
 
-  cout << "sx = " << sx << endl;
-  cout << "sy = " << sy << endl;
-  
-  // concat and part-selects
-  ( sx, sy ) = ( a.range(7,4), a.range(3,0) );
-  
-  cout << "sx = " << sx << endl;
-  cout << "sy = " << sy << endl;
-  
-  sc_int_base  s5(5);
+    sc_int_base sb(8);
+    // concat of part-selects
+    sb = (a.range(7, 4), a.range(3, 0));
 
-  s5 = ( sx , a[4] );
-  
-  cout << "s5 = " << s5 << endl;
+    cout << "sb = " << sb << endl;
 
-  s5 = (a[4],sx);
-  cout << "s5 = " << s5 << endl;
+    (sx, sy) = 17;
 
-  sc_bv<8> sc8;
-  sc_bv<4> sc4;
-  
-  // ( sc8.range(7,4), sc4 ) = 17; 
-  ( sc8.range(7,4), sc4 ) = "00010001"; 
+    cout << "sx = " << sx << endl;
+    cout << "sy = " << sy << endl;
 
-  cout << "sc8 = " << sc8.to_int() << endl;
-  cout << "sc4 = " << sc4.to_int() << endl;
-  
-  sc_int_base sia(8);
+    // concat and part-selects
+    (sx, sy) = (a.range(7, 4), a.range(3, 0));
 
+    cout << "sx = " << sx << endl;
+    cout << "sy = " << sy << endl;
 
-  sc_uint_base u4(4);
-  
-  // part-select on sc_uint
-  u4 = sx.range(3,0);
+    sc_int_base s5(5);
 
-  cout << "u4 = " << u4 << endl;
+    s5 = (sx, a[4]);
 
-  u4[3] = sx[0];
+    cout << "s5 = " << s5 << endl;
 
-  cout << "u4 = " << u4 << endl;
+    s5 = (a[4], sx);
+    cout << "s5 = " << s5 << endl;
 
-  sx = (u4.range(1,0), u4.range(3,2));
+    sc_bv<8> sc8;
+    sc_bv<4> sc4;
 
-  cout << "sx = " << sx << endl;
+    // ( sc8.range(7,4), sc4 ) = 17;
+    (sc8.range(7, 4), sc4) = "00010001";
 
-  sc_bv<8> bva;
-  sc_lv<8> lva;
+    cout << "sc8 = " << sc8.to_int() << endl;
+    cout << "sc4 = " << sc4.to_int() << endl;
 
-  // Mixing bv, lv on the RHS
+    sc_int_base sia(8);
 
-  bva = "10000000";
-  lva = "10000001";
+    sc_uint_base u4(4);
 
-  b = bva & "1010";
-  cout << "b = " << b << endl;
+    // part-select on sc_uint
+    u4 = sx.range(3, 0);
 
-  // b = lva ^ bva;
-  b = sc_bv<8>( lva ^ bva );
-  cout << "b = " << b << endl;
+    cout << "u4 = " << u4 << endl;
 
-  //Mixing bv, lv on the LHS
+    u4[3] = sx[0];
 
-  bva = b;
-  lva = b;
+    cout << "u4 = " << u4 << endl;
 
-  cout << "bva = " << bva << endl;
-  cout << "lva = " << lva << endl;
+    sx = (u4.range(1, 0), u4.range(3, 2));
 
-  bva = b & lva.to_int();
-  
-  cout << "bva = " << bva << endl;
-  
+    cout << "sx = " << sx << endl;
 
-  //Mixing sc_signed on LHS
-  
-  sc_signed ss8(8);
-  ss8 = b;
-  cout << "ss8 = " << ss8 << endl;
+    sc_bv<8> bva;
+    sc_lv<8> lva;
 
-  ss8 = u4;
-  cout << "ss8 = " << ss8 << endl;
- 
-  // Mixing sc_signed/sc_unsigned on RHS
-  sc_unsigned su8(8);
+    // Mixing bv, lv on the RHS
 
-  su8 = 8;
-  b = su8 + 1;
-  
-  cout << "b = " << b << endl;
+    bva = "10000000";
+    lva = "10000001";
 
-  b = ss8 * su8;
-  b = ss8 ^ su8;
-  su8 = bva.to_int() | ss8;
- 
-  cout << "b = " << b << endl;
+    b = bva & "1010";
+    cout << "b = " << b << endl;
 
-  // Having more than two concats
+    // b = lva ^ bva;
+    b = sc_bv<8>(lva ^ bva);
+    cout << "b = " << b << endl;
 
-  sc_int_base ai2(2);
-  sc_int_base bi4(4);
-  sc_int_base ci2(2);
-  sc_int_base di2(2);
-  sc_int_base ei8(8);
-  sc_int_base ei10(10);
+    // Mixing bv, lv on the LHS
 
-  ai2 = 2;
-  bi4 = 2;
-  ci2 = 2;
-  di2 = 2;
-  
-  ei8 = (ai2, bi4, ci2 );
+    bva = b;
+    lva = b;
 
-  cout << "ei8 = " << ei8 << endl;
+    cout << "bva = " << bva << endl;
+    cout << "lva = " << lva << endl;
 
-  ei10 = (ai2, bi4, ci2 , di2);
-  
-  cout << "ei10 = " << ei10 << endl;
-  
-  // bit-true behavior
-  sc_int_base bs4(4);
-  sc_signed ds4(4);
+    bva = b & lva.to_int();
 
-  bs4[3] = 1;
-  bs4[2] = 0;
-  bs4[1] = 0;
-  bs4[0] = 0;
+    cout << "bva = " << bva << endl;
 
-  ds4[3] = 1;
-  ds4[2] = 0;
-  ds4[1] = 0;
-  ds4[0] = 0;
-  
-  
-  cout << "bs4  = " << bs4 << endl;
-  cout << "ds4 =  " << ds4 << endl;
+    // Mixing sc_signed on LHS
 
-  return 0;
+    sc_signed ss8(8);
+    ss8 = b;
+    cout << "ss8 = " << ss8 << endl;
 
+    ss8 = u4;
+    cout << "ss8 = " << ss8 << endl;
+
+    // Mixing sc_signed/sc_unsigned on RHS
+    sc_unsigned su8(8);
+
+    su8 = 8;
+    b = su8 + 1;
+
+    cout << "b = " << b << endl;
+
+    b = ss8 * su8;
+    b = ss8 ^ su8;
+    su8 = bva.to_int() | ss8;
+
+    cout << "b = " << b << endl;
+
+    // Having more than two concats
+
+    sc_int_base ai2(2);
+    sc_int_base bi4(4);
+    sc_int_base ci2(2);
+    sc_int_base di2(2);
+    sc_int_base ei8(8);
+    sc_int_base ei10(10);
+
+    ai2 = 2;
+    bi4 = 2;
+    ci2 = 2;
+    di2 = 2;
+
+    ei8 = (ai2, bi4, ci2);
+
+    cout << "ei8 = " << ei8 << endl;
+
+    ei10 = (ai2, bi4, ci2, di2);
+
+    cout << "ei10 = " << ei10 << endl;
+
+    // bit-true behavior
+    sc_int_base bs4(4);
+    sc_signed ds4(4);
+
+    bs4[3] = 1;
+    bs4[2] = 0;
+    bs4[1] = 0;
+    bs4[0] = 0;
+
+    ds4[3] = 1;
+    ds4[2] = 0;
+    ds4[1] = 0;
+    ds4[0] = 0;
+
+    cout << "bs4  = " << bs4 << endl;
+    cout << "ds4 =  " << ds4 << endl;
+
+    return 0;
 }

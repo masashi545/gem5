@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  tb.cpp -- 
+  tb.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,51 +37,48 @@
 
 #include "tb.h"
 #include "define.h"
- 
-void tb::entry() 
+
+void tb::entry()
 {
-  cout << "Begin Simulation" << endl;
+    cout << "Begin Simulation" << endl;
 
-        reset_sig = 1;
-	cont1 = 0;
-        i1 = 0;
-        i2 = 0;
-        single_cycle;
-        reset_sig = 0;
- 
-	i1 = 5;
-        single_cycle;
-        single_cycle;
-        single_cycle;
-        single_cycle;
-        single_cycle;
-        single_cycle;
+    reset_sig = 1;
+    cont1 = 0;
+    i1 = 0;
+    i2 = 0;
+    single_cycle;
+    reset_sig = 0;
 
-        set_value(cont1,1);
-        single_cycle;
-        single_cycle;
-	
-        test_value(o1,2);
-        test_value(o2,3);
- 
-        // 2nd iteration. Test 'else' clause.
-        i1 = 0;
-        i2 = 0;
-	cont1 = 0;
-        single_cycle;
-        single_cycle;
-        single_cycle;
-        single_cycle;
- 
-        test_value(o1,2);
-        test_value(o2,3);
- 
-        long_wait;
- 
+    i1 = 5;
+    single_cycle;
+    single_cycle;
+    single_cycle;
+    single_cycle;
+    single_cycle;
+    single_cycle;
 
-  cout << "End Simulation" << endl;
+    set_value(cont1, 1);
+    single_cycle;
+    single_cycle;
 
-  sc_stop();
+    test_value(o1, 2);
+    test_value(o2, 3);
 
+    // 2nd iteration. Test 'else' clause.
+    i1 = 0;
+    i2 = 0;
+    cont1 = 0;
+    single_cycle;
+    single_cycle;
+    single_cycle;
+    single_cycle;
+
+    test_value(o1, 2);
+    test_value(o2, 3);
+
+    long_wait;
+
+    cout << "End Simulation" << endl;
+
+    sc_stop();
 }
-

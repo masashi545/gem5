@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test04.cpp -- 
+  test04.cpp --
 
   Original Author: Ucar Aziz, Synopsys, Inc., 2002-02-15
                    Martin Janssen, Synopsys, Inc., 2002-02-15
@@ -40,22 +40,21 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_semaphore semaphore;
 
-    SC_CTOR( mod_a )
-    : semaphore( 1 )
-    { }
+    SC_CTOR(mod_a)
+        : semaphore(1)
+    {
+    }
 };
 
-
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    mod_a a( "a" );
-    cout<<a.semaphore.kind()<<endl;
-    sc_start( 5, SC_NS );
+    mod_a a("a");
+    cout << a.semaphore.kind() << endl;
+    sc_start(5, SC_NS);
 
     return 0;
 }

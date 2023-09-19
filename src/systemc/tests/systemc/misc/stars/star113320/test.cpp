@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -43,21 +43,24 @@ I would like to convert between sc_int and sc_bv like in this example:
 
 #include "systemc.h"
 
-int sc_main(int argc, char* arg[]) 
+int sc_main(int argc, char *arg[])
 {
     sc_int<10> a;
     sc_bv<10> b;
     sc_int<7> c;
 
-    a=10; cout << "a="<< a << "\n";
-    b=a; cout << "b="<< b << "\n";
-    c=b; cout << "c="<< c << "\n";
+    a = 10;
+    cout << "a=" << a << "\n";
+    b = a;
+    cout << "b=" << b << "\n";
+    c = b;
+    cout << "c=" << c << "\n";
 
     return 0;
 }
 
 /*
-This doesn't work on with either SC5.0 or g++ for different reasons. 
+This doesn't work on with either SC5.0 or g++ for different reasons.
 
 SC 5.0
 ------------------------------------
@@ -92,7 +95,6 @@ Abort (core dumped)
 
 
 
-I am using SystemC 1.0.1 (stellar does not yet have a 1.0.1 release entry). on 
+I am using SystemC 1.0.1 (stellar does not yet have a 1.0.1 release entry). on
 a Solaris 5.5.1 host with SC5.0 or g++ 2.95.2
 */
-

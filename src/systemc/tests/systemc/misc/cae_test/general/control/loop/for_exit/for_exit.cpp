@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  for_exit.cpp -- 
+  for_exit.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-29
 
@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 #include "for_exit.h"
 
 #define max 10
@@ -43,60 +42,73 @@
 void for_exit::entry()
 {
 
-  int  i, inp_tmp;
+    int i, inp_tmp;
 
-  // reset_loop
-  if (reset.read()==true) {
-    result.write(0);
-    out_valid.write(false);
-    wait();
-  } else wait(); 
+    // reset_loop
+    if (reset.read() == true)
+    {
+        result.write(0);
+        out_valid.write(false);
+        wait();
+    }
+    else
+        wait();
 
-  //----------
-  // main loop
-  //----------
-  while(1) {
+    //----------
+    // main loop
+    //----------
+    while (1)
+    {
 
-    // read inputs
-    while (in_valid.read()==false) wait();
+        // read inputs
+        while (in_valid.read() == false)
+            wait();
 
-    // execution of for loop with continues
-    out_valid.write(true);
-    wait();
-    for (i=1; i<=max; i++) {
-      inp_tmp = in_value.read();
-      if (i==8) {
-	wait();
-	continue;
-      } else if (inp_tmp<5 && i!=1) {
-	wait();
-	continue;
-      } else {
-	result.write(inp_tmp);
-	wait();
-      };
-    };
-    out_valid.write(false);
-    wait(5);
+        // execution of for loop with continues
+        out_valid.write(true);
+        wait();
+        for (i = 1; i <= max; i++)
+        {
+            inp_tmp = in_value.read();
+            if (i == 8)
+            {
+                wait();
+                continue;
+            }
+            else if (inp_tmp < 5 && i != 1)
+            {
+                wait();
+                continue;
+            }
+            else
+            {
+                result.write(inp_tmp);
+                wait();
+            };
+        };
+        out_valid.write(false);
+        wait(5);
 
-    // for loop with break
-    out_valid.write(true);
-    wait();
-    for (i=1; i<=max; i++) {
-      inp_tmp = in_value.read();
-      if (inp_tmp==7) {
-	wait();
-	break;
-      }	else {
-	result.write(inp_tmp);
-	wait();
-      }
-    };
-    out_valid.write(false);
-    wait();
-
-  }
+        // for loop with break
+        out_valid.write(true);
+        wait();
+        for (i = 1; i <= max; i++)
+        {
+            inp_tmp = in_value.read();
+            if (inp_tmp == 7)
+            {
+                wait();
+                break;
+            }
+            else
+            {
+                result.write(inp_tmp);
+                wait();
+            }
+        };
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,28 +40,29 @@
 #include "systemc.h"
 
 class base_mod
-: public sc_module
+    : public sc_module
 {
 public:
-    base_mod( sc_module_name name_ )
-        : sc_module( name_ )
-        {}
+    base_mod(sc_module_name name_)
+        : sc_module(name_)
+    {
+    }
 };
 
 class derived_mod
-: public base_mod
+    : public base_mod
 {
 public:
-    derived_mod( sc_module_name name_ )
-        : base_mod( name_ )
-        {}
+    derived_mod(sc_module_name name_)
+        : base_mod(name_)
+    {
+    }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    base_mod m1( "m1" );
-    derived_mod m2( "m2" );
+    base_mod m1("m1");
+    derived_mod m2("m2");
 
     sc_start(0, SC_NS);
 

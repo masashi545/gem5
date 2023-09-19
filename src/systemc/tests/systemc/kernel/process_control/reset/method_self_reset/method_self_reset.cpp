@@ -46,32 +46,32 @@ SC_MODULE(DUT)
     SC_CTOR(DUT)
     {
         SC_METHOD(method);
-	sensitive << m_clk.pos();
+        sensitive << m_clk.pos();
     }
     void method()
     {
         static int trigger = 0;
         cout << "Entry " << endl;
-	switch( trigger++ )
-	{
-	  case 0:
-	    cout << "Issuing self reset " << endl;
-	    sc_get_current_process_handle().reset();
-	    sc_assert( false );
-	  case 1:
-	    break;
-	  default:
-	    trigger = 0;
-	}
+        switch (trigger++)
+        {
+        case 0:
+            cout << "Issuing self reset " << endl;
+            sc_get_current_process_handle().reset();
+            sc_assert(false);
+        case 1:
+            break;
+        default:
+            trigger = 0;
+        }
         cout << "Exit " << endl;
     }
     sc_in<bool> m_clk;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-    sc_clock        clock;
-    DUT             dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
 
     dut.m_clk(clock);
 

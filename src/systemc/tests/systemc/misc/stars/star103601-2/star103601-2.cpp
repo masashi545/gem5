@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star103601-2.cpp -- 
+  star103601-2.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,42 +38,55 @@
 #include <systemc.h>
 #include "test.h"
 
-void test::reset_loop() {
-  sc_uint<8> tmp, inp, caseexpr;
-  
-  wait();
-  
-  done = 0;
-  dato = 0;
-  tmp = 0;
-  
-  wait();
-  operational_loop: while(1 != 0) {
-    inp = dati.read();
-    wait();
-    inner : while(1 != 0) {
-      dato = tmp;
-      wait();
+void test::reset_loop()
+{
+    sc_uint<8> tmp, inp, caseexpr;
 
-      caseexpr = inp;
-      if(caseexpr == 1) {
-        tmp = 1;
-      } else if((caseexpr == 2) | (caseexpr == 3)) {
-        tmp = 2;
-      } else if(caseexpr != 4) {
-        tmp = 5;
-        break;
-      } else {
-        tmp = 4;
-      }
-      inp = inp + 1;
-    }
     wait();
-    done_loop : while(1) {
-      dato = tmp;
-      done = 1;
-      wait();
+
+    done = 0;
+    dato = 0;
+    tmp = 0;
+
+    wait();
+operational_loop:
+    while (1 != 0)
+    {
+        inp = dati.read();
+        wait();
+    inner:
+        while (1 != 0)
+        {
+            dato = tmp;
+            wait();
+
+            caseexpr = inp;
+            if (caseexpr == 1)
+            {
+                tmp = 1;
+            }
+            else if ((caseexpr == 2) | (caseexpr == 3))
+            {
+                tmp = 2;
+            }
+            else if (caseexpr != 4)
+            {
+                tmp = 5;
+                break;
+            }
+            else
+            {
+                tmp = 4;
+            }
+            inp = inp + 1;
+        }
+        wait();
+    done_loop:
+        while (1)
+        {
+            dato = tmp;
+            done = 1;
+            wait();
+        }
     }
-  }
 }
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test03.cpp -- 
+  test03.cpp --
 
   Original Author: Andy Goodrich, Forte Design Systems, 27 July 2005
 
@@ -35,46 +35,48 @@
 
  *****************************************************************************/
 
-
 // This tests that one can get process handles on static processes.
 
 #include "systemc.h"
 
-
-SC_MODULE(Test) {
+SC_MODULE(Test)
+{
     sc_in<bool> m_clk;
 
-    void method() {
-      sc_process_handle handle = sc_get_current_process_handle(); 
-      cout << handle.name() << " " << handle.proc_kind() << endl; 
+    void method()
+    {
+        sc_process_handle handle = sc_get_current_process_handle();
+        cout << handle.name() << " " << handle.proc_kind() << endl;
     }
-    void thread() {
-		for (;;)
-		{
-			wait();
-			sc_process_handle handle = sc_get_current_process_handle(); 
-			cout << handle.name() << " " << handle.proc_kind() << endl; 
-		}
+    void thread()
+    {
+        for (;;)
+        {
+            wait();
+            sc_process_handle handle = sc_get_current_process_handle();
+            cout << handle.name() << " " << handle.proc_kind() << endl;
+        }
     }
-    SC_CTOR(Test) {
+    SC_CTOR(Test)
+    {
         SC_METHOD(method);
         sensitive << m_clk.neg();
-        sc_process_handle method_handle = sc_get_current_process_handle(); 
-        cout << name() << ".method " << method_handle.proc_kind() << endl; 
-        SC_CTHREAD(thread,m_clk.pos());
-        sc_process_handle thread_handle = sc_get_current_process_handle(); 
-        cout << name() << ".thread " << thread_handle.proc_kind() << endl; 
+        sc_process_handle method_handle = sc_get_current_process_handle();
+        cout << name() << ".method " << method_handle.proc_kind() << endl;
+        SC_CTHREAD(thread, m_clk.pos());
+        sc_process_handle thread_handle = sc_get_current_process_handle();
+        cout << name() << ".thread " << thread_handle.proc_kind() << endl;
     }
 };
 
+int sc_main(int argc, char *argv[])
+{
 
-int sc_main(int argc,char *argv[]) {
-  
     Test t1("t1");
-    sc_clock clk("clk",10,SC_NS);
-    
+    sc_clock clk("clk", 10, SC_NS);
+
     t1.m_clk(clk);
-    
-    sc_start(50,SC_NS);
+
+    sc_start(50, SC_NS);
     return 0;
 }

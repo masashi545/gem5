@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  share.cpp -- 
+  share.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,14 +37,13 @@
 
 #include "systemc.h"
 sc_signed
-share( const sc_unsigned& u,
-       const sc_unsigned& v )
+share(const sc_unsigned &u,
+      const sc_unsigned &v)
 {
     return (u - v) * (v + u);
 }
 
-int
-sc_main( int, char** argv )   
+int sc_main(int, char **argv)
 {
     return 0;
 }

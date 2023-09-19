@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-56.cpp -- 
+  pr-56.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,9 +37,8 @@
 
 #include "systemc.h"
 
-void
-foo( sc_signed& x,
-     sc_unsigned& y )
+void foo(sc_signed &x,
+         sc_unsigned &y)
 {
     x = x + 1;
 }

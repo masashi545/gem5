@@ -53,71 +53,69 @@
 
 sc_event event1;
 sc_process_handle t;
-SC_MODULE(DUT)
-{
-    SC_CTOR(DUT)
-    {
+SC_MODULE(DUT){
+    SC_CTOR(DUT){
         SC_THREAD(thread);
-	t = sc_get_current_process_handle();
-    }
-    void thread()
-    {
-        cout << sc_time_stamp() << " target: initializing" << endl;
-        for (;;)
-        {
-            wait(event1);
-	    cout << sc_time_stamp() << " target: awoke" << endl;
-        }
-    }
-};
-
-SC_MODULE(TB)
+t = sc_get_current_process_handle();
+}
+void thread()
 {
-    SC_CTOR(TB)
+    cout << sc_time_stamp() << " target: initializing" << endl;
+    for (;;)
     {
+        wait(event1);
+        cout << sc_time_stamp() << " target: awoke" << endl;
+    }
+}
+}
+;
+
+SC_MODULE(TB){
+    SC_CTOR(TB){
         SC_THREAD(tb_thread);
-    }
-    void tb_thread()
-    {
-	wait( 10, SC_NS );
-	cout << sc_time_stamp() << " tb: firing event " << endl;
-	event1.notify();
-	wait( 10, SC_NS );
+}
+void tb_thread()
+{
+    wait(10, SC_NS);
+    cout << sc_time_stamp() << " tb: firing event " << endl;
+    event1.notify();
+    wait(10, SC_NS);
 
-	cout << sc_time_stamp() << " tb: suspending target " << endl;
-        t.suspend();
-	wait( 10, SC_NS );
+    cout << sc_time_stamp() << " tb: suspending target " << endl;
+    t.suspend();
+    wait(10, SC_NS);
 
-	cout << sc_time_stamp() << " tb: firing event while target suspended" 
-	     << endl;
-	event1.notify();
-	wait( 10, SC_NS );
+    cout << sc_time_stamp() << " tb: firing event while target suspended"
+         << endl;
+    event1.notify();
+    wait(10, SC_NS);
 
-	cout << sc_time_stamp() << " tb: resetting target " << endl;
-	t.reset();
-	wait( 10, SC_NS );
+    cout << sc_time_stamp() << " tb: resetting target " << endl;
+    t.reset();
+    wait(10, SC_NS);
 
-	cout << sc_time_stamp() << " tb: resuming target" << endl;
-	t.resume();
-	wait( 10, SC_NS );
+    cout << sc_time_stamp() << " tb: resuming target" << endl;
+    t.resume();
+    wait(10, SC_NS);
 
-	cout << sc_time_stamp() << " tb: 10ns after resume" << endl;
-	wait( 10, SC_NS );
+    cout << sc_time_stamp() << " tb: 10ns after resume" << endl;
+    wait(10, SC_NS);
 
-	cout << sc_time_stamp() << " tb: firing event again" << endl;
-	event1.notify();
-	wait( 10, SC_NS );
+    cout << sc_time_stamp() << " tb: firing event again" << endl;
+    event1.notify();
+    wait(10, SC_NS);
 
-	cout << sc_time_stamp() << " tb: stopping" << endl;
-	sc_stop();
-    }
-};
+    cout << sc_time_stamp() << " tb: stopping" << endl;
+    sc_stop();
+}
+}
+;
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
     sc_core::sc_allow_process_control_corners = true;
-    DUT             dut("dut");
-    TB              tb("tb");
+    DUT dut("dut");
+    TB tb("tb");
 
     sc_core::sc_allow_process_control_corners = true;
     sc_start();

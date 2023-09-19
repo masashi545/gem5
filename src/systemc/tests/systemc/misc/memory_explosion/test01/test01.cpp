@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -58,56 +58,66 @@ optimized libraries.
 
 class A : public sc_module
 {
-  sc_event e1;
+    sc_event e1;
 
-  void f()
-  {
-    while(true)
+    void f()
     {
-      e1.notify(sc_time(5,sc_ns));
-      wait(e1);
+        while (true)
+        {
+            e1.notify(sc_time(5, sc_ns));
+            wait(e1);
 
-      wait(2,sc_ns);
+            wait(2, sc_ns);
+        }
     }
-  }
-  public:
-  sc_in_clk clk;
-  SC_CTOR(A) { SC_THREAD(f); sensitive<<clk;}
+
+public:
+    sc_in_clk clk;
+    SC_CTOR(A)
+    {
+        SC_THREAD(f);
+        sensitive << clk;
+    }
 };
 
 class B : public sc_module
 {
-  sc_event e2, e3;
-  void f()
-  {
-    while(true)
+    sc_event e2, e3;
+    void f()
     {
-      e2.notify(sc_time(1,sc_ns));
-      wait(e2);
+        while (true)
+        {
+            e2.notify(sc_time(1, sc_ns));
+            wait(e2);
 
-      e3.notify(sc_time(10,sc_ns));
+            e3.notify(sc_time(10, sc_ns));
 
-      wait(e3);
+            wait(e3);
+        }
     }
-  }
-  public:
-  sc_in_clk clk;
-  SC_CTOR(B) { SC_THREAD(f); sensitive<<clk;}
+
+public:
+    sc_in_clk clk;
+    SC_CTOR(B)
+    {
+        SC_THREAD(f);
+        sensitive << clk;
+    }
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  A a("a");
-  B b("b");
+    A a("a");
+    B b("b");
 
- sc_time clk_time(10.0, sc_ns);
- sc_clock clock("clock",clk_time);
- a.clk(clock);
- b.clk(clock);
+    sc_time clk_time(10.0, sc_ns);
+    sc_clock clock("clock", clk_time);
+    a.clk(clock);
+    b.clk(clock);
 
-  sc_start(0, SC_NS);
-  sc_time sim_time(10.,sc_ms);
-  sc_start(sim_time);
-  return 0;
+    sc_start(0, SC_NS);
+    sc_time sim_time(10., sc_ms);
+    sc_start(sim_time);
+    return 0;
 }
 //--------------------------------------------------------------------------

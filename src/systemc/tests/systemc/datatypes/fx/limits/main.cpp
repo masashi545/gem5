@@ -48,61 +48,61 @@
 #define SC_INCLUDE_FX
 #include "systemc.h"
 
-# if (defined(__GNUC__) && (__GNUC__ >= 3))|| (defined(_MSC_VER) && (_MSC_VER >= 1300))
-#   include "sstream"
+#if (defined(__GNUC__) && (__GNUC__ >= 3)) || (defined(_MSC_VER) && (_MSC_VER >= 1300))
+#include "sstream"
 #else
-#   include "strstream.h"
+#include "strstream.h"
 #endif
 
-extern void test_fx_float_limits(ostream&);
-extern void test_fx_ufix_limits(ostream&);
-extern void test_fx_fix_limits(ostream&);
-extern void test_fx_fixed_limits(ostream&);
-extern void test_fx_ufixed_limits(ostream&);
+extern void test_fx_float_limits(ostream &);
+extern void test_fx_ufix_limits(ostream &);
+extern void test_fx_fix_limits(ostream &);
+extern void test_fx_fixed_limits(ostream &);
+extern void test_fx_ufixed_limits(ostream &);
 
-int sc_main( int, char** )
+int sc_main(int, char **)
 {
-# if (defined(__GNUC__) && (__GNUC__ >= 3))|| (defined(_MSC_VER) && (_MSC_VER >= 1300))
+#if (defined(__GNUC__) && (__GNUC__ >= 3)) || (defined(_MSC_VER) && (_MSC_VER >= 1300))
     std::stringstream out;
-# else
+#else
     strstream out;
-# endif
+#endif
 
-  out.precision(15);
+    out.precision(15);
 
-  test_fx_float_limits(out);
-  test_fx_ufix_limits(out);
-  test_fx_fix_limits(out);
-  test_fx_fixed_limits(out);
-  test_fx_ufixed_limits(out);
+    test_fx_float_limits(out);
+    test_fx_ufix_limits(out);
+    test_fx_fix_limits(out);
+    test_fx_fixed_limits(out);
+    test_fx_ufixed_limits(out);
 
-# if (defined(__GNUC__) && (__GNUC__ >= 3))|| (defined(_MSC_VER) && (_MSC_VER >= 1300))
+#if (defined(__GNUC__) && (__GNUC__ >= 3)) || (defined(_MSC_VER) && (_MSC_VER >= 1300))
     std::string s = out.str();
     for (int i = 0; i < s.length(); i++)
-# else
+#else
     out << '\0';
-    char* s = out.str();
+    char *s = out.str();
     for (int i = 0; i < strlen(s); i++)
-# endif
+#endif
 
-  {
-    if (s[i+0] == 'i'  &&  s[i+1] == 'n'  &&  s[i+2] == 'f')
     {
-      s[i+0] = 'I';
-      i += 2;
-      continue;
+        if (s[i + 0] == 'i' && s[i + 1] == 'n' && s[i + 2] == 'f')
+        {
+            s[i + 0] = 'I';
+            i += 2;
+            continue;
+        }
+
+        if (s[i + 0] == 'n' && s[i + 1] == 'a' && s[i + 2] == 'n')
+        {
+            s[i + 0] = 'N';
+            s[i + 2] = 'N';
+            i += 2;
+            continue;
+        }
     }
 
-    if (s[i+0] == 'n'  &&  s[i+1] == 'a'  &&  s[i+2] == 'n')
-    {
-      s[i+0] = 'N';
-      s[i+2] = 'N';
-      i += 2;
-      continue;
-    }
-  }
+    cout << s;
 
-  cout << s;
-
-  return 0;
+    return 0;
 }

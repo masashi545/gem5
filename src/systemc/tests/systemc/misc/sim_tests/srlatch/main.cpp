@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,24 +40,23 @@
 #include "testbench.h"
 #include "nor.h"
 
-int
-sc_main(int ac, char *av[])
+int sc_main(int ac, char *av[])
 {
-  sc_signal<bool> s;
-  sc_signal<bool> r;
-  sc_signal<bool> q;
-  sc_signal<bool> qp;
+    sc_signal<bool> s;
+    sc_signal<bool> r;
+    sc_signal<bool> q;
+    sc_signal<bool> qp;
 
-  /* Signal initialization to make sure that we do not have an infinite loop of evaluate-update cycles */
-  s = true;
-  r = true;
+    /* Signal initialization to make sure that we do not have an infinite loop of evaluate-update cycles */
+    s = true;
+    r = true;
 
-  sc_clock clk("Clock");
+    sc_clock clk("Clock");
 
-  testbench T("TB", clk, q, qp, s, r);
-  nor G1("G1", s, qp, q);
-  nor G2("G2", r, q, qp);
-  
-  sc_start();
-  return 0;
+    testbench T("TB", clk, q, qp, s, r);
+    nor G1("G1", s, qp, q);
+    nor G2("G2", r, q, qp);
+
+    sc_start();
+    return 0;
 }

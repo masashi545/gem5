@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star103765.cpp -- 
+  star103765.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,39 +38,48 @@
 #include <systemc.h>
 #include "test.h"
 
-void test::reset_loop() {
-  sc_uint<8> tmp;
-  unsigned int i, j;
-  
-  wait();
-  
-  done = 0;
-  dato = 0;
-  tmp = 0;
-  
-  wait();
-  operational_loop: while(1 != 0) {
-    wait();
-    
-    block1 : for(i = 0; i < 1; i++) {
-      tmp = tmp + 1;
-      dato = tmp;
-      wait();
+void test::reset_loop()
+{
+    sc_uint<8> tmp;
+    unsigned int i, j;
 
-      tmp = tmp + 1;
-      if(tmp < 5) {
-        break;
-      } else {
-        continue;
-      }
-      tmp = tmp + 1; // should never get here
-    }
     wait();
-    done_loop : while(1) {
-      dato = tmp;
-      done = 1;
-      wait();
+
+    done = 0;
+    dato = 0;
+    tmp = 0;
+
+    wait();
+operational_loop:
+    while (1 != 0)
+    {
+        wait();
+
+    block1:
+        for (i = 0; i < 1; i++)
+        {
+            tmp = tmp + 1;
+            dato = tmp;
+            wait();
+
+            tmp = tmp + 1;
+            if (tmp < 5)
+            {
+                break;
+            }
+            else
+            {
+                continue;
+            }
+            tmp = tmp + 1; // should never get here
+        }
+        wait();
+    done_loop:
+        while (1)
+        {
+            dato = tmp;
+            done = 1;
+            wait();
+        }
     }
-  }
 }
-

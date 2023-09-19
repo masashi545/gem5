@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -44,18 +44,17 @@ to a sc_bv:
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-   sc_bv<4>      bv4;
-   sc_bv<10>      bv10 = 5;
+    sc_bv<4> bv4;
+    sc_bv<10> bv10 = 5;
 
-    bv4 = bv10.range(4,1);
+    bv4 = bv10.range(4, 1);
     // g++: OK
     // SC5.0: Error
-    //  "str.cc", line 8: Error: Cannot assign 
-    //  sc_bv_ns::sc_range<sc_bv_ns::sc_bv_base> to 
-    //  sc_bv_ns::sc_bv<4> without 
+    //  "str.cc", line 8: Error: Cannot assign
+    //  sc_bv_ns::sc_range<sc_bv_ns::sc_bv_base> to
+    //  sc_bv_ns::sc_bv<4> without
     //  "sc_bv_ns::sc_bv<4>::operator=(const sc_bv_ns::sc_bv<4>&)";.
     cout << bv4 << endl;
 

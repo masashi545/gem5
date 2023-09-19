@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  accessor.cpp -- 
+  accessor.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,43 +42,43 @@
 
 void accessor::entry()
 {
-  int addr;
-  int datao;
-  int datai;
+    int addr;
+    int datao;
+    int datai;
 
-  addr = 10;
-  datao = 0xdeadbeef;
+    addr = 10;
+    datao = 0xdeadbeef;
 
-  while (true) {
-    // Write memory location first
-    chip_select.write(true);
-    write_enable.write(true);
-    address.write(addr);
-    dataout.write(datao);
-    cout << "Accessor: Data Written = " << hex << datao << " at address "
-         << hex << addr << endl;
-    wait(memory_latency); // To make all the outputs appear at the interface
+    while (true)
+    {
+        // Write memory location first
+        chip_select.write(true);
+        write_enable.write(true);
+        address.write(addr);
+        dataout.write(datao);
+        cout << "Accessor: Data Written = " << hex << datao << " at address "
+             << hex << addr << endl;
+        wait(memory_latency); // To make all the outputs appear at the interface
 
-    // some process functionality not shown here during which chip
-    // chip select is deasserted and bus is tristated
-    chip_select.write(false);
-    dataout.write(0);
-    wait();
+        // some process functionality not shown here during which chip
+        // chip select is deasserted and bus is tristated
+        chip_select.write(false);
+        dataout.write(0);
+        wait();
 
-    // Now read memory location
-    chip_select.write(true);
-    write_enable.write(false);
-    address.write(addr);
-    wait(memory_latency); // For data to appear
+        // Now read memory location
+        chip_select.write(true);
+        write_enable.write(false);
+        address.write(addr);
+        wait(memory_latency); // For data to appear
 
-    datai = datain.read().to_int();
-    cout << "Accessor: Data Read = " << hex << datai << " from address "
-         << hex << addr << endl;
-    chip_select.write(false);
-    wait();
+        datai = datain.read().to_int();
+        cout << "Accessor: Data Read = " << hex << datai << " from address "
+             << hex << addr << endl;
+        chip_select.write(false);
+        wait();
 
-    addr++;
-    datao++;
-  }
+        addr++;
+        datao++;
+    }
 } // end of entry function
-

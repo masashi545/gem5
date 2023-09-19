@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,29 +42,29 @@
 
 int sc_main(int ac, char *av[])
 {
-  // Parameter Settings
-  int width = 4;
+    // Parameter Settings
+    int width = 4;
 
-  // Signal Instantiation
-  sc_signal<bool> reset;
-  signal_bool_vector a ("Operand1");
-  signal_bool_vector b ("Operand2");
-  sc_signal<bool> cin;
-  sc_signal<bool> ready;
-  signal_bool_vector sum ("Sum");
-  sc_signal<bool> co;
-  sc_signal<bool> done;
+    // Signal Instantiation
+    sc_signal<bool> reset;
+    signal_bool_vector a("Operand1");
+    signal_bool_vector b("Operand2");
+    sc_signal<bool> cin;
+    sc_signal<bool> ready;
+    signal_bool_vector sum("Sum");
+    sc_signal<bool> co;
+    sc_signal<bool> done;
 
-  // Clock Instantiation
-  sc_clock clk ("Clock", 10, SC_NS, 0.5, 0, SC_NS);
+    // Clock Instantiation
+    sc_clock clk("Clock", 10, SC_NS, 0.5, 0, SC_NS);
 
-  // Process Instantiation
-  paramadd D1("D1", clk, reset, a, b, cin, ready, sum, 
-	      co, done, width);
-  stim T1("T1", clk, done, reset, a, b, cin, 
-	  ready, width);
+    // Process Instantiation
+    paramadd D1("D1", clk, reset, a, b, cin, ready, sum,
+                co, done, width);
+    stim T1("T1", clk, done, reset, a, b, cin,
+            ready, width);
 
-  // Simulation Run Control
-  sc_start();
-  return 0;
+    // Simulation Run Control
+    sc_start();
+    return 0;
 }

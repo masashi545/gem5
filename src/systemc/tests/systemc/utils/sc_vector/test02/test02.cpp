@@ -35,10 +35,10 @@
 
  *****************************************************************************/
 
-//#define USE_BOOST
+// #define USE_BOOST
 
 #ifndef USE_BOOST
-#  define SC_INCLUDE_DYNAMIC_PROCESSES
+#define SC_INCLUDE_DYNAMIC_PROCESSES
 #endif
 
 #include "systemc.h"
@@ -54,73 +54,73 @@ using sc_core::sc_vector;
 //
 struct base : sc_object
 {
-  base( const char* n ) : sc_object(n) {}
+    base(const char *n) : sc_object(n) {}
 };
 
 struct derived_0 : base
 {
-  derived_0(const char* name) : base(name) {}
-  const char* kind() const { return "derived_0"; }
+    derived_0(const char *name) : base(name) {}
+    const char *kind() const { return "derived_0"; }
 };
 
 struct derived_1 : public base
 {
-  derived_1(const char* name) : base(name) {}
-  const char* kind() const { return "derived_1"; }
+    derived_1(const char *name) : base(name) {}
+    const char *kind() const { return "derived_1"; }
 };
 
 // plain function pointer
-base* fill_array( const char* n, size_t i )
+base *fill_array(const char *n, size_t i)
 {
-  if( i%2 ) return new derived_1( n );
-  return new derived_0( n );
+    if (i % 2)
+        return new derived_1(n);
+    return new derived_0(n);
 }
 
 SC_MODULE(DUT)
 {
-  sc_vector< base >            arr;
-  sc_vector< sc_in<bool> >     inps;
-  sc_vector< sc_signal<bool> > sigs;
+    sc_vector<base> arr;
+    sc_vector<sc_in<bool>> inps;
+    sc_vector<sc_signal<bool>> sigs;
 
-  SC_CTOR(DUT);
+    SC_CTOR(DUT);
 
-  // member function as creator (use with sc_bind())
-  sc_signal<bool>* init_sig_bind( const char* n, unsigned i )
-  {
-    sc_signal<bool>* sig = new sc_signal<bool>(n);
-    inps[i]( *sig );
-    return sig;
-  }
+    // member function as creator (use with sc_bind())
+    sc_signal<bool> *init_sig_bind(const char *n, unsigned i)
+    {
+        sc_signal<bool> *sig = new sc_signal<bool>(n);
+        inps[i](*sig);
+        return sig;
+    }
 };
 
-
-DUT::DUT( sc_module_name )
-  : arr("array")
-  , inps("inps", 5)
-  , sigs("sigs")
+DUT::DUT(sc_module_name)
+    : arr("array"), inps("inps", 5), sigs("sigs")
 {
-  arr.init( 3, fill_array );
+    arr.init(3, fill_array);
 
-  sigs.init( inps.size()
-#if defined( SC_INCLUDE_DYNAMIC_PROCESSES )
-	, sc_bind( &DUT::init_sig_bind, this, sc_unnamed::_1, sc_unnamed::_2 )
-#elif defined( USE_BOOST )
-	, boost::bind( &DUT::init_sig_bind, this, _1, _2 )
+    sigs.init(inps.size()
+#if defined(SC_INCLUDE_DYNAMIC_PROCESSES)
+                  ,
+              sc_bind(&DUT::init_sig_bind, this, sc_unnamed::_1, sc_unnamed::_2)
+#elif defined(USE_BOOST)
+                   ,
+               boost::bind(&DUT::init_sig_bind, this, _1, _2)
 #endif
-  );
+    );
 }
 
-int sc_main(int , char* [])
+int sc_main(int, char *[])
 {
-  DUT dut("dut");
+    DUT dut("dut");
 
-  std::vector<sc_object*> children = dut.get_child_objects();
+    std::vector<sc_object *> children = dut.get_child_objects();
 
-  for (size_t i=0; i<children.size(); ++i )
-    cout << children[i]->name() << " - "
-         << children[i]->kind()
-         << endl;
+    for (size_t i = 0; i < children.size(); ++i)
+        cout << children[i]->name() << " - "
+             << children[i]->kind()
+             << endl;
 
-  cout << "Program completed" << endl;
-  return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }

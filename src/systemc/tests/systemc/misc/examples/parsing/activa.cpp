@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  activa.cpp -- 
+  activa.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,26 +37,25 @@
 
 #include "systemc.h"
 
-SC_MODULE( activa )
+SC_MODULE(activa)
 {
-    SC_HAS_PROCESS( activa );
+    SC_HAS_PROCESS(activa);
 
     sc_in_clk clk;
 
-    const sc_signal<unsigned>& a;
-    const sc_signal<unsigned>& b;
-          sc_signal<unsigned>& c;
+    const sc_signal<unsigned> &a;
+    const sc_signal<unsigned> &b;
+    sc_signal<unsigned> &c;
 
-    activa( sc_module_name NAME,
-            sc_clock& CLK,
-            const sc_signal<unsigned>& A,
-            const sc_signal<unsigned>& B,
-                  sc_signal<unsigned>& C )
-        : 
-          a(A), b(B), c(C)
+    activa(sc_module_name NAME,
+           sc_clock & CLK,
+           const sc_signal<unsigned> &A,
+           const sc_signal<unsigned> &B,
+           sc_signal<unsigned> &C)
+        : a(A), b(B), c(C)
     {
-      clk( CLK );
-	  SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
 };
@@ -65,22 +64,24 @@ void activa::entry()
 {
     bool cond1 = false, cond2 = false;
 
-    while (1) {
-        c.write( a + b );
-        if (cond1) {
-            if (cond2) {
-                c.write( a + b );
+    while (1)
+    {
+        c.write(a + b);
+        if (cond1)
+        {
+            if (cond2)
+            {
+                c.write(a + b);
             }
-            c.write( a - b );
+            c.write(a - b);
         }
-        c.write( a * b );
+        c.write(a * b);
     }
 }
 
-int
-sc_main( int, char** )
+int sc_main(int, char **)
 {
-  sc_clock clk;
+    sc_clock clk;
 
-  return 0;
+    return 0;
 }

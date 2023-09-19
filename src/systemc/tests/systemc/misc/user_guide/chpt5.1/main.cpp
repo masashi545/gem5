@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 /* Main file for accumulator simulation */
 
 #include "testbench.h"
@@ -43,15 +42,15 @@
 
 int sc_main(int ac, char *av[])
 {
-  sc_signal<int> number;
-  sc_signal<int> resulta;
-  sc_signal<int> resultm;
+    sc_signal<int> number;
+    sc_signal<int> resulta;
+    sc_signal<int> resultm;
 
-  sc_clock clk("Clock", 20.0, SC_NS, 0.5, 0.0, SC_NS);
+    sc_clock clk("Clock", 20.0, SC_NS, 0.5, 0.0, SC_NS);
 
-  testbench TBH("TB", clk, resulta,resultm, number);
-  accumulator ACC("ACC", clk, number, resulta, resultm);
+    testbench TBH("TB", clk, resulta, resultm, number);
+    accumulator ACC("ACC", clk, number, resulta, resultm);
 
-  sc_start(1000, SC_NS);
-  return 0;
+    sc_start(1000, SC_NS);
+    return 0;
 }

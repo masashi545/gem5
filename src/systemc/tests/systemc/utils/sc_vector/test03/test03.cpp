@@ -39,62 +39,61 @@
 
 using sc_core::sc_vector;
 
-SC_MODULE( sub_module )
+SC_MODULE(sub_module)
 {
-  // constructor with additional parameters
-  sub_module( sc_core::sc_module_name, int param );
-  // ...
+    // constructor with additional parameters
+    sub_module(sc_core::sc_module_name, int param);
+    // ...
 };
 
-SC_MODULE( module )
+SC_MODULE(module)
 {
-  sc_core::sc_vector< sub_module > m_sub_vec;          // vector of sub-modules
+    sc_core::sc_vector<sub_module> m_sub_vec; // vector of sub-modules
 
-  module( sc_core::sc_module_name, unsigned n_sub );   // constructor
+    module(sc_core::sc_module_name, unsigned n_sub); // constructor
 
-  struct mod_creator                                   // Creator struct
-  {
-    mod_creator( int p ) : param(p) {}                 // store parameter to forward
-
-    sub_module* operator()( const char* name, size_t ) // actual creator function
+    struct mod_creator // Creator struct
     {
-      return new sub_module( name, param );            // forward param to sub-module
-    }
-    int param;
-  };
+        mod_creator(int p) : param(p) {} // store parameter to forward
 
+        sub_module *operator()(const char *name, size_t) // actual creator function
+        {
+            return new sub_module(name, param); // forward param to sub-module
+        }
+        int param;
+    };
 };
 
-sub_module::sub_module( sc_core::sc_module_name, int )
-  { /* empty */ }
-
-module::module( sc_core::sc_module_name, unsigned n_sub )
-  : m_sub_vec( "sub_modules" )                       // set name prefix
-{
-  m_sub_vec.init( n_sub, mod_creator(42) );          // init with custom creator
-  // ...
+sub_module::sub_module(sc_core::sc_module_name, int)
+{ /* empty */
 }
 
-int sc_main(int , char* [])
+module::module(sc_core::sc_module_name, unsigned n_sub) :m_sub_vec("sub_modules") // set name prefix
 {
-  module dut( "dut", 5 );
+    m_sub_vec.init(n_sub, mod_creator(42)); // init with custom creator
+                                            // ...
+}
 
-  typedef sc_core::sc_vector<sub_module> vec_type;
-  vec_type const & children = dut.m_sub_vec;
+int sc_main(int, char *[])
+{
+    module dut("dut", 5);
 
-  for( vec_type::const_iterator it = children.begin();
-       it != children.end(); ++it )
-  {
-    cout << it->name() << " - "
-         << (*it).kind()
-         << endl;
-  }
+    typedef sc_core::sc_vector<sub_module> vec_type;
+    vec_type const &children = dut.m_sub_vec;
 
-  for (size_t i=0; i < children.size(); ++i )
-    cout << children[i].basename() << " - "
-         << children[i].get_parent_object()->name()
-         << endl;
+    for (vec_type::const_iterator it = children.begin();
+         it != children.end(); ++it)
+    {
+        cout << it->name() << " - "
+             << (*it).kind()
+             << endl;
+    }
 
-  cout << "Program completed" << endl;
-  return 0;
+    for (size_t i = 0; i < children.size(); ++i)
+        cout << children[i].basename() << " - "
+             << children[i].get_parent_object()->name()
+             << endl;
+
+    cout << "Program completed" << endl;
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,7 +39,7 @@
 
 #include "systemc.h"
 
-SC_MODULE( writer )
+SC_MODULE(writer)
 {
     // port(s)
     sc_fifo_out<int> out;
@@ -48,20 +48,21 @@ SC_MODULE( writer )
     void main_action()
     {
         int val = 0;
-        while( true ) {
-            wait( 10, SC_NS ); // wait for 10 ns
-            for( int i = 0; i < 20; i ++ )
-                out->write( val ++ ); // blocking write
+        while (true)
+        {
+            wait(10, SC_NS); // wait for 10 ns
+            for (int i = 0; i < 20; i++)
+                out->write(val++); // blocking write
         }
     }
 
-    SC_CTOR( writer )
+    SC_CTOR(writer)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
     }
 };
 
-SC_MODULE( reader )
+SC_MODULE(reader)
 {
     // port(s)
     sc_fifo_in<int> in;
@@ -70,38 +71,40 @@ SC_MODULE( reader )
     void main_action()
     {
         int val;
-        while( true ) {
-            wait( 10, SC_NS ); // wait for 10 ns
-            for( int i = 0; i < 15; i ++ ) {
-                in->read( val ); // blocking read
+        while (true)
+        {
+            wait(10, SC_NS); // wait for 10 ns
+            for (int i = 0; i < 15; i++)
+            {
+                in->read(val); // blocking read
                 cout << val << endl;
             }
             cout << "Available: " << in->num_available() << endl;
         }
     }
 
-    SC_CTOR( reader )
+    SC_CTOR(reader)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
     }
 };
 
-int sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_clock c;
 
     // declare channel(s)
-    sc_fifo<int> fifo( 10 );
+    sc_fifo<int> fifo(10);
 
     // instantiate block(s) and connect to channel(s)
-    writer w( "writer" );
-    reader r( "reader" );
+    writer w("writer");
+    reader r("reader");
 
-    w.out( fifo );
-    r.in( fifo );
+    w.out(fifo);
+    r.in(fifo);
 
     // run the simulation
-    sc_start( 100, SC_NS );
+    sc_start(100, SC_NS);
 
     return 0;
 }

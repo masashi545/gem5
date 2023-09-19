@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  display.cpp -- 
+  display.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,25 +35,26 @@
 
  *****************************************************************************/
 
-		/*****************************************/
-		/* Implementation Filename:  display.cc  */
-		/*****************************************/
+/*****************************************/
+/* Implementation Filename:  display.cc  */
+/*****************************************/
 
 #include "display.h"
 
 void displayp::entry()
 {
-  bool_vector	tmp;
+    bool_vector tmp;
 
-  cout << sc_time_stamp() << " : STARTING SIM \n" << endl;
+    cout << sc_time_stamp() << " : STARTING SIM \n"
+         << endl;
 
-  while (true) {
+    while (true)
+    {
 
-    tmp = prime.read();
-    wait();
+        tmp = prime.read();
+        wait();
 
-    cout << sc_time_stamp() << " : STOPPING SIM - stop button" << endl;
-    sc_stop();
-
-  }
+        cout << sc_time_stamp() << " : STOPPING SIM - stop button" << endl;
+        sc_stop();
+    }
 }

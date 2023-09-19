@@ -37,75 +37,73 @@
 
 #include "systemc"
 
+using sc_core::sc_in;
+using sc_core::sc_mutex;
 using sc_core::sc_object;
 using sc_core::sc_vector;
-using sc_core::sc_mutex;
-using sc_core::sc_in;
 
-void print_vector( const char * header,
-                   const std::vector<sc_object*> & vec )
+void print_vector(const char *header,
+                  const std::vector<sc_object *> &vec)
 {
-  std::cout << "\n-->-- " << header << " -->--\n";
+    std::cout << "\n-->-- " << header << " -->--\n";
 
-  std::cout << " - size: " << vec.size() << "\n";
+    std::cout << " - size: " << vec.size() << "\n";
 
-  for (size_t i=0; i<vec.size(); ++i )
-    std::cout << " - "
-              << vec[i]->name() << " - "
-              << vec[i]->kind() << "\n";
+    for (size_t i = 0; i < vec.size(); ++i)
+        std::cout << " - "
+                  << vec[i]->name() << " - "
+                  << vec[i]->kind() << "\n";
 
-  std::cout << "--<-- " << header << " --<--"
-            << std::endl;
+    std::cout << "--<-- " << header << " --<--"
+              << std::endl;
 }
 
-#define PRINT_VECTOR( Vector ) \
-  print_vector( #Vector, Vector )
+#define PRINT_VECTOR(Vector) \
+    print_vector(#Vector, Vector)
 
-SC_MODULE( sub_module )
+SC_MODULE(sub_module)
 {
-  sc_in<bool> in;
-  SC_CTOR(sub_module) {}
+    sc_in<bool> in;
+    SC_CTOR(sub_module) {}
 };
 
-
-SC_MODULE( module )
+SC_MODULE(module)
 {
-  // vector of sub-modules
-  sc_vector< sub_module > sub_vec;
+    // vector of sub-modules
+    sc_vector<sub_module> sub_vec;
 
-  // vector of ports
-  sc_vector< sc_in<bool> > in_vec;
+    // vector of ports
+    sc_vector<sc_in<bool>> in_vec;
 
-  SC_CTOR(module)
-    : sub_vec( "sub_modules" )
-    , in_vec( "in_vec" )
-  {}
+    SC_CTOR(module)
+        : sub_vec("sub_modules"), in_vec("in_vec")
+    {
+    }
 
-  void init( unsigned n_sub )
-  {
-    sub_vec.init(n_sub);
-    in_vec.init(n_sub);
-    // in_vec.init(n_sub); // second call fails
+    void init(unsigned n_sub)
+    {
+        sub_vec.init(n_sub);
+        in_vec.init(n_sub);
+        // in_vec.init(n_sub); // second call fails
 
-    // bind ports of sub-modules -- no dereference
-    sc_assemble_vector(  sub_vec, &sub_module::in ).bind( in_vec );
-  }
-
+        // bind ports of sub-modules -- no dereference
+        sc_assemble_vector(sub_vec, &sub_module::in).bind(in_vec);
+    }
 };
 
-int sc_main(int, char* [])
+int sc_main(int, char *[])
 {
-  module m("dut");
-  m.init(4); // calls from external context
+    module m("dut");
+    m.init(4); // calls from external context
 
-  PRINT_VECTOR( m.get_child_objects() );
+    PRINT_VECTOR(m.get_child_objects());
 
-  PRINT_VECTOR( m.sub_vec.get_child_objects() );
+    PRINT_VECTOR(m.sub_vec.get_child_objects());
 
-  PRINT_VECTOR( m.sub_vec.get_elements() );
+    PRINT_VECTOR(m.sub_vec.get_elements());
 
-  PRINT_VECTOR( sc_assemble_vector( m.sub_vec, &sub_module::in ).get_elements() );
+    PRINT_VECTOR(sc_assemble_vector(m.sub_vec, &sub_module::in).get_elements());
 
-  std::cout << "\nProgram completed" << std::endl;
-  return 0;
+    std::cout << "\nProgram completed" << std::endl;
+    return 0;
 }

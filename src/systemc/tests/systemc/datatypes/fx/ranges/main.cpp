@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,24 +36,23 @@
  *****************************************************************************/
 
 // This may look like C code, but it is really -*- C++ -*-
-// 
-// main.cxx<2> -- 
+//
+// main.cxx<2> --
 // Copyright Synopsys 1998
 // Author          : Ric Hilderink
 // Created On      : Mon Jan 11 12:03:04 1999
 // Status          : none
-// 
-
+//
 
 #include <limits.h>
 #define SC_INCLUDE_FX
 #include "systemc.h"
 
-extern void range_fx(ostream&);
+extern void range_fx(ostream &);
 
-int sc_main( int, char** )
+int sc_main(int, char **)
 {
-  range_fx(cout);
+    range_fx(cout);
 
-  return 0;
+    return 0;
 }

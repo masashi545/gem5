@@ -18,11 +18,11 @@
  *****************************************************************************/
 
 /*****************************************************************************
-        
+
   test05.cpp -- Test user exception throws.
-        
+
   Original Author: Andy Goodrich, Forte Design Systems, 15 December 2006
-        
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -31,8 +31,8 @@
   changes you are making here.
 
       Name, Affiliation, Date:
-  Description of Modification:    
-    
+  Description of Modification:
+
  *****************************************************************************/
 
 // $Log: test05.cpp,v $
@@ -42,71 +42,75 @@
 
 #include "systemc.h"
 
-class my_exception {};
-class your_exception {};
+class my_exception
+{
+};
+class your_exception
+{
+};
 
 SC_MODULE(DUT)
 {
-	SC_CTOR(DUT)
-	{
-		SC_CTHREAD(thread,m_clk.pos());
-		SC_THREAD(monitor);
-	}
-	void monitor()
-	{
-		m_monitor_handle = sc_get_current_process_handle();
-		for (;;)
-		{
-			try
-			{
-				wait(m_never_event);
-			}
-			catch (my_exception& except)
-			{
-				cout << sc_time_stamp() << " caught my exception " << endl;
-			}
-			catch (your_exception& except)
-			{
-				cout << sc_time_stamp() << " caught your exception " << endl;
-			}
-		}
-	}
-	void thread()
-	{
-		my_exception   exception;
-		your_exception other_exception;
-		for (;;)
-		{
-			wait(3);
-			cout << sc_time_stamp() << " throwing my exception " << endl;
-			m_monitor_handle.throw_it(exception);
-			wait();
+    SC_CTOR(DUT)
+    {
+        SC_CTHREAD(thread, m_clk.pos());
+        SC_THREAD(monitor);
+    }
+    void monitor()
+    {
+        m_monitor_handle = sc_get_current_process_handle();
+        for (;;)
+        {
+            try
+            {
+                wait(m_never_event);
+            }
+            catch (my_exception &except)
+            {
+                cout << sc_time_stamp() << " caught my exception " << endl;
+            }
+            catch (your_exception &except)
+            {
+                cout << sc_time_stamp() << " caught your exception " << endl;
+            }
+        }
+    }
+    void thread()
+    {
+        my_exception exception;
+        your_exception other_exception;
+        for (;;)
+        {
+            wait(3);
+            cout << sc_time_stamp() << " throwing my exception " << endl;
+            m_monitor_handle.throw_it(exception);
+            wait();
 
-			// test that both exceptions appear.
+            // test that both exceptions appear.
 
-			cout << sc_time_stamp() << " throwing my exception " << endl;
-			m_monitor_handle.throw_it(exception);
-			cout << sc_time_stamp() << " throwing your exception " << endl;
-			m_monitor_handle.throw_it(other_exception);
-			wait();
-			wait();
-			sc_stop();
-		}
-	}
-	sc_in<bool>       m_clk;
-	sc_process_handle m_monitor_handle;
-	sc_event          m_never_event;
+            cout << sc_time_stamp() << " throwing my exception " << endl;
+            m_monitor_handle.throw_it(exception);
+            cout << sc_time_stamp() << " throwing your exception " << endl;
+            m_monitor_handle.throw_it(other_exception);
+            wait();
+            wait();
+            sc_stop();
+        }
+    }
+    sc_in<bool> m_clk;
+    sc_process_handle m_monitor_handle;
+    sc_event m_never_event;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-	sc_clock        clock;
-	DUT             dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
 
-	dut.m_clk(clock);
+    dut.m_clk(clock);
 
-	sc_start();
+    sc_start();
 
-	cout << "Program completed" << endl;
-	return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }

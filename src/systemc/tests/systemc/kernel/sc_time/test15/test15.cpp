@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test15.cpp -- 
+  test15.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,11 +39,10 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_set_default_time_unit( 1, SC_NS );
-    sc_set_default_time_unit( 10, SC_FS );
+    sc_set_default_time_unit(1, SC_NS);
+    sc_set_default_time_unit(10, SC_FS);
 
     return 0;
 }

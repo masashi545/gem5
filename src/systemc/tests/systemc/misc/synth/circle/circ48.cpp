@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  circ48.cpp -- 
+  circ48.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,26 +36,25 @@
  *****************************************************************************/
 
 #include "tb.h"
-#include "circ48.h" 	
+#include "circ48.h"
 
-int
-sc_main( int, char *[] )
+int sc_main(int, char *[])
 {
-    sc_clock clk( "clk", 20, SC_NS, 0.5, 10, SC_NS );
+    sc_clock clk("clk", 20, SC_NS, 0.5, 10, SC_NS);
 
-    sc_signal<bool>    I_reset;
-    sc_signal<bool>    I_x_ok;
-    sc_signal<bool>    I_y_ok;
-    sc_signal<bool>    O_out_wr;
-    sc_signal<bool>    O_out_sel;
+    sc_signal<bool> I_reset;
+    sc_signal<bool> I_x_ok;
+    sc_signal<bool> I_y_ok;
+    sc_signal<bool> O_out_wr;
+    sc_signal<bool> O_out_sel;
     signal_bool_vector O_out_xy;
     signal_bool_vector O_diffs;
 
-    testbench tb( "TB", clk, I_reset, I_x_ok, I_y_ok,
-		  O_out_wr, O_out_sel, O_out_xy );
+    testbench tb("TB", clk, I_reset, I_x_ok, I_y_ok,
+                 O_out_wr, O_out_sel, O_out_xy);
 
-    circ48 c1( "C1", clk, I_reset, I_x_ok, I_y_ok,
-	       O_out_wr, O_out_sel, O_out_xy, O_diffs );
+    circ48 c1("C1", clk, I_reset, I_x_ok, I_y_ok,
+              O_out_wr, O_out_sel, O_out_xy, O_diffs);
 
     sc_start();
 

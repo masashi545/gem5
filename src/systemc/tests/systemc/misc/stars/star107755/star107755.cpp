@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star107755.cpp -- 
+  star107755.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,43 +38,44 @@
 #include "systemc.h"
 #include "regfile.h"
 
-void test::reset_loop() {
-  sc_uint<14> cell[2];
-  sc_uint<14> cell1[2];
+void test::reset_loop()
+{
+    sc_uint<14> cell[2];
+    sc_uint<14> cell1[2];
 
-  sc_uint<14> dat0, dat3;
-  sc_uint<14> out0, out3;
-  
-  dato.write(0);
-  dat0 = dat3 = out0 = out3 = 0;
-  ready.write(sc_logic('0'));
-  done.write(sc_logic('0'));
-  
-  wait();
-  while (1) {
-    ready.write(sc_logic('1'));
-    wait();
+    sc_uint<14> dat0, dat3;
+    sc_uint<14> out0, out3;
 
+    dato.write(0);
+    dat0 = dat3 = out0 = out3 = 0;
     ready.write(sc_logic('0'));
-    dat0 = dati.read();
-    wait();
-    
-    dat3 = dati.read();
-
-    cell[0] = dat0;
-
-    cell1[1] = dat3;
-
-    out0 = cell[0];
-    out3 = cell1[1];
-    
-    dato.write(out0);
-    done.write(sc_logic('1'));
-    wait();
-
-    dato.write(out3);
     done.write(sc_logic('0'));
-    wait();
 
-  }
+    wait();
+    while (1)
+    {
+        ready.write(sc_logic('1'));
+        wait();
+
+        ready.write(sc_logic('0'));
+        dat0 = dati.read();
+        wait();
+
+        dat3 = dati.read();
+
+        cell[0] = dat0;
+
+        cell1[1] = dat3;
+
+        out0 = cell[0];
+        out3 = cell1[1];
+
+        dato.write(out0);
+        done.write(sc_logic('1'));
+        wait();
+
+        dato.write(out3);
+        done.write(sc_logic('0'));
+        wait();
+    }
 }

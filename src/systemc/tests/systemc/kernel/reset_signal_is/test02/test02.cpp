@@ -22,7 +22,7 @@
   test02.cpp -- Test reset_signal_is() usage with SC_CTHREAD processes.
 
   Original Author: Andy Goodrich, Forte Design Systems, 12 August 2005
-    
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -31,54 +31,53 @@
   changes you are making here.
 
       Name, Affiliation, Date:
-  Description of Modification:    
-    
+  Description of Modification:
+
  *****************************************************************************/
 
 #include "systemc.h"
 SC_MODULE(DUT)
 {
-	SC_CTOR(DUT)
-	{
-		SC_CTHREAD(cthread,m_clk.pos());
-		reset_signal_is(m_reset,true);
-		SC_CTHREAD(resetter,m_clk.pos());
-	}
-	void cthread()
-	{
-		cout << sc_time_stamp() << ": initializing" << endl;
-		for (;;)
-		{
-		    wait(3);
-			cout << sc_time_stamp() << ": waited 3" << endl;
-		}
-	}
-	void resetter()
-	{
-		m_reset = false;
-		wait(3);
-		m_reset = true;
-		wait(2);
-		m_reset = false;
-		wait(6);
-		m_reset = true;
-		wait(5);
-		sc_stop();
-	}
-	sc_in<bool>    m_clk;
-	sc_inout<bool> m_reset;
+    SC_CTOR(DUT)
+    {
+        SC_CTHREAD(cthread, m_clk.pos());
+        reset_signal_is(m_reset, true);
+        SC_CTHREAD(resetter, m_clk.pos());
+    }
+    void cthread()
+    {
+        cout << sc_time_stamp() << ": initializing" << endl;
+        for (;;)
+        {
+            wait(3);
+            cout << sc_time_stamp() << ": waited 3" << endl;
+        }
+    }
+    void resetter()
+    {
+        m_reset = false;
+        wait(3);
+        m_reset = true;
+        wait(2);
+        m_reset = false;
+        wait(6);
+        m_reset = true;
+        wait(5);
+        sc_stop();
+    }
+    sc_in<bool> m_clk;
+    sc_inout<bool> m_reset;
 };
 
-int sc_main( int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-	sc_clock        clock;
-	DUT             dut("dut");
-	sc_signal<bool> reset;
+    sc_clock clock;
+    DUT dut("dut");
+    sc_signal<bool> reset;
 
-	dut.m_clk(clock);
-	dut.m_reset(reset);
+    dut.m_clk(clock);
+    dut.m_reset(reset);
 
-	sc_start();
-	return 0;
+    sc_start();
+    return 0;
 }
-

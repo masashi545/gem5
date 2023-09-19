@@ -18,11 +18,11 @@
  *****************************************************************************/
 
 /*****************************************************************************
- 
+
   speed.cpp -- Definition of the speedometer.
- 
+
   Original Author: Ali Dasdan, Synopsys, Inc.
- 
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -54,40 +54,42 @@
 // Find the elapsed_time between NUM_PULSES_FOR_SPEED pulses.
 void speed_mod::find_time_proc()
 {
-  if (start)
-    elapsed_time = elapsed_time + 1;
-  else
-    elapsed_time = 0;
+    if (start)
+        elapsed_time = elapsed_time + 1;
+    else
+        elapsed_time = 0;
 }
 
 // Compute speed.
-void
-speed_mod::read_speed_proc()
+void speed_mod::read_speed_proc()
 {
-  wait();
+    wait();
 
-  double tmp_speed;
+    double tmp_speed;
 
-  while (true) {
+    while (true)
+    {
 
-    // More than one pulse is needed to compute a distance and 
-    // consequently, speed. This function collects NUM_PULSES_FOR_SPEED
-    // pulses for that purpose.
-    AWAIT(NUM_PULSES_FOR_SPEED);
+        // More than one pulse is needed to compute a distance and
+        // consequently, speed. This function collects NUM_PULSES_FOR_SPEED
+        // pulses for that purpose.
+        AWAIT(NUM_PULSES_FOR_SPEED);
 
-    if (start) {
-      tmp_speed = DIST_BETWEEN_TWO_PULSES * PERIODS_PER_HOUR / elapsed_time;
-      speed = tmp_speed;
-      angle = tmp_speed * MAX_ANGLE / MAX_SPEED;
+        if (start)
+        {
+            tmp_speed = DIST_BETWEEN_TWO_PULSES * PERIODS_PER_HOUR / elapsed_time;
+            speed = tmp_speed;
+            angle = tmp_speed * MAX_ANGLE / MAX_SPEED;
+        }
+        else
+        {
+            speed = 0.0;
+            angle = 0.0;
+        }
+
+        // Reset timer.
+        elapsed_time = 0;
     }
-    else {
-      speed = 0.0;
-      angle = 0.0;
-    }
-
-    // Reset timer.
-    elapsed_time = 0;
-  }
 }
 
 // End of file

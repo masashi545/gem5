@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,9 +35,9 @@
 
  *****************************************************************************/
 
-/* 
+/*
    Verifies directive line_label.
-   Author: PRP 
+   Author: PRP
    From PR 358 - Check that directive is accepted when followed
    by a labelled statement
 */
@@ -45,31 +45,32 @@
 #include "systemc.h"
 #include "test.h"
 
-void test::entry() 
+void test::entry()
 {
-  int y,j,i;
+    int y, j, i;
 
-     y = 3;
+    y = 3;
 
-      i = 3;
+    i = 3;
 
-      switch (i) {
-      case 0:
-	y = 1;
-      j = 2;
-      case 1:
-	y = y + 1;
-	break;
-      case 2:
-	y = y + 1;
-      j = 2;
-      default:
-	y = y + 1;
-	break;
-      }
-      j = 4;
-      j = 2;
- pp: j = 8;
-  wait();
- 
+    switch (i)
+    {
+    case 0:
+        y = 1;
+        j = 2;
+    case 1:
+        y = y + 1;
+        break;
+    case 2:
+        y = y + 1;
+        j = 2;
+    default:
+        y = y + 1;
+        break;
+    }
+    j = 4;
+    j = 2;
+pp:
+    j = 8;
+    wait();
 }
