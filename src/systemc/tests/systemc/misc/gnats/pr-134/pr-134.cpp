@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-134.cpp -- 
+  pr-134.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,50 +37,52 @@
 
 #include "systemc.h"
 
-SC_MODULE( arst )
+SC_MODULE(arst)
 {
-    SC_HAS_PROCESS( arst );
+    SC_HAS_PROCESS(arst);
 
     sc_in_clk clk;
 
-    const sc_signal<char>& a;
-          sc_signal<char>& b;
+    const sc_signal<char> &a;
+    sc_signal<char> &b;
 
-    arst( sc_module_name NAME,
-          sc_clock& CLK,
-          
-          const sc_signal<char>& A,
-                sc_signal<char>& B )
+    arst(sc_module_name NAME,
+         sc_clock & CLK,
+
+         const sc_signal<char> &A,
+         sc_signal<char> &B)
         : a(A), b(B)
     {
-      clk(CLK);
-	  SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
 };
 
 sc_signal<char> yikes; /* instantiation bug with gcc 2.95 */
 
-struct xyz {
+struct xyz
+{
     char x;
     char y;
 };
 
-void
-arst::entry()
+void arst::entry()
 {
     xyz xyz_array[8];
-    for (signed char i = 0; i < 8; ++i) {
+    for (signed char i = 0; i < 8; ++i)
+    {
         xyz_array[i].x = a;
         wait();
     }
-    for (signed char i = 0; i < 8; ++i) {
+    for (signed char i = 0; i < 8; ++i)
+    {
         b = xyz_array[i].x;
         wait();
     }
 }
 
-int sc_main(int argc, char* argv[] )
-{ 
-  return 0;
+int sc_main(int argc, char *argv[])
+{
+    return 0;
 }

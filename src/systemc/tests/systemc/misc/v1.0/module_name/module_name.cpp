@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  module_name.cpp -- 
+  module_name.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,12 +37,13 @@
 
 #include "systemc.h"
 
-int numbers[] = { 49597, 41218, 20635, 40894, 16767, 17233, 36246, 28171, 60879, 49566, 10971, 24107, 30561, 49648, 50031, 12559, 23787, 35674, 43320, 37558, 840, 18689, 62466, 6308, 46271, 49801, 43433, 22683, 35494, 35259, 29020, 19555, 10941, 49656, 60450, 27709, 1353, 31160, 55880, 62232, 15190, 1315, 20803, 45751, 50963, 5298, 58311, 9215, 2378 };
+int numbers[] = {49597, 41218, 20635, 40894, 16767, 17233, 36246, 28171, 60879, 49566, 10971, 24107, 30561, 49648, 50031, 12559, 23787, 35674, 43320, 37558, 840, 18689, 62466, 6308, 46271, 49801, 43433, 22683, 35494, 35259, 29020, 19555, 10941, 49656, 60450, 27709, 1353, 31160, 55880, 62232, 15190, 1315, 20803, 45751, 50963, 5298, 58311, 9215, 2378};
 
 int numbers_index = 0;
 
-struct example : sc_module {
-    sc_in_clk  clk;
+struct example : sc_module
+{
+    sc_in_clk clk;
     sc_in<int> a;
     sc_in<int> b;
     sc_out<int> c;
@@ -59,136 +60,134 @@ struct example : sc_module {
 
     SC_CTOR(example)
     {
-        SC_METHOD( block_a );
+        SC_METHOD(block_a);
         sensitive << a;
         sensitive << b;
 
-        SC_METHOD( block_b );
+        SC_METHOD(block_b);
         sensitive << a << b;
 
-        SC_METHOD( block_c );
+        SC_METHOD(block_c);
         sensitive << d << e;
 
-        SC_CTHREAD( block_d, clk.neg() );
+        SC_CTHREAD(block_d, clk.neg());
 
-        SC_CTHREAD( block_e, clk.pos() );
+        SC_CTHREAD(block_e, clk.pos());
 
-        SC_CTHREAD( block_f, clk.pos() );
+        SC_CTHREAD(block_f, clk.pos());
     }
 };
 
-void
-example::block_a()
+void example::block_a()
 {
     d = a + b;
 }
 
-void
-example::block_b()
+void example::block_b()
 {
     e = a - b;
 }
 
-void
-example::block_c()
+void example::block_c()
 {
     c = d * e;
 }
 
-void
-example::block_d()
+void example::block_d()
 {
     int i = 0;
-    while (true) {
+    while (true)
+    {
         cout << "block_d " << i << endl;
         i++;
         wait();
     }
 }
 
-void
-example::block_e()
+void example::block_e()
 {
     int i = 0;
-    while (true) {
+    while (true)
+    {
         cout << "block_e " << i << endl;
         i++;
         wait();
     }
 }
 
-void
-example::block_f()
+void example::block_f()
 {
     int i = 32;
-    while (true) {
+    while (true)
+    {
         cout << "block_f " << i << endl;
         i++;
         wait();
     }
 }
 
-struct tb : sc_module {
-    sc_in_clk   clk;
+struct tb : sc_module
+{
+    sc_in_clk clk;
     sc_out<int> a;
 
     void tb_proc();
 
     SC_CTOR(tb)
     {
-        SC_CTHREAD( tb_proc, clk.pos() );
+        SC_CTHREAD(tb_proc, clk.pos());
     }
 };
 
-void
-tb::tb_proc()
+void tb::tb_proc()
 {
-    while (true) {
-        a = numbers[numbers_index % (sizeof(numbers)/sizeof(numbers[0]))];
+    while (true)
+    {
+        a = numbers[numbers_index % (sizeof(numbers) / sizeof(numbers[0]))];
         numbers_index++;
         cout << "tb_proc " << endl;
         wait();
     }
 }
 
-struct tb2 : sc_module {
-    sc_in_clk   clk;
+struct tb2 : sc_module
+{
+    sc_in_clk clk;
     sc_out<int> b;
 
     void tb2_proc();
 
     SC_CTOR(tb2)
     {
-        SC_CTHREAD( tb2_proc, clk.pos() );
+        SC_CTHREAD(tb2_proc, clk.pos());
     }
 };
 
-void
-tb2::tb2_proc()
+void tb2::tb2_proc()
 {
-    while (true) {
-        b = numbers[numbers_index % (sizeof(numbers)/sizeof(numbers[0]))];
+    while (true)
+    {
+        b = numbers[numbers_index % (sizeof(numbers) / sizeof(numbers[0]))];
         numbers_index++;
         cout << "tb2_proc " << endl;
         wait();
     }
 }
 
-SC_MODULE( monitor )
+SC_MODULE(monitor)
 {
-    SC_HAS_PROCESS( monitor );
+    SC_HAS_PROCESS(monitor);
 
-    const sc_signal<int>& a;
-    const sc_signal<int>& b;
-    const sc_signal<int>& c;
+    const sc_signal<int> &a;
+    const sc_signal<int> &b;
+    const sc_signal<int> &c;
 
-    monitor( sc_module_name,
-             const sc_signal<int>& A,
-             const sc_signal<int>& B,
-             const sc_signal<int>& C ) :
-        a(A), b(B), c(C)
+    monitor(sc_module_name,
+            const sc_signal<int> &A,
+            const sc_signal<int> &B,
+            const sc_signal<int> &C) : a(A), b(B), c(C)
     {
-	SC_METHOD( entry );
+        SC_METHOD(entry);
         sensitive << a;
         sensitive << b;
         sensitive << c;
@@ -196,16 +195,17 @@ SC_MODULE( monitor )
     void entry();
 };
 
-void
-monitor::entry()
+void monitor::entry()
 {
-    if (a.event()) cout << "a = " << a << endl;
-    if (b.event()) cout << "b = " << b << endl;
-    if (c.event()) cout << "c = " << c << endl;
+    if (a.event())
+        cout << "a = " << a << endl;
+    if (b.event())
+        cout << "b = " << b << endl;
+    if (c.event())
+        cout << "c = " << c << endl;
 }
 
-int
-sc_main( int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
     sc_signal<int> a("a");
     sc_signal<int> b("b");

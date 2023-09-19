@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star103832.cpp -- 
+  star103832.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,62 +37,72 @@
 
 #include <systemc.h>
 
-struct test : sc_module {
-  
-  sc_in<bool> reset;
-  sc_in_clk clk;
-  sc_in<sc_uint<8> >  dati;
-  sc_out<sc_uint<8> >  dato;
-  sc_out<bool> done;
+struct test : sc_module
+{
 
-  SC_HAS_PROCESS( test );
-  
-  test (const char *NAME) : sc_module(NAME) {
-    SC_CTHREAD( reset_loop, clk.pos() );
-    reset_signal_is(reset,true);
-    end_module();
-  }
+    sc_in<bool> reset;
+    sc_in_clk clk;
+    sc_in<sc_uint<8>> dati;
+    sc_out<sc_uint<8>> dato;
+    sc_out<bool> done;
 
-  void tc_mult_8x8(sc_uint<8> A, sc_uint<8> B, sc_uint<16>& Y);
-  void reset_loop();
+    SC_HAS_PROCESS(test);
+
+    test(const char *NAME) : sc_module(NAME)
+    {
+        SC_CTHREAD(reset_loop, clk.pos());
+        reset_signal_is(reset, true);
+        end_module();
+    }
+
+    void tc_mult_8x8(sc_uint<8> A, sc_uint<8> B, sc_uint<16> &Y);
+    void reset_loop();
 };
 
-void test::tc_mult_8x8(sc_uint<8> A, sc_uint<8> B, sc_uint<16>& Z) {
-  sc_uint<8> MantA;
-  sc_uint<16> MantC;
-  sc_uint<1> SignC, SignA, SignB;
-  sc_uint<8> MantB;
-  if (A == 0 || B == 0) {
-    Z = 0;
-  } else {
-    SignA = A[7];
-    SignB = B[7];
-    MantA = SignA ? sc_uint<8>(0 - A) : A;
-    MantB = SignB ? sc_uint<8>(0 - B) : B;
-    MantC = MantA *  MantB;
-    SignC = SignA ^ SignB;
-    MantC = SignC ? sc_uint<16>(0 - MantC) : MantC;
-    Z = (SignC, MantC.range(14,0));
-  }
+void test::tc_mult_8x8(sc_uint<8> A, sc_uint<8> B, sc_uint<16> &Z)
+{
+    sc_uint<8> MantA;
+    sc_uint<16> MantC;
+    sc_uint<1> SignC, SignA, SignB;
+    sc_uint<8> MantB;
+    if (A == 0 || B == 0)
+    {
+        Z = 0;
+    }
+    else
+    {
+        SignA = A[7];
+        SignB = B[7];
+        MantA = SignA ? sc_uint<8>(0 - A) : A;
+        MantB = SignB ? sc_uint<8>(0 - B) : B;
+        MantC = MantA * MantB;
+        SignC = SignA ^ SignB;
+        MantC = SignC ? sc_uint<16>(0 - MantC) : MantC;
+        Z = (SignC, MantC.range(14, 0));
+    }
 }
 
-void test::reset_loop() {
-  sc_uint<16> tmp;
-  sc_uint<8> inp;
-  done = 0;
-  dato = 0;
-  tmp = 0;
-  wait();
-  operational_loop : while (1 != 0) {
-    inp = dati.read();
+void test::reset_loop()
+{
+    sc_uint<16> tmp;
+    sc_uint<8> inp;
+    done = 0;
+    dato = 0;
+    tmp = 0;
     wait();
-    tc_mult_8x8( inp, -2, tmp);
-    wait();
-    done_loop: while (1) {
-      dato = tmp;
-      done = 1;
-      wait();
+operational_loop:
+    while (1 != 0)
+    {
+        inp = dati.read();
+        wait();
+        tc_mult_8x8(inp, -2, tmp);
+        wait();
+    done_loop:
+        while (1)
+        {
+            dato = tmp;
+            done = 1;
+            wait();
+        }
     }
-  }
 }
- 

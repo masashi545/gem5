@@ -34,55 +34,56 @@
 #include "sysc/communication/sc_signal_resolved.h"
 #include "sysc/communication/sc_signal_resolved_ports.h"
 
-namespace sc_core {
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_in_resolved
-//
-//  The sc_signal_resolved input port class.
-// ----------------------------------------------------------------------------
-
-// called when elaboration is done
-
-void
-sc_in_resolved::end_of_elaboration()
+namespace sc_core
 {
-    base_type::end_of_elaboration();
-    // check if bound channel is a resolved signal
-    if( DCAST<sc_signal_resolved*>( get_interface() ) == 0 ) {
-	char msg[BUFSIZ];
-	std::sprintf( msg, "%s (%s)", name(), kind() );
-	SC_REPORT_ERROR( SC_ID_RESOLVED_PORT_NOT_BOUND_, msg );
+
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_in_resolved
+    //
+    //  The sc_signal_resolved input port class.
+    // ----------------------------------------------------------------------------
+
+    // called when elaboration is done
+
+    void
+    sc_in_resolved::end_of_elaboration()
+    {
+        base_type::end_of_elaboration();
+        // check if bound channel is a resolved signal
+        if (DCAST<sc_signal_resolved *>(get_interface()) == 0)
+        {
+            char msg[BUFSIZ];
+            std::sprintf(msg, "%s (%s)", name(), kind());
+            SC_REPORT_ERROR(SC_ID_RESOLVED_PORT_NOT_BOUND_, msg);
+        }
     }
-}
 
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_inout_resolved
+    //
+    //  The sc_signal_resolved input/output port class.
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_inout_resolved
-//
-//  The sc_signal_resolved input/output port class.
-// ----------------------------------------------------------------------------
+    // called when elaboration is done
 
-// called when elaboration is done
-
-void
-sc_inout_resolved::end_of_elaboration()
-{
-    base_type::end_of_elaboration();
-    // check if bound channel is a resolved signal
-    if( DCAST<sc_signal_resolved*>( get_interface() ) == 0 ) {
-	char msg[BUFSIZ];
-	std::sprintf( msg, "%s (%s)", name(), kind() );
-	SC_REPORT_ERROR( SC_ID_RESOLVED_PORT_NOT_BOUND_, msg );
+    void
+    sc_inout_resolved::end_of_elaboration()
+    {
+        base_type::end_of_elaboration();
+        // check if bound channel is a resolved signal
+        if (DCAST<sc_signal_resolved *>(get_interface()) == 0)
+        {
+            char msg[BUFSIZ];
+            std::sprintf(msg, "%s (%s)", name(), kind());
+            SC_REPORT_ERROR(SC_ID_RESOLVED_PORT_NOT_BOUND_, msg);
+        }
     }
-}
 
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_out_resolved
-//
-//  The sc_signal_resolved output port class.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_out_resolved
+    //
+    //  The sc_signal_resolved output port class.
+    // ----------------------------------------------------------------------------
 
 } // namespace sc_core
 

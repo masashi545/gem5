@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stimgen.cpp -- 
+  stimgen.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,27 +35,26 @@
 
  *****************************************************************************/
 
-                /*******************************************/
-                /* Implementation Filename:  stimgen.cc  */
-                /*******************************************/
- 
+/*******************************************/
+/* Implementation Filename:  stimgen.cc  */
+/*******************************************/
+
 #include "stimgen.h"
- 
-void
-stimgen::entry()
+
+void stimgen::entry()
 {
-  bool_vector8	d;
+    bool_vector8 d;
 
-//  in1.write("0101_1001");
-  in1.write("01011001");
-  wait(2);
+    //  in1.write("0101_1001");
+    in1.write("01011001");
+    wait(2);
 
-  cout << "IN1 = "  << in1.read() << endl;
-  cout << "O1 = "   << o1.read() 
-       << "  O2 = " << o2.read() << endl;
-  cout << "O3 = "   << o3.read() << endl;
-  cout << "O4 = "   << o4.read() << endl;
-  cout << "O5 = "   << o5.read() << endl;
+    cout << "IN1 = " << in1.read() << endl;
+    cout << "O1 = " << o1.read()
+         << "  O2 = " << o2.read() << endl;
+    cout << "O3 = " << o3.read() << endl;
+    cout << "O4 = " << o4.read() << endl;
+    cout << "O5 = " << o5.read() << endl;
 
-  sc_stop();
+    sc_stop();
 }

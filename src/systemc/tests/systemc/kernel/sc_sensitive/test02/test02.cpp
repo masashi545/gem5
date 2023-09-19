@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-03-22
                    Ucar Aziz, Synopsys, Inc.
@@ -48,81 +48,83 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_in<bool> in1;
     sc_in<bool> in2;
- 
+
     void main_action1()
-    { 
-	int i = 0;
-	while( true ) {
-	    wait();
-	    cout << "i = " << i << endl;
-	    i ++;
-	}
+    {
+        int i = 0;
+        while (true)
+        {
+            wait();
+            cout << "i = " << i << endl;
+            i++;
+        }
     }
 
     void main_action2()
-    { 
-	int j = 0;
-	while( true ) {
-	    wait();
-	    cout << "j = " << j << endl;
-	    j ++;
-	}
-    }
- 
-    SC_CTOR( mod_a )
     {
-	SC_THREAD( main_action1 );
-	sensitive_neg( in1 );
-	SC_THREAD( main_action2 );
-	sensitive_neg << in2;
+        int j = 0;
+        while (true)
+        {
+            wait();
+            cout << "j = " << j << endl;
+            j++;
+        }
+    }
+
+    SC_CTOR(mod_a)
+    {
+        SC_THREAD(main_action1);
+        sensitive_neg(in1);
+        SC_THREAD(main_action2);
+        sensitive_neg << in2;
     }
 };
 
-SC_MODULE( mod_b )
+SC_MODULE(mod_b)
 {
-    sc_in<bool>    clk;
+    sc_in<bool> clk;
     sc_inout<bool> in1;
- 
+
     void main_action()
-    { 
-	bool j = true;
-	while( true ) {
-	    wait();
-	    in1->write( j );
-	    j = !j;
-	}
-    }
- 
-    SC_CTOR( mod_b )
     {
-	SC_CTHREAD( main_action, clk );
+        bool j = true;
+        while (true)
+        {
+            wait();
+            in1->write(j);
+            j = !j;
+        }
+    }
+
+    SC_CTOR(mod_b)
+    {
+        SC_CTHREAD(main_action, clk);
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_clock clk1( "clk", 5, SC_NS );
-    sc_clock clk2( "clk1", 5, SC_NS );
+    sc_clock clk1("clk", 5, SC_NS);
+    sc_clock clk2("clk1", 5, SC_NS);
     sc_signal<bool> sig_1;
     sc_signal<bool> sig_2;
-    mod_a a( "a" );
-    mod_b b1( "b1" );
-    mod_b b2( "b2" );
+    mod_a a("a");
+    mod_b b1("b1");
+    mod_b b2("b2");
 
-    b1.clk( clk1 );
-    b1.in1( sig_1 );   
-    b2.clk( clk2 );
-    b2.in1( sig_2 );
+    b1.clk(clk1);
+    b1.in1(sig_1);
+    b2.clk(clk2);
+    b2.in1(sig_2);
 
-    a.in1( sig_1 );
-    a.in2( sig_2 );
+    a.in1(sig_1);
+    a.in2(sig_2);
 
-    sc_start( 100, SC_NS );   
+    sc_start(100, SC_NS);
 
     return 0;
 }

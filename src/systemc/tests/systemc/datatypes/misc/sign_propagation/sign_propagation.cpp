@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: David Long, Doulos
 
@@ -37,90 +37,90 @@
 
  *****************************************************************************/
 
-#include <systemc.h> 
+#include <systemc.h>
 
-int sc_main(int,char**) { 
-        int i;
-		int64 j;
-        sc_int<64> I; 
-        sc_uint<64> UI; 
-        sc_bigint<64> BI; 
-        sc_biguint<64> BUI; 
-        sc_bv<64> BV; 
-        sc_bigint<70> BBI; 
-        sc_biguint<70> BBUI; 
+int sc_main(int, char **)
+{
+    int i;
+    int64 j;
+    sc_int<64> I;
+    sc_uint<64> UI;
+    sc_bigint<64> BI;
+    sc_biguint<64> BUI;
+    sc_bv<64> BV;
+    sc_bigint<70> BBI;
+    sc_biguint<70> BBUI;
 
-		cout << "int = 8 " << endl;
-		i = 8;
-        I = i; 
-        cout << "I    =  " << I.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    cout << "int = 8 " << endl;
+    i = 8;
+    I = i;
+    cout << "I    =  " << I.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        UI = i; 
-        cout << "UI   = " << UI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    UI = i;
+    cout << "UI   = " << UI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BI= i; 
-        cout << "BI   =  " << BI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BI = i;
+    cout << "BI   =  " << BI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BUI = i; 
-        cout << "BUI  = " << BUI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BUI = i;
+    cout << "BUI  = " << BUI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BV = i; 
-        cout << "BV   = " << BV.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BV = i;
+    cout << "BV   = " << BV.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BBI= i; 
-        cout << "BBI  =  " << BBI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BBI = i;
+    cout << "BBI  =  " << BBI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BBUI = i; 
-        cout << "BBUI = " << BBUI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BBUI = i;
+    cout << "BBUI = " << BBUI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-		cout << "int = -1 " << endl;
-		i = -1;
-        I = i; 
-        cout << "I    =  " << I.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    cout << "int = -1 " << endl;
+    i = -1;
+    I = i;
+    cout << "I    =  " << I.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        UI = i; 
-        cout << "UI   = " << UI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    UI = i;
+    cout << "UI   = " << UI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BI= i; 
-        cout << "BI   =  " << BI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BI = i;
+    cout << "BI   =  " << BI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BUI = i; 
-        cout << "BUI  = " << BUI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BUI = i;
+    cout << "BUI  = " << BUI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BV = i; 
-        cout << "BV   = " << BV.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BV = i;
+    cout << "BV   = " << BV.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BBI= i; 
-        cout << "BBI  =  " << BBI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BBI = i;
+    cout << "BBI  =  " << BBI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BBUI = i; 
-        cout << "BBUI = " << BBUI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BBUI = i;
+    cout << "BBUI = " << BBUI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        cout << endl;
-		cout << "int64 = -2 " << endl;
-		j = -2;
+    cout << endl;
+    cout << "int64 = -2 " << endl;
+    j = -2;
 
-        I = j; 
-        cout << "I    =  " << I.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    I = j;
+    cout << "I    =  " << I.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        UI = j; 
-        cout << "UI   = " << UI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    UI = j;
+    cout << "UI   = " << UI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BI= j; 
-        cout << "BI   =  " << BI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BI = j;
+    cout << "BI   =  " << BI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BUI = j; 
-        cout << "BUI  = " << BUI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BUI = j;
+    cout << "BUI  = " << BUI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BV = j; 
-        cout << "BV   = " << BV.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BV = j;
+    cout << "BV   = " << BV.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BBI= j; 
-        cout << "BBI  =  " << BBI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BBI = j;
+    cout << "BBI  =  " << BBI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        BBUI = j; 
-        cout << "BBUI = " << BBUI.to_string(SC_BIN) << " " << I(5,3) << endl; 
+    BBUI = j;
+    cout << "BBUI = " << BBUI.to_string(SC_BIN) << " " << I(5, 3) << endl;
 
-        return 0; 
-} 
-
+    return 0;
+}

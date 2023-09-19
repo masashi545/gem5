@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -43,16 +43,16 @@ The following program works fine with gcc on  Solaris but does not compile with 
 
 #include <systemc.h>
 
-int sc_main(int argc, char* arg[]) 
+int sc_main(int argc, char *arg[])
 {
     sc_bv<64> bv = "0111";
     sc_bv<64> res;
-    
-    res = bv << 2; 
+
+    res = bv << 2;
 
     // gcc: OK
-    // SC5.0: Error: Cannot assign const 
-    //  sc_bv_ns::sc_shift_left<sc_bv_ns::sc_bv_base> to sc_bv_ns::sc_bv<64> 
+    // SC5.0: Error: Cannot assign const
+    //  sc_bv_ns::sc_shift_left<sc_bv_ns::sc_bv_base> to sc_bv_ns::sc_bv<64>
     //  without "sc_bv_ns::sc_bv<64>::operator=(const sc_bv_ns::sc_bv<64>&)";.
 
     cout << res.to_string() << "\n";

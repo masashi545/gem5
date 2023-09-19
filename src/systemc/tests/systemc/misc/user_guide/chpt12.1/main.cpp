@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -44,17 +44,17 @@ int global_mem[4000];
 
 int sc_main(int ac, char *av[])
 {
-  sc_signal<bool> cs("CS");
-  sc_signal<bool> we("WE");
-  signal_bool_vector10 addr("Address");
-  signal_bool_vector32 data1("Data1");
-  signal_bool_vector32 data2("Data2");
+    sc_signal<bool> cs("CS");
+    sc_signal<bool> we("WE");
+    signal_bool_vector10 addr("Address");
+    signal_bool_vector32 data1("Data1");
+    signal_bool_vector32 data2("Data2");
 
-  sc_clock clk("Clock", 20, SC_NS, 0.5, 0.0, SC_NS);
+    sc_clock clk("Clock", 20, SC_NS, 0.5, 0.0, SC_NS);
 
-  accessor A("Accessor", clk, data1, cs, we, addr, data2);
-  ram R("Ram", data2, cs, we, addr, data1);
+    accessor A("Accessor", clk, data1, cs, we, addr, data2);
+    ram R("Ram", data2, cs, we, addr, data1);
 
-  sc_start(560, SC_NS);
-  return 0;
+    sc_start(560, SC_NS);
+    return 0;
 }

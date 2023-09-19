@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  T_1_1_2_1.cpp -- 
+  T_1_1_2_1.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,7 +37,7 @@
 
 #include "systemc.h"
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
     sc_clock clock1("CLK1");
     sc_clock clock2("CLK2", 2, SC_NS);

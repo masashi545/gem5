@@ -31,7 +31,6 @@
   CHANGE LOG AT END OF FILE
  *****************************************************************************/
 
-
 #include <stdlib.h>
 #include <string.h>
 
@@ -42,239 +41,244 @@
 #include "sysc/utils/sc_utils_ids.h"
 #include <algorithm> // std::swap
 
-namespace sc_core {
-
-
-static void sc_deprecated_report_ids(const char* method)
+namespace sc_core
 {
-    static bool warn_report_ids_deprecated=true;
-    if ( warn_report_ids_deprecated )
+
+    static void sc_deprecated_report_ids(const char *method)
     {
-        std::string message;
-	message = "integer report ids are deprecated, use string values: ";
-	message += method;
-        warn_report_ids_deprecated=false;
-	SC_REPORT_INFO(SC_ID_IEEE_1666_DEPRECATION_, message.c_str());
+        static bool warn_report_ids_deprecated = true;
+        if (warn_report_ids_deprecated)
+        {
+            std::string message;
+            message = "integer report ids are deprecated, use string values: ";
+            message += method;
+            warn_report_ids_deprecated = false;
+            SC_REPORT_INFO(SC_ID_IEEE_1666_DEPRECATION_, message.c_str());
+        }
     }
-}
 
-static char empty_str[] = "";
-static inline char * empty_dup(const char * p)
-{
-    if ( p && *p )
+    static char empty_str[] = "";
+    static inline char *empty_dup(const char *p)
     {
-        char* result;
-        result = (char*)malloc(strlen(p)+1);
-        strcpy(result, p);
-        return result;
+        if (p && *p)
+        {
+            char *result;
+            result = (char *)malloc(strlen(p) + 1);
+            strcpy(result, p);
+            return result;
+        }
+        else
+        {
+            return empty_str;
+        }
     }
-    else
+
+    sc_report::sc_report()
+        : severity(SC_INFO),
+          md(0),
+          msg(empty_dup(0)),
+          file(empty_dup(0)),
+          line(0),
+          timestamp(new sc_time(sc_time_stamp())),
+          process(0),
+          m_verbosity_level(SC_MEDIUM),
+          m_what(empty_dup(0))
     {
-        return empty_str;
     }
-}
 
-sc_report::sc_report() 
-: severity(SC_INFO),
-  md(0),
-  msg(empty_dup(0)),
-  file(empty_dup(0)),
-  line(0),
-  timestamp(new sc_time(sc_time_stamp())),
-  process(0),
-  m_verbosity_level(SC_MEDIUM),
-  m_what(empty_dup(0))
-{
-}
-
-sc_report::sc_report(sc_severity severity_,
-		     const sc_msg_def* md_,
-		     const char* msg_,
-		     const char* file_,
-		     int line_,
-		     int verbosity_level)
-: severity(severity_),
-  md(md_),
-  msg(empty_dup(msg_)),
-  file(empty_dup(file_)),
-  line(line_),
-  timestamp(new sc_time(sc_time_stamp())),
-  process(sc_get_current_process_b()),
-  m_verbosity_level(verbosity_level),
-  m_what( empty_dup( sc_report_compose_message(*this).c_str() ) )
-{
-}
-
-sc_report::sc_report(const sc_report& other)
-: std::exception(other),
-  severity(other.severity),
-  md(other.md),
-  msg(empty_dup(other.msg)),
-  file(empty_dup(other.file)),
-  line(other.line),
-  timestamp(new sc_time(*other.timestamp)),
-  process(other.process),
-  m_verbosity_level(other.m_verbosity_level),
-  m_what(empty_dup(other.m_what))
-{
-}
-
-sc_report & sc_report::operator=(const sc_report& other)
-{
-    sc_report copy(other);
-    swap( copy );
-    return *this;
-}
-
-void
-sc_report::swap( sc_report & that )
-{
-    using std::swap;
-    swap( severity,          that.severity );
-    swap( md,                that.md );
-    swap( msg,               that.msg );
-    swap( file,              that.file );
-    swap( line,              that.line );
-    swap( timestamp,         that.timestamp );
-    swap( process,           that.process );
-    swap( m_verbosity_level, that.m_verbosity_level );
-    swap( m_what,            that.m_what );
-} 
-
-sc_report::~sc_report() throw()
-{
-    if ( file != empty_str )
-	free(file);
-    if ( msg != empty_str )
-	free(msg);
-    delete timestamp;
-    if ( m_what != empty_str )
-    free(m_what);
-}
-
-const char * sc_report::get_msg_type() const
-{
-    return md->msg_type;
-}
-
-//
-// backward compatibility with 2.0+
-//
-
-static bool warnings_are_errors = false;
-static const char unknown_id[] = "unknown id";
-
-void sc_report_handler::report(sc_severity severity_,
-			       int         id_,
-			       const char* msg_,
-			       const char* file_,
-			       int         line_ )
-{
-    sc_msg_def * md = sc_report_handler::mdlookup(id_);
-
-    if ( !md )
+    sc_report::sc_report(sc_severity severity_,
+                         const sc_msg_def *md_,
+                         const char *msg_,
+                         const char *file_,
+                         int line_,
+                         int verbosity_level)
+        : severity(severity_),
+          md(md_),
+          msg(empty_dup(msg_)),
+          file(empty_dup(file_)),
+          line(line_),
+          timestamp(new sc_time(sc_time_stamp())),
+          process(sc_get_current_process_b()),
+          m_verbosity_level(verbosity_level),
+          m_what(empty_dup(sc_report_compose_message(*this).c_str()))
     {
-	md = sc_report_handler::add_msg_type(unknown_id);
-	md->id = id_;
     }
 
-    if ( severity_ == SC_WARNING && warnings_are_errors )
-	severity_ = SC_ERROR;
-
-    sc_actions actions = execute(md, severity_);
-    sc_report rep(severity_, md, msg_, file_, line_);
-
-    if ( actions & SC_CACHE_REPORT )
-	cache_report(rep);
-
-    if ( severity_ == SC_ERROR )
-	actions |= SC_THROW;
-    else if ( severity_ == SC_FATAL )
-	actions |= SC_ABORT;
-
-    handler(rep, actions);
-}
-
-void sc_report::register_id( int id, const char* msg )
-{
-    sc_deprecated_report_ids("sc_report::register_id()");
-    if( id < 0 ) {
-	SC_REPORT_ERROR( SC_ID_REGISTER_ID_FAILED_,
-			 "invalid report id" );
-    }
-    if( msg == 0 ) {
-	SC_REPORT_ERROR( SC_ID_REGISTER_ID_FAILED_,
-			 "invalid report message" );
-    }
-    sc_msg_def * md = sc_report_handler::mdlookup(id);
-
-    if ( !md )
-	md = sc_report_handler::add_msg_type(msg);
-
-    if ( !md ) {
-	SC_REPORT_ERROR( SC_ID_REGISTER_ID_FAILED_,
-			 "report_map insertion error" );
+    sc_report::sc_report(const sc_report &other)
+        : std::exception(other),
+          severity(other.severity),
+          md(other.md),
+          msg(empty_dup(other.msg)),
+          file(empty_dup(other.file)),
+          line(other.line),
+          timestamp(new sc_time(*other.timestamp)),
+          process(other.process),
+          m_verbosity_level(other.m_verbosity_level),
+          m_what(empty_dup(other.m_what))
+    {
     }
 
-    if( md->id != -1 ) {
-	if( strcmp( msg, md->msg_type ) != 0 ) {
-	    SC_REPORT_ERROR( SC_ID_REGISTER_ID_FAILED_,
-			     "report id already exists" );
-	}
-	return;
+    sc_report &sc_report::operator=(const sc_report &other)
+    {
+        sc_report copy(other);
+        swap(copy);
+        return *this;
     }
-    md->id = id;
-}
 
-const char* sc_report::get_message( int id )
-{
-    sc_deprecated_report_ids("sc_report::get_message()");
-    sc_msg_def* md = sc_report_handler::mdlookup(id);
+    void
+    sc_report::swap(sc_report &that)
+    {
+        using std::swap;
+        swap(severity, that.severity);
+        swap(md, that.md);
+        swap(msg, that.msg);
+        swap(file, that.file);
+        swap(line, that.line);
+        swap(timestamp, that.timestamp);
+        swap(process, that.process);
+        swap(m_verbosity_level, that.m_verbosity_level);
+        swap(m_what, that.m_what);
+    }
 
-    return md ? md->msg_type: unknown_id;
-}
+    sc_report::~sc_report() throw()
+    {
+        if (file != empty_str)
+            free(file);
+        if (msg != empty_str)
+            free(msg);
+        delete timestamp;
+        if (m_what != empty_str)
+            free(m_what);
+    }
 
-bool sc_report::is_suppressed( int id )
-{
-    sc_deprecated_report_ids("sc_report::is_suppressed()");
-    sc_msg_def* md = sc_report_handler::mdlookup(id);
+    const char *sc_report::get_msg_type() const
+    {
+        return md->msg_type;
+    }
 
-    return md ? md->actions == SC_DO_NOTHING: false; // only do-nothing set
-}
+    //
+    // backward compatibility with 2.0+
+    //
 
-void sc_report::suppress_id(int id_, bool suppress)
-{
-    sc_deprecated_report_ids("sc_report::suppress_id()");
-    sc_msg_def* md = sc_report_handler::mdlookup(id_);
+    static bool warnings_are_errors = false;
+    static const char unknown_id[] = "unknown id";
 
-    if ( md )
-	md->actions = suppress ? SC_DO_NOTHING: SC_UNSPECIFIED;
-}
+    void sc_report_handler::report(sc_severity severity_,
+                                   int id_,
+                                   const char *msg_,
+                                   const char *file_,
+                                   int line_)
+    {
+        sc_msg_def *md = sc_report_handler::mdlookup(id_);
 
-void sc_report::suppress_infos(bool suppress)
-{
-    sc_deprecated_report_ids("sc_report::supress_infos");
-    sc_report_handler::sev_actions[SC_INFO] =
-	suppress ? SC_DO_NOTHING: SC_DEFAULT_INFO_ACTIONS;
-}
+        if (!md)
+        {
+            md = sc_report_handler::add_msg_type(unknown_id);
+            md->id = id_;
+        }
 
-void sc_report::suppress_warnings(bool suppress)
-{
-    sc_deprecated_report_ids("sc_report::suppress_warnings");
-    sc_report_handler::sev_actions[SC_WARNING] =
-	suppress ? SC_DO_NOTHING: SC_DEFAULT_WARNING_ACTIONS;
-}
+        if (severity_ == SC_WARNING && warnings_are_errors)
+            severity_ = SC_ERROR;
 
-void sc_report::make_warnings_errors(bool flag)
-{
-    sc_deprecated_report_ids("sc_report::make_warnings_errors");
-    warnings_are_errors = flag;
-}
+        sc_actions actions = execute(md, severity_);
+        sc_report rep(severity_, md, msg_, file_, line_);
 
-int sc_report::get_id() const
-{
-    return md->id;
-}
+        if (actions & SC_CACHE_REPORT)
+            cache_report(rep);
+
+        if (severity_ == SC_ERROR)
+            actions |= SC_THROW;
+        else if (severity_ == SC_FATAL)
+            actions |= SC_ABORT;
+
+        handler(rep, actions);
+    }
+
+    void sc_report::register_id(int id, const char *msg)
+    {
+        sc_deprecated_report_ids("sc_report::register_id()");
+        if (id < 0)
+        {
+            SC_REPORT_ERROR(SC_ID_REGISTER_ID_FAILED_,
+                            "invalid report id");
+        }
+        if (msg == 0)
+        {
+            SC_REPORT_ERROR(SC_ID_REGISTER_ID_FAILED_,
+                            "invalid report message");
+        }
+        sc_msg_def *md = sc_report_handler::mdlookup(id);
+
+        if (!md)
+            md = sc_report_handler::add_msg_type(msg);
+
+        if (!md)
+        {
+            SC_REPORT_ERROR(SC_ID_REGISTER_ID_FAILED_,
+                            "report_map insertion error");
+        }
+
+        if (md->id != -1)
+        {
+            if (strcmp(msg, md->msg_type) != 0)
+            {
+                SC_REPORT_ERROR(SC_ID_REGISTER_ID_FAILED_,
+                                "report id already exists");
+            }
+            return;
+        }
+        md->id = id;
+    }
+
+    const char *sc_report::get_message(int id)
+    {
+        sc_deprecated_report_ids("sc_report::get_message()");
+        sc_msg_def *md = sc_report_handler::mdlookup(id);
+
+        return md ? md->msg_type : unknown_id;
+    }
+
+    bool sc_report::is_suppressed(int id)
+    {
+        sc_deprecated_report_ids("sc_report::is_suppressed()");
+        sc_msg_def *md = sc_report_handler::mdlookup(id);
+
+        return md ? md->actions == SC_DO_NOTHING : false; // only do-nothing set
+    }
+
+    void sc_report::suppress_id(int id_, bool suppress)
+    {
+        sc_deprecated_report_ids("sc_report::suppress_id()");
+        sc_msg_def *md = sc_report_handler::mdlookup(id_);
+
+        if (md)
+            md->actions = suppress ? SC_DO_NOTHING : SC_UNSPECIFIED;
+    }
+
+    void sc_report::suppress_infos(bool suppress)
+    {
+        sc_deprecated_report_ids("sc_report::supress_infos");
+        sc_report_handler::sev_actions[SC_INFO] =
+            suppress ? SC_DO_NOTHING : SC_DEFAULT_INFO_ACTIONS;
+    }
+
+    void sc_report::suppress_warnings(bool suppress)
+    {
+        sc_deprecated_report_ids("sc_report::suppress_warnings");
+        sc_report_handler::sev_actions[SC_WARNING] =
+            suppress ? SC_DO_NOTHING : SC_DEFAULT_WARNING_ACTIONS;
+    }
+
+    void sc_report::make_warnings_errors(bool flag)
+    {
+        sc_deprecated_report_ids("sc_report::make_warnings_errors");
+        warnings_are_errors = flag;
+    }
+
+    int sc_report::get_id() const
+    {
+        return md->id;
+    }
 
 } // namespace sc_core
 

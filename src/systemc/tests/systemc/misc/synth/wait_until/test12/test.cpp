@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,28 +38,44 @@
 #include "test.h"
 
 /* From Test Case 56.sc */
-void test::entry() 
+void test::entry()
 {
-  while (true) {
+    while (true)
+    {
 
-  do { wait(); } while  (cont1 != 1);
-  wait();
-  o1 = 9;
-  switch (i3) {
-  case 1: o2 = 8; 
-        if (i2 > 4) 
-          do { wait(); } while  (cont1 != 1); 
-        else
-          wait();
-        break;
-  case 2: o2 = 9; wait(); break;
-  case 3: o2 = 10; wait(); break;
-  default: o2 = 11; wait(); break;
-  }
-  wait();
-  o1 = 5;
-  wait();
-
-  }
+        do
+        {
+            wait();
+        } while (cont1 != 1);
+        wait();
+        o1 = 9;
+        switch (i3)
+        {
+        case 1:
+            o2 = 8;
+            if (i2 > 4)
+                do
+                {
+                    wait();
+                } while (cont1 != 1);
+            else
+                wait();
+            break;
+        case 2:
+            o2 = 9;
+            wait();
+            break;
+        case 3:
+            o2 = 10;
+            wait();
+            break;
+        default:
+            o2 = 11;
+            wait();
+            break;
+        }
+        wait();
+        o1 = 5;
+        wait();
+    }
 }
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,10 +40,9 @@
 
 #include "test.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    top<bool> t1( "t1" );
+    top<bool> t1("t1");
 
     sc_start(0, SC_NS);
 

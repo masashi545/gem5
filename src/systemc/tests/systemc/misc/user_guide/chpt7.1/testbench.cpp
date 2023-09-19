@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  testbench.cpp -- 
+  testbench.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -46,36 +46,36 @@ QTIsaac<8> rng;
 
 int add(int a, int b)
 {
-  return (a + b);
+    return (a + b);
 }
 
 int adder_sub(int a, int b, int c, int *d)
 {
-  int sum;
+    int sum;
 
-  sum = add(a, b);
-  sum = add(sum, c);
-  *d = a - b;
-  return (sum);
+    sum = add(a, b);
+    sum = add(sum, c);
+    *d = a - b;
+    return (sum);
 }
 
 void testbench::entry()
 {
-  int a, b, c, d;
-  int sum;
-  int i;
+    int a, b, c, d;
+    int sum;
+    int i;
 
-  for (i=0; i < 10; i++) {
-    a = rng.rand() & 0x0fffffff;
-    b = rng.rand() & 0x0fffffff;
-    c = rng.rand() & 0x0fffffff;
+    for (i = 0; i < 10; i++)
+    {
+        a = rng.rand() & 0x0fffffff;
+        b = rng.rand() & 0x0fffffff;
+        c = rng.rand() & 0x0fffffff;
 
-    sum = adder_sub(a, b, c, &d);
-    // printf("A = %d, B = %d, C = %d, D = %d, SUM = %d\n", a, b, c, d, sum);
-    char buf[BUFSIZ];
-    sprintf(buf, "A = %d, B = %d, C = %d, D = %d, SUM = %d\n", a, b, c, d, sum);
-    cout << buf;
-  }
-  sc_stop();
+        sum = adder_sub(a, b, c, &d);
+        // printf("A = %d, B = %d, C = %d, D = %d, SUM = %d\n", a, b, c, d, sum);
+        char buf[BUFSIZ];
+        sprintf(buf, "A = %d, B = %d, C = %d, D = %d, SUM = %d\n", a, b, c, d, sum);
+        cout << buf;
+    }
+    sc_stop();
 } // end of entry function
-

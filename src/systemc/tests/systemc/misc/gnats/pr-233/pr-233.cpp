@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-233.cpp -- 
+  pr-233.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,15 +37,14 @@
 
 #include "systemc.h"
 
-int*
-bar(int* x, int* y, int q)
+int *bar(int *x, int *y, int q)
 {
     return q ? x : y;
 }
 
-SC_MODULE( pr233 )
+SC_MODULE(pr233)
 {
-    SC_HAS_PROCESS( pr233 );
+    SC_HAS_PROCESS(pr233);
 
     sc_in_clk clk;
 
@@ -53,32 +52,29 @@ SC_MODULE( pr233 )
     // const sc_signal<int*>& y;
     // const sc_signal<int>&  q;
     //       sc_signal<int*>& z;
-    sc_in<int*>  x;
-    sc_in<int*>  y;
-    sc_in<int>   q;
-    sc_out<int*> z;
+    sc_in<int *> x;
+    sc_in<int *> y;
+    sc_in<int> q;
+    sc_out<int *> z;
 
-    pr233( sc_module_name         NAME,
-           sc_clock&              CLK,
-           const sc_signal<int*>& X,
-           const sc_signal<int*>& Y,
-           const sc_signal<int>&  Q,
-           sc_signal<int*>&       Z )
-        : 
-          x(X), y(Y), q(Q), z(Z)
+    pr233(sc_module_name NAME,
+          sc_clock & CLK,
+          const sc_signal<int *> &X,
+          const sc_signal<int *> &Y,
+          const sc_signal<int> &Q,
+          sc_signal<int *> &Z)
+        : x(X), y(Y), q(Q), z(Z)
     {
-      clk( CLK );
-	  SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
-
 };
 
-void
-pr233::entry()
+void pr233::entry()
 {
-    z.write( bar(x, y, q) );
+    z.write(bar(x, y, q));
     wait();
 }
 
-int sc_main(int,char**) { return 0; }
+int sc_main(int, char **) { return 0; }

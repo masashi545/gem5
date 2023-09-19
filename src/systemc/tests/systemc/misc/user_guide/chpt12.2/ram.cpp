@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  ram.cpp -- 
+  ram.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,21 +42,26 @@
 
 void ram::entry()
 {
-  int address;
+    int address;
 
-  while (true) {
-    do { wait(); } while (cs != true); 
-    address = addr.read().to_int();
-    if (we.read() == true) { // Write operation
-      wait(wait_cycles-1);
-      memory[address] = datain.read().to_int();
+    while (true)
+    {
+        do
+        {
+            wait();
+        } while (cs != true);
+        address = addr.read().to_int();
+        if (we.read() == true)
+        { // Write operation
+            wait(wait_cycles - 1);
+            memory[address] = datain.read().to_int();
+        }
+        else
+        { // Read operation
+            if (wait_cycles > 2)
+                wait(wait_cycles - 2); // Introduce delay needed
+            dataout.write(memory[address]);
+            wait();
+        }
     }
-    else { // Read operation
-      if (wait_cycles > 2)
-	wait(wait_cycles-2); // Introduce delay needed
-      dataout.write(memory[address]);
-      wait();
-    }    
-  }
 } // end of entry function
-

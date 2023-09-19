@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test05.cpp -- 
+  test05.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,79 +37,80 @@
 
 #include "systemc.h"
 
-SC_MODULE( proc1 )
+SC_MODULE(proc1)
 {
-  SC_HAS_PROCESS( proc1 );
+    SC_HAS_PROCESS(proc1);
 
-  sc_in<bool> clk;
+    sc_in<bool> clk;
 
-  char obj1;
-  short obj2;
-  int obj3;
-  long obj4;
-  int64 obj5;
+    char obj1;
+    short obj2;
+    int obj3;
+    long obj4;
+    int64 obj5;
 
-  proc1( sc_module_name NAME,
-	 sc_signal<bool>& CLK )
-  {
-    clk(CLK);
-    SC_THREAD( entry );
-    sensitive << clk;
-    obj1 = 0;
-    obj2 = 0;
-    obj3 = 0;
-    obj4 = 0;
-    obj5 = 0;
-  }
+    proc1(sc_module_name NAME,
+          sc_signal<bool> & CLK)
+    {
+        clk(CLK);
+        SC_THREAD(entry);
+        sensitive << clk;
+        obj1 = 0;
+        obj2 = 0;
+        obj3 = 0;
+        obj4 = 0;
+        obj5 = 0;
+    }
 
-  void entry();
+    void entry();
 };
-  
-void proc1::entry() 
+
+void proc1::entry()
 {
-  wait();
-  while(true) {
-    obj1 = 7;
-    obj2 = 31;
-    obj3 = -1023;
-    obj4 = 2047;
-	obj5 = -1;
-	obj5 = obj5 << 40;
     wait();
-    obj1 = 1;
-    obj2 = -2;
-    obj3 = 1024;
-    obj4 = -2048;
-	obj5 = 7;
-	obj5 = obj5 << 40;
-    wait();
-  }
+    while (true)
+    {
+        obj1 = 7;
+        obj2 = 31;
+        obj3 = -1023;
+        obj4 = 2047;
+        obj5 = -1;
+        obj5 = obj5 << 40;
+        wait();
+        obj1 = 1;
+        obj2 = -2;
+        obj3 = 1024;
+        obj4 = -2048;
+        obj5 = 7;
+        obj5 = obj5 << 40;
+        wait();
+    }
 }
-  
 
 int sc_main(int ac, char *av[])
 {
-  sc_trace_file *tf;
-  sc_signal<bool> clock;
+    sc_trace_file *tf;
+    sc_signal<bool> clock;
 
-  proc1 P1("P1", clock);
+    proc1 P1("P1", clock);
 
-  tf = sc_create_wif_trace_file("test05");
-  sc_trace(tf, P1.obj1, "Char", 4);
-  sc_trace(tf, P1.obj2, "Short", 12);
-  sc_trace(tf, P1.obj3, "Int", 14);
-  sc_trace(tf, P1.obj4, "Long", 14);
-  sc_trace(tf, P1.obj5, "Int64", 44);
-  sc_trace(tf, clock, "Clock");
+    tf = sc_create_wif_trace_file("test05");
+    sc_trace(tf, P1.obj1, "Char", 4);
+    sc_trace(tf, P1.obj2, "Short", 12);
+    sc_trace(tf, P1.obj3, "Int", 14);
+    sc_trace(tf, P1.obj4, "Long", 14);
+    sc_trace(tf, P1.obj5, "Int64", 44);
+    sc_trace(tf, clock, "Clock");
 
-  clock.write(0);
-  sc_start(0, SC_NS);
-  for (int i = 0; i< 10; i++) {
-    clock.write(1);
-    sc_start(10, SC_NS);
     clock.write(0);
-    sc_start(10, SC_NS);
-  }
-  sc_close_wif_trace_file( tf );
-  return 0;
+    sc_start(0, SC_NS);
+    for (int i = 0; i < 10; i++)
+    {
+        clock.write(1);
+        sc_start(10, SC_NS);
+        clock.write(0);
+        sc_start(10, SC_NS);
+    }
+    sc_close_wif_trace_file(tf);
+    return 0;
 }

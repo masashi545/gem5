@@ -29,76 +29,82 @@
 #include "sysc/communication/sc_mutex.h"
 #include "sysc/kernel/sc_simcontext.h"
 
-namespace sc_core {
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_mutex
-//
-//  The sc_mutex primitive channel class.
-// ----------------------------------------------------------------------------
-
-// constructors
-
-sc_mutex::sc_mutex()
-: sc_object( sc_gen_unique_name( "mutex" ) ),
-  m_owner( 0 ),
-  m_free( (std::string(SC_KERNEL_EVENT_PREFIX)+"_free_event").c_str() )
-{}
-
-sc_mutex::sc_mutex( const char* name_ )
-: sc_object( name_ ),
-  m_owner( 0 ),
-  m_free( (std::string(SC_KERNEL_EVENT_PREFIX)+"_free_event").c_str() )
-{}
-
-
-// destructor
-
-sc_mutex::~sc_mutex()
-{}
-
-// interface methods
-
-// blocks until mutex could be locked
-
-int
-sc_mutex::lock()
+namespace sc_core
 {
-    if ( m_owner == sc_get_current_process_b()) return 0;
-    while( in_use() ) {
-	sc_core::wait( m_free, sc_get_curr_simcontext() );
+
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_mutex
+    //
+    //  The sc_mutex primitive channel class.
+    // ----------------------------------------------------------------------------
+
+    // constructors
+
+    sc_mutex::sc_mutex()
+        : sc_object(sc_gen_unique_name("mutex")),
+          m_owner(0),
+          m_free((std::string(SC_KERNEL_EVENT_PREFIX) + "_free_event").c_str())
+    {
     }
-    m_owner = sc_get_current_process_b();
-    return 0;
-}
 
-
-// returns -1 if mutex could not be locked
-
-int
-sc_mutex::trylock()
-{
-    if ( m_owner == sc_get_current_process_b()) return 0;
-    if( in_use() ) {
-	return -1;
+    sc_mutex::sc_mutex(const char *name_)
+        : sc_object(name_),
+          m_owner(0),
+          m_free((std::string(SC_KERNEL_EVENT_PREFIX) + "_free_event").c_str())
+    {
     }
-    m_owner = sc_get_current_process_b();
-    return 0;
-}
 
+    // destructor
 
-// returns -1 if mutex was not locked by caller
-
-int
-sc_mutex::unlock()
-{
-    if( m_owner != sc_get_current_process_b() ) {
-	return -1;
+    sc_mutex::~sc_mutex()
+    {
     }
-    m_owner = 0;
-    m_free.notify();
-    return 0;
-}
+
+    // interface methods
+
+    // blocks until mutex could be locked
+
+    int
+    sc_mutex::lock()
+    {
+        if (m_owner == sc_get_current_process_b())
+            return 0;
+        while (in_use())
+        {
+            sc_core::wait(m_free, sc_get_curr_simcontext());
+        }
+        m_owner = sc_get_current_process_b();
+        return 0;
+    }
+
+    // returns -1 if mutex could not be locked
+
+    int
+    sc_mutex::trylock()
+    {
+        if (m_owner == sc_get_current_process_b())
+            return 0;
+        if (in_use())
+        {
+            return -1;
+        }
+        m_owner = sc_get_current_process_b();
+        return 0;
+    }
+
+    // returns -1 if mutex was not locked by caller
+
+    int
+    sc_mutex::unlock()
+    {
+        if (m_owner != sc_get_current_process_b())
+        {
+            return -1;
+        }
+        m_owner = 0;
+        m_free.notify();
+        return 0;
+    }
 
 } // namespace sc_core
 

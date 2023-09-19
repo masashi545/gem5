@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  sc_length_param.cpp - 
+  sc_length_param.cpp -
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-03-19
 
@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 // $Log: sc_length_param.cpp,v $
 // Revision 1.2  2011/02/18 20:19:15  acg
 //  Andy Goodrich: updating Copyright notice.
@@ -50,48 +49,45 @@
 
 #include "sysc/datatypes/int/sc_length_param.h"
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_length_param
-//
-//  Length parameter type.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_length_param
+    //
+    //  Length parameter type.
+    // ----------------------------------------------------------------------------
 
-const std::string
-sc_length_param::to_string() const
-{
-    std::string s;
+    const std::string
+    sc_length_param::to_string() const
+    {
+        std::string s;
 
-    char buf[BUFSIZ];
+        char buf[BUFSIZ];
 
-    s += "(";
-    std::sprintf( buf, "%d", m_len );
-    s += buf;
-    s += ")";
+        s += "(";
+        std::sprintf(buf, "%d", m_len);
+        s += buf;
+        s += ")";
 
-    return s;
-}
+        return s;
+    }
 
+    void
+    sc_length_param::print(::std::ostream &os) const
+    {
+        os << to_string();
+    }
 
-void
-sc_length_param::print( ::std::ostream& os ) const
-{
-    os << to_string();
-}
-
-void
-sc_length_param::dump( ::std::ostream& os ) const
-{
-    os << "sc_length_param" << ::std::endl;
-    os << "(" << ::std::endl;
-    os << "len = " << m_len << ::std::endl;
-    os << ")" << ::std::endl;
-}
+    void
+    sc_length_param::dump(::std::ostream &os) const
+    {
+        os << "sc_length_param" << ::std::endl;
+        os << "(" << ::std::endl;
+        os << "len = " << m_len << ::std::endl;
+        os << ")" << ::std::endl;
+    }
 
 } // namespace sc_dt
-
 
 // Taf!

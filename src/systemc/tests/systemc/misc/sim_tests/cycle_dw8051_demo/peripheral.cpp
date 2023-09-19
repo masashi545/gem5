@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  peripheral.cpp -- 
+  peripheral.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,29 +37,33 @@
 
 #include "peripheral.h"
 
-void peripheral::entry() {
-  unsigned int buffer_in = 0;
-  unsigned int buffer_out = 0;
-  wait();
-
-  while(true) {
-    unsigned int addr = mem_addr.read().to_uint();
-    unsigned int data = mem_data_out.read().to_uint();
-
-    if(!mem_wr_n.read() && (addr==0x10)) {
-      // write
-      cout << "peripheral: receive " << data << endl;
-      buffer_in = data;
-      wait(100);
-      buffer_out = buffer_in;
-    }
-
-    if(!mem_rd_n.read() && (addr==0x11)) {
-      // read
-      mem_data_in.write( sc_bv<8>( buffer_out ) );
-      cout << "peripheral: send " << buffer_out << endl;
-      wait();
-    }
+void peripheral::entry()
+{
+    unsigned int buffer_in = 0;
+    unsigned int buffer_out = 0;
     wait();
-  }
+
+    while (true)
+    {
+        unsigned int addr = mem_addr.read().to_uint();
+        unsigned int data = mem_data_out.read().to_uint();
+
+        if (!mem_wr_n.read() && (addr == 0x10))
+        {
+            // write
+            cout << "peripheral: receive " << data << endl;
+            buffer_in = data;
+            wait(100);
+            buffer_out = buffer_in;
+        }
+
+        if (!mem_rd_n.read() && (addr == 0x11))
+        {
+            // read
+            mem_data_in.write(sc_bv<8>(buffer_out));
+            cout << "peripheral: send " << buffer_out << endl;
+            wait();
+        }
+        wait();
+    }
 }

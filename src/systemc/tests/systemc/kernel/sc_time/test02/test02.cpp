@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,10 +39,9 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_set_time_resolution( -1, SC_NS );
+    sc_set_time_resolution(-1, SC_NS);
 
     return 0;
 }

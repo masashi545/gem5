@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,9 +35,9 @@
 
  *****************************************************************************/
 
-                /***************************************/
-                /* Main Filename: 	main.cc        */
-                /***************************************/
+/***************************************/
+/* Main Filename: 	main.cc        */
+/***************************************/
 
 #include "param.h"
 #include "stim.h"
@@ -45,35 +45,35 @@
 int sc_main(int ac, char *av[])
 {
 
-// Parameter Settings
+    // Parameter Settings
 
-	int	data_width = 5;
+    int data_width = 5;
 
-// Signal Instantiation
+    // Signal Instantiation
 
-        sc_signal<bool>      	reset;
-        signal_bool_vector    	a;
-        signal_bool_vector	b;
-        sc_signal<bool>      	cin;
-        sc_signal<bool>      	ready;
-        signal_bool_vector  	sum;
-        sc_signal<bool>    	co;
-        sc_signal<bool>    	done;
+    sc_signal<bool> reset;
+    signal_bool_vector a;
+    signal_bool_vector b;
+    sc_signal<bool> cin;
+    sc_signal<bool> ready;
+    signal_bool_vector sum;
+    sc_signal<bool> co;
+    sc_signal<bool> done;
 
-// Clock Instantiation
+    // Clock Instantiation
 
-  sc_clock 	clk ("Clock", 10, SC_NS, 0.5, 0, SC_NS);
+    sc_clock clk("Clock", 10, SC_NS, 0.5, 0, SC_NS);
 
-// Process Instantiation
+    // Process Instantiation
 
-  param 	D1 ("D1", clk, reset, a, b, cin, ready, sum, 
-			  co, done, data_width);
+    param D1("D1", clk, reset, a, b, cin, ready, sum,
+             co, done, data_width);
 
-  stim 		T1 ("T1", clk, done, reset, a, b, cin, 
-			  ready, data_width);
+    stim T1("T1", clk, done, reset, a, b, cin,
+            ready, data_width);
 
-// Simulation Run Control
+    // Simulation Run Control
 
-  sc_start();
-  return 0;
+    sc_start();
+    return 0;
 }

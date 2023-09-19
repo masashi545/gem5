@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-51_pos.cpp -- 
+  pr-51_pos.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,8 +37,7 @@
 
 #include "systemc.h"
 
-int
-foo()
+int foo()
 {
     sc_logic x;
     sc_logic y;

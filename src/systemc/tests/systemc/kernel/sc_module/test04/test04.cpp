@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test04.cpp -- 
+  test04.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,47 +39,46 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_in<int> in;
     sc_out<int> out;
-    SC_CTOR( mod_a ) {}
+    SC_CTOR(mod_a) {}
 };
 
-SC_MODULE( mod_b )
+SC_MODULE(mod_b)
 {
     sc_out<int> out;
-    sc_in<int>  in;
-    SC_CTOR( mod_b ) {}
+    sc_in<int> in;
+    SC_CTOR(mod_b) {}
 };
 
-SC_MODULE( mod_c )
+SC_MODULE(mod_c)
 {
     mod_a a;
     mod_b b;
     sc_signal<int> sig1;
     sc_signal<int> sig2;
-    SC_CTOR( mod_c ) : a("a"), b("b")
+    SC_CTOR(mod_c) : a("a"), b("b")
     {
-        a.in( sig1 );
-        a.out( sig2 );
-        b.out( sig1 );
-        b.in( sig2 );
+        a.in(sig1);
+        a.out(sig2);
+        b.out(sig1);
+        b.in(sig2);
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_signal<int> sig1;
     sc_signal<int> sig2;
     mod_a a("a");
     mod_b b("b");
     mod_c c("c");
-    a.in( sig1 );
-    a.out( sig2 );
-    b.out( sig1 );
-    b.in( sig2 );
+    a.in(sig1);
+    a.out(sig2);
+    b.out(sig1);
+    b.in(sig2);
 
     sc_start(0, SC_NS);
 

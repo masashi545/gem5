@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -51,34 +51,33 @@ Example:
 
 #include <systemc.h>
 
-int sc_main(int argc, char* arg[]) 
+int sc_main(int argc, char *arg[])
 {
-  sc_bv<8> bv8 = 3;
-  sc_bv<4> bv4 = 3;
-  sc_int<8> i8 = 3;
-  sc_int<4> i4 = 3;
-  sc_bigint<8> bi8=3;
-  sc_bigint<4> bi4=3;
+    sc_bv<8> bv8 = 3;
+    sc_bv<4> bv4 = 3;
+    sc_int<8> i8 = 3;
+    sc_int<4> i4 = 3;
+    sc_bigint<8> bi8 = 3;
+    sc_bigint<4> bi4 = 3;
 
-  // OK
-  bi8.range(5,2) = bi4.range(3,0);
-  bi8.range(5,2) = bi4;
-  bi8.range(5,2) = 3;
-  bi8.range(5,2) = (sc_bigint<4>(3)).range(3,0);
+    // OK
+    bi8.range(5, 2) = bi4.range(3, 0);
+    bi8.range(5, 2) = bi4;
+    bi8.range(5, 2) = 3;
+    bi8.range(5, 2) = (sc_bigint<4>(3)).range(3, 0);
 
-  // OK
-  i8.range(5,2) = i4.range(3,0);
-  i8.range(5,2) = i4;
-  i8.range(5,2) = 3;
-  i8.range(5,2) = (sc_int<4>(3)).range(3,0);
+    // OK
+    i8.range(5, 2) = i4.range(3, 0);
+    i8.range(5, 2) = i4;
+    i8.range(5, 2) = 3;
+    i8.range(5, 2) = (sc_int<4>(3)).range(3, 0);
 
+    // OK
+    bv8.range(5, 2) = bv4.range(3, 0);
 
-  // OK
-  bv8.range(5,2) = bv4.range(3,0);
+    // OK gcc, error SC5.0
+    bv8.range(5, 2) = bv4;
+    bv8.range(5, 2) = (sc_bv<4>(3)).range(3, 0);
 
-  // OK gcc, error SC5.0
-  bv8.range(5,2) = bv4;
-  bv8.range(5,2) = (sc_bv<4>(3)).range(3,0);
-
-  return 0;
+    return 0;
 }

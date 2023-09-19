@@ -36,22 +36,22 @@
  *****************************************************************************/
 
 #include <systemc.h>
- 
-int sc_main(int argc, char**argv)
+
+int sc_main(int argc, char **argv)
 {
-  sc_biguint<3> a = 7;
-  sc_bigint<3>  b = 7;
+    sc_biguint<3> a = 7;
+    sc_bigint<3> b = 7;
 
-  ++a;
-  cout << "a         is " << a << endl;
-  cout << "a == 0    is " << (a==0) << endl;
-  cout << "raw digit: " << *a.get_raw() << endl;
-  cout << endl;
+    ++a;
+    cout << "a         is " << a << endl;
+    cout << "a == 0    is " << (a == 0) << endl;
+    cout << "raw digit: " << *a.get_raw() << endl;
+    cout << endl;
 
-  ++b;
-  cout << "b         is " << b << endl;
-  cout << "b == 0    is " << (b==0) << endl;
-  cout << "raw digit: " << *b.get_raw() << endl;
+    ++b;
+    cout << "b         is " << b << endl;
+    cout << "b == 0    is " << (b == 0) << endl;
+    cout << "raw digit: " << *b.get_raw() << endl;
 
-  return 0;
+    return 0;
 }

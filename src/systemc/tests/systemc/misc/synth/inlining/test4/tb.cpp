@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  tb.cpp -- 
+  tb.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,11 +38,9 @@
 #include "systemc.h"
 #include "tb.h"
 #include "define.h"
- 
-void tb::entry() 
+
+void tb::entry()
 {
 
-  sc_stop();
-
+    sc_stop();
 }
-

@@ -18,11 +18,11 @@
  *****************************************************************************/
 
 /*****************************************************************************
- 
+
   dist.cpp -- Implementation of the odometers.
- 
+
   Original Author: Ali Dasdan, Synopsys, Inc.
- 
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -56,79 +56,77 @@ double dist_compute_mod::total_compute_dist;
 double dist_compute_mod::partial_compute_dist;
 
 // Get the pulses for one distance increment.
-void
-dist_read_mod::get_dist_proc()
+void dist_read_mod::get_dist_proc()
 {
-  wait();
+    wait();
 
-  bool ok = false;
+    bool ok = false;
 
-  while (true) {
+    while (true)
+    {
 
-    // More than one pulse is needed for a distance increment.  This
-    // function collects NUM_PULSES_FOR_DIST_INCR pulses for that
-    // purpose.
-    AWAIT(NUM_PULSES_FOR_DIST_INCR);
+        // More than one pulse is needed for a distance increment.  This
+        // function collects NUM_PULSES_FOR_DIST_INCR pulses for that
+        // purpose.
+        AWAIT(NUM_PULSES_FOR_DIST_INCR);
 
-    if (start)
-      ok = !ok;
-    else
-      ok = false;
+        if (start)
+            ok = !ok;
+        else
+            ok = false;
 
-    ok_for_incr = ok;
-  }
+        ok_for_incr = ok;
+    }
 }
 
 // Compute total distance.
-void
-dist_compute_mod::compute_total_proc()
+void dist_compute_mod::compute_total_proc()
 {
-  if (start)
-    total_compute_dist += 1.0;
-  else
-    total_compute_dist = 0.0;
+    if (start)
+        total_compute_dist += 1.0;
+    else
+        total_compute_dist = 0.0;
 
-  total_dist = total_compute_dist;
+    total_dist = total_compute_dist;
 }
 
 // Compute partial distance.
-void
-dist_compute_mod::compute_partial_proc()
+void dist_compute_mod::compute_partial_proc()
 {
-  if (start) {
+    if (start)
+    {
 
-    // Implement reset.event():
-    if (prev_reset != (bool) reset)
-      partial_compute_dist = 0.0;
+        // Implement reset.event():
+        if (prev_reset != (bool)reset)
+            partial_compute_dist = 0.0;
+        else
+            partial_compute_dist += 1.0;
+
+        prev_reset = reset;
+    }
     else
-      partial_compute_dist += 1.0;
+        partial_compute_dist = 0.0;
 
-    prev_reset = reset;
-
-  }
-  else
-    partial_compute_dist = 0.0;
-
-  partial_dist = partial_compute_dist;
+    partial_dist = partial_compute_dist;
 }
 
 // LCD display driver.
-void
-dist_lcd_mod::lcd_driver_proc()
+void dist_lcd_mod::lcd_driver_proc()
 {
-  if (start) {
+    if (start)
+    {
 
-    if (total_dist.event())
-      total = total_dist * DIST_INCR;
+        if (total_dist.event())
+            total = total_dist * DIST_INCR;
 
-    if (partial_dist.event())
-      partial = partial_dist * DIST_INCR;
-
-  }
-  else {
-    total = 0.0;
-    partial = 0.0;
-  }
+        if (partial_dist.event())
+            partial = partial_dist * DIST_INCR;
+    }
+    else
+    {
+        total = 0.0;
+        partial = 0.0;
+    }
 }
 
 // End of file

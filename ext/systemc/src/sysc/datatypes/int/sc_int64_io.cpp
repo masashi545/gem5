@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 // $Log: sc_int64_io.cpp,v $
 // Revision 1.2  2011/02/18 20:19:14  acg
 //  Andy Goodrich: updating Copyright notice.
@@ -54,129 +53,147 @@
 #include "sysc/datatypes/int/sc_int_base.h"
 #include "sysc/datatypes/int/sc_uint_base.h"
 
-
-#if defined( _MSC_VER )
+#if defined(_MSC_VER)
 
 namespace sc_dt
 {
 
-static void
-write_uint64(::std::ostream& os, uint64 val, int sign)
-{
-    const int WRITE_BUF_SIZE = 10 + sizeof(uint64)*3;
-    char buf[WRITE_BUF_SIZE];
-    char* buf_ptr = buf + WRITE_BUF_SIZE;
-    const char* show_base = "";
-    int show_base_len = 0;
-    int show_pos = 0;
-    fmtflags flags = os.flags();
+    static void
+    write_uint64(::std::ostream &os, uint64 val, int sign)
+    {
+        const int WRITE_BUF_SIZE = 10 + sizeof(uint64) * 3;
+        char buf[WRITE_BUF_SIZE];
+        char *buf_ptr = buf + WRITE_BUF_SIZE;
+        const char *show_base = "";
+        int show_base_len = 0;
+        int show_pos = 0;
+        fmtflags flags = os.flags();
 
-    if ((flags & ::std::ios::basefield) == ::std::ios::oct) {
-        do {
-            *--buf_ptr = (char)((val & 7) + '0');
-            val = val >> 3;
-        } while (val != 0);
-        if ((flags & ::std::ios::showbase) && (*buf_ptr != '0'))
-            *--buf_ptr = '0';
-    } else if ((flags & ::std::ios::basefield) == ::std::ios::hex) {
-        const char* xdigs = (flags & ::std::ios::uppercase) ? 
-            "0123456789ABCDEF0X" : 
-            "0123456789abcdef0x";
-        do {
-            *--buf_ptr = xdigs[val & 15];
-            val = val >> 4;
-        } while (val != 0);
-        if ((flags & ::std::ios::showbase)) {
-            show_base = xdigs + 16;
-            show_base_len = 2;
+        if ((flags & ::std::ios::basefield) == ::std::ios::oct)
+        {
+            do
+            {
+                *--buf_ptr = (char)((val & 7) + '0');
+                val = val >> 3;
+            } while (val != 0);
+            if ((flags & ::std::ios::showbase) && (*buf_ptr != '0'))
+                *--buf_ptr = '0';
         }
-    } else {
-        while (val > UINT_MAX) {
-            *--buf_ptr = (char)((val % 10) + '0');
-            val /= 10;
+        else if ((flags & ::std::ios::basefield) == ::std::ios::hex)
+        {
+            const char *xdigs = (flags & ::std::ios::uppercase) ? "0123456789ABCDEF0X" : "0123456789abcdef0x";
+            do
+            {
+                *--buf_ptr = xdigs[val & 15];
+                val = val >> 4;
+            } while (val != 0);
+            if ((flags & ::std::ios::showbase))
+            {
+                show_base = xdigs + 16;
+                show_base_len = 2;
+            }
         }
-        unsigned ival = (unsigned) val;
-        do {
-            *--buf_ptr = (ival % 10) + '0';
-            ival /= 10;
-        } while (ival != 0);
-        if (sign > 0 && (flags & ::std::ios::showpos))
-            show_pos = 1;
-    }
+        else
+        {
+            while (val > UINT_MAX)
+            {
+                *--buf_ptr = (char)((val % 10) + '0');
+                val /= 10;
+            }
+            unsigned ival = (unsigned)val;
+            do
+            {
+                *--buf_ptr = (ival % 10) + '0';
+                ival /= 10;
+            } while (ival != 0);
+            if (sign > 0 && (flags & ::std::ios::showpos))
+                show_pos = 1;
+        }
 
-    int buf_len = buf + WRITE_BUF_SIZE - buf_ptr;
-    int w = os.width(0);
+        int buf_len = buf + WRITE_BUF_SIZE - buf_ptr;
+        int w = os.width(0);
 
-    int len = buf_len + show_pos;
-    if (sign < 0) len++;
-    len += show_base_len;
+        int len = buf_len + show_pos;
+        if (sign < 0)
+            len++;
+        len += show_base_len;
 
-    int padding = len > w ? 0 : w - len;
-    fmtflags pad_kind = flags & ::std::ios::adjustfield;
-    char fill_char = os.fill();
+        int padding = len > w ? 0 : w - len;
+        fmtflags pad_kind = flags & ::std::ios::adjustfield;
+        char fill_char = os.fill();
 
-    if (padding > 0 &&
-        ::std::ios::left != pad_kind &&
-        ::std::ios::internal != pad_kind) {
-        for (int i = padding - 1; i >= 0; --i) {
-            if (! os.put(fill_char))
+        if (padding > 0 &&
+            ::std::ios::left != pad_kind &&
+            ::std::ios::internal != pad_kind)
+        {
+            for (int i = padding - 1; i >= 0; --i)
+            {
+                if (!os.put(fill_char))
+                    goto fail;
+            }
+        }
+        if (sign < 0 || show_pos)
+        {
+            if (!os.put(sign < 0 ? '-' : '+'))
                 goto fail;
         }
-    }
-    if (sign < 0 || show_pos) {
-        if (! os.put(sign < 0 ? '-' : '+'))
+        if (show_base_len)
+        {
+            if (!os.write(show_base, show_base_len))
+                goto fail;
+        }
+        if ((fmtflags)::std::ios::internal == pad_kind && padding > 0)
+        {
+            for (int i = padding - 1; i >= 0; --i)
+            {
+                if (!os.put(fill_char))
+                    goto fail;
+            }
+        }
+        if (!os.write(buf_ptr, buf_len))
             goto fail;
-    }
-    if (show_base_len) {
-        if (! os.write(show_base, show_base_len))
-            goto fail;
-    }
-    if ((fmtflags)::std::ios::internal == pad_kind && padding > 0) {
-        for (int i = padding - 1; i >= 0; --i) {
-            if (! os.put(fill_char))
-                goto fail;
+        if ((fmtflags)::std::ios::left == pad_kind && padding > 0)
+        {
+            for (int i = padding - 1; i >= 0; --i)
+            {
+                if (!os.put(fill_char))
+                    goto fail;
+            }
         }
+        os.osfx();
+        return;
+    fail:
+        // os.set(::std::ios::badbit);
+        os.osfx();
     }
-    if (! os.write(buf_ptr, buf_len))
-        goto fail;
-    if ((fmtflags)::std::ios::left == pad_kind && padding > 0) {
-        for (int i = padding - 1; i >= 0; --i) {
-            if (! os.put(fill_char))
-                goto fail;
-        }
-    }
-    os.osfx();
-    return;
-fail:
-    //os.set(::std::ios::badbit);
-    os.osfx();
-}
 
-::std::ostream&
-operator << ( ::std::ostream& os, int64 n )
-{
-    if (os.opfx()) {
-        int sign = 1;
-        uint64 abs_n = (uint64) n;
-        if (n < 0 && (os.flags() & (::std::ios::oct|::std::ios::hex)) == 0) {
-            abs_n = -1*((uint64) n);
-            sign = -1;
+    ::std::ostream &
+    operator<<(::std::ostream &os, int64 n)
+    {
+        if (os.opfx())
+        {
+            int sign = 1;
+            uint64 abs_n = (uint64)n;
+            if (n < 0 && (os.flags() & (::std::ios::oct | ::std::ios::hex)) == 0)
+            {
+                abs_n = -1 * ((uint64)n);
+                sign = -1;
+            }
+            sc_dt::write_uint64(os, abs_n, sign);
         }
-        sc_dt::write_uint64(os, abs_n, sign);
+        return os;
     }
-    return os;
-}
 
-::std::ostream&
-operator << ( ::std::ostream& os, uint64 n )
-{
-    if (os.opfx()) {
-        sc_dt::write_uint64(os, n, 0);
+    ::std::ostream &
+    operator<<(::std::ostream &os, uint64 n)
+    {
+        if (os.opfx())
+        {
+            sc_dt::write_uint64(os, n, 0);
+        }
+        return os;
     }
-    return os;
-}
 
 } // namespace sc_dt
-
 
 #endif

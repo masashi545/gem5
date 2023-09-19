@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stim.cpp -- 
+  stim.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,53 +35,57 @@
 
  *****************************************************************************/
 
-		/*************************************/
-		/* Implementation Filename:  stim.cc */
-		/*************************************/
+/*************************************/
+/* Implementation Filename:  stim.cc */
+/*************************************/
 
 #include "stim.h"
 
 void stim::entry()
 {
 
-// VARIABLE INITIALIZATION
-  sc_unsigned	a_tmp(data_width);
-  sc_unsigned	b_tmp(data_width);
-  bool		c_tmp;
-  int 		i, j;
+    // VARIABLE INITIALIZATION
+    sc_unsigned a_tmp(data_width);
+    sc_unsigned b_tmp(data_width);
+    bool c_tmp;
+    int i, j;
 
-// RESET CYCLE
-  reset.write(0);
-  wait(2);
-   
-  reset.write(1);
-  wait();
-  cout  << sc_time_stamp() << "\t : "
-        << "RESET off \t...by stim" << endl;
+    // RESET CYCLE
+    reset.write(0);
+    wait(2);
 
-// STIMULUS GENERATION
-  c_tmp = 0;
+    reset.write(1);
+    wait();
+    cout << sc_time_stamp() << "\t : "
+         << "RESET off \t...by stim" << endl;
 
-  for (i=0; i<16; i++) {
-    for (j=0; j<16; j++) {     
-      a_tmp = j;
-      b_tmp = i;
-      c_tmp = !c_tmp;
+    // STIMULUS GENERATION
+    c_tmp = 0;
 
-      a.write(a_tmp);	
-      b.write(b_tmp);	
-      cin.write(c_tmp);
+    for (i = 0; i < 16; i++)
+    {
+        for (j = 0; j < 16; j++)
+        {
+            a_tmp = j;
+            b_tmp = i;
+            c_tmp = !c_tmp;
 
-      ready.write(1);
-      // wait();
-      do { wait(); } while ( done != 1 );
+            a.write(a_tmp);
+            b.write(b_tmp);
+            cin.write(c_tmp);
 
-      ready.write(0);
-      // do { wait(); } while (done == 1); 
-      wait();
+            ready.write(1);
+            // wait();
+            do
+            {
+                wait();
+            } while (done != 1);
+
+            ready.write(0);
+            // do { wait(); } while (done == 1);
+            wait();
+        }
     }
-  }
- 
-  sc_stop(); 
-   
+
+    sc_stop();
 }

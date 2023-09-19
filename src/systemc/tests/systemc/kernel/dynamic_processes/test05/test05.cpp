@@ -41,25 +41,26 @@
 
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 #include "systemc.h"
-SC_MODULE(mod)
+SC_MODULE(mod){
+    void start_of_simulation(){
+        cout << "spawn thetest" << endl;
+sc_spawn(sc_bind(&mod::thetest, this));
+}
+void thetest()
 {
-  void start_of_simulation()
-  {
-    cout << "spawn thetest" << endl;
-    sc_spawn(sc_bind(&mod::thetest, this));
-  }
-  void thetest()
-  {
     cout << "in thetest()" << endl;
-    wait(10,SC_NS);
+    wait(10, SC_NS);
     sc_stop();
-  }
-  SC_CTOR(mod) {
-  }
-};
+}
+SC_CTOR(mod)
+{
+}
+}
+;
 
-int sc_main(int, char**) {
-  mod m1("m1");
-  sc_start();
-  return 0;
+int sc_main(int, char **)
+{
+    mod m1("m1");
+    sc_start();
+    return 0;
 }

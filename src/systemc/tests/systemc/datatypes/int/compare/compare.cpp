@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  compare.cpp -- 
+  compare.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,41 +37,40 @@
 
 #include "systemc.h"
 
-
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  sc_bigint<8> a, b;
-  sc_biguint<8> c;
+    sc_bigint<8> a, b;
+    sc_biguint<8> c;
 
-  a = -5;
-  b = -1;
-  c = -1;
-  sc_assert(a <= b);
-  sc_assert(a <= c);
+    a = -5;
+    b = -1;
+    c = -1;
+    sc_assert(a <= b);
+    sc_assert(a <= c);
 
-  a = -5;
-  b = 0;
-  c = 0;
-  sc_assert(a <= b);
-  sc_assert(a <= c);
+    a = -5;
+    b = 0;
+    c = 0;
+    sc_assert(a <= b);
+    sc_assert(a <= c);
 
-  a = -5;
-  b = 5;
-  c = 5;
-  sc_assert(a <= b);
-  sc_assert(a <= c);
+    a = -5;
+    b = 5;
+    c = 5;
+    sc_assert(a <= b);
+    sc_assert(a <= c);
 
-  a = 0;
-  b = 5;
-  c = 5;
-  sc_assert(a <= b);
-  sc_assert(a <= c);
+    a = 0;
+    b = 5;
+    c = 5;
+    sc_assert(a <= b);
+    sc_assert(a <= c);
 
-  a = 5;
-  b = 10;
-  c = 10;
-  sc_assert(a <= b);
-  sc_assert(a <= c);
-  
-  return 0;
+    a = 5;
+    b = 10;
+    c = 10;
+    sc_assert(a <= b);
+    sc_assert(a <= c);
+
+    return 0;
 }

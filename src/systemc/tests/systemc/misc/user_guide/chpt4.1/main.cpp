@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -45,24 +45,23 @@
 
 int sc_main(int ac, char *av[])
 {
-  sc_signal<double> in1;
-  sc_signal<double> in2;
-  sc_signal<double> sum;
-  sc_signal<double> diff;
-  sc_signal<double> prod;
-  sc_signal<double> quot;
-  sc_signal<double> powr;
-  powr = 0.0;
+    sc_signal<double> in1;
+    sc_signal<double> in2;
+    sc_signal<double> sum;
+    sc_signal<double> diff;
+    sc_signal<double> prod;
+    sc_signal<double> quot;
+    sc_signal<double> powr;
+    powr = 0.0;
 
-  sc_clock clk("CLOCK", 20.0, SC_NS, 0.5, 0.0, SC_NS);
+    sc_clock clk("CLOCK", 20.0, SC_NS, 0.5, 0.0, SC_NS);
 
-  numgen N("STIMULUS", clk, in1, in2);
-  stage1 S1("Stage1", clk, in1, in2, sum, diff);
-  stage2 S2("Stage2", clk, sum, diff, prod, quot);
-  stage3 S3("Stage3", clk, prod, quot, powr);
-  display D("Display", clk, powr);
+    numgen N("STIMULUS", clk, in1, in2);
+    stage1 S1("Stage1", clk, in1, in2, sum, diff);
+    stage2 S2("Stage2", clk, sum, diff, prod, quot);
+    stage3 S3("Stage3", clk, prod, quot, powr);
+    display D("Display", clk, powr);
 
-  sc_start(1000, SC_NS);
-  return 0;
+    sc_start(1000, SC_NS);
+    return 0;
 }
-

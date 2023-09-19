@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  blast3.cpp -- 
+  blast3.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,42 +37,40 @@
 
 #include "systemc.h"
 
-SC_MODULE( array )
+SC_MODULE(array)
 {
-    SC_HAS_PROCESS( array );
+    SC_HAS_PROCESS(array);
 
     sc_in_clk clk;
 
-    const sc_signal<bool>& reset;
-          sc_signal<bool>& ready;
-    const sc_signal<char>& a;
-    const sc_signal<char>& b;
-          sc_signal<short>& c;
+    const sc_signal<bool> &reset;
+    sc_signal<bool> &ready;
+    const sc_signal<char> &a;
+    const sc_signal<char> &b;
+    sc_signal<short> &c;
 
     char mem[17];
     sc_unsigned i, j;
 
-    array( sc_module_name NAME,
-           sc_clock& CLK,
-           const sc_signal<bool>& RESET,
-                 sc_signal<bool>& READY,
-           const sc_signal<char>& A,
-           const sc_signal<char>& B,
-                 sc_signal<short>& C )
-        : 
-          reset(RESET), ready(READY),
+    array(sc_module_name NAME,
+          sc_clock & CLK,
+          const sc_signal<bool> &RESET,
+          sc_signal<bool> &READY,
+          const sc_signal<char> &A,
+          const sc_signal<char> &B,
+          sc_signal<short> &C)
+        : reset(RESET), ready(READY),
           a(A), b(B), c(C),
           i(2), j(2)
     {
         clk(CLK);
-		SC_CTHREAD( entry, clk );
-        reset_signal_is(reset,true);
+        SC_CTHREAD(entry, clk);
+        reset_signal_is(reset, true);
     }
     void entry();
 };
 
-void
-array::entry()
+void array::entry()
 {
     i = 2;
     j = 1;
@@ -89,8 +87,7 @@ array::entry()
     wait();
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test03.cpp -- 
+  test03.cpp --
 
   Original Author: Ucar Aziz, Synopsys, Inc., 2002-02-15
                    Martin Janssen, Synopsys, Inc., 2002-02-15
@@ -40,18 +40,16 @@
 
 #include "systemc.h"
 
-
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_time t1( 8, SC_NS );
-    sc_time t2( 2, SC_NS );
+    sc_time t1(8, SC_NS);
+    sc_time t2(2, SC_NS);
 
-    sc_clock c1( "c1", t1, 0.1, t2 );
+    sc_clock c1("c1", t1, 0.1, t2);
     c1.dump(cout);
     cout << "\n";
 
-    sc_clock c2( "c2", t1, 0.1, t2, false );
+    sc_clock c2("c2", t1, 0.1, t2, false);
     c2.dump(cout);
     cout << "\n";
 

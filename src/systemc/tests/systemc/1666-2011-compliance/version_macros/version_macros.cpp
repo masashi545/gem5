@@ -17,7 +17,7 @@
 
  *****************************************************************************/
 
-// version_macros.cpp -- test for 
+// version_macros.cpp -- test for
 //
 //  Original Author: John Aynsley, Doulos, Inc.
 //
@@ -42,25 +42,25 @@ using namespace sc_core;
 using std::cout;
 using std::endl;
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  sc_assert(  SC_VERSION_MAJOR        == sc_version_major );
-  sc_assert(  SC_VERSION_MINOR        == sc_version_minor );
-  sc_assert(  SC_VERSION_PATCH        == sc_version_patch );
-  sc_assert(  SC_VERSION_ORIGINATOR   == sc_version_originator );
-  sc_assert(  SC_VERSION_RELEASE_DATE == sc_version_release_date );
-  sc_assert(  SC_VERSION_PRERELEASE   == sc_version_prerelease );
-  sc_assert(  SC_IS_PRERELEASE        == sc_is_prerelease );
-  sc_assert(  SC_VERSION              == sc_version_string );
-  sc_assert(  sc_release()            == sc_version_string );
-  sc_assert(  SC_COPYRIGHT            == sc_copyright_string );
-  sc_assert(  sc_copyright()          == sc_copyright_string );
+    sc_assert(SC_VERSION_MAJOR == sc_version_major);
+    sc_assert(SC_VERSION_MINOR == sc_version_minor);
+    sc_assert(SC_VERSION_PATCH == sc_version_patch);
+    sc_assert(SC_VERSION_ORIGINATOR == sc_version_originator);
+    sc_assert(SC_VERSION_RELEASE_DATE == sc_version_release_date);
+    sc_assert(SC_VERSION_PRERELEASE == sc_version_prerelease);
+    sc_assert(SC_IS_PRERELEASE == sc_is_prerelease);
+    sc_assert(SC_VERSION == sc_version_string);
+    sc_assert(sc_release() == sc_version_string);
+    sc_assert(SC_COPYRIGHT == sc_copyright_string);
+    sc_assert(sc_copyright() == sc_copyright_string);
 
-  cout << "IEEE_1666_SYSTEMC = "       << IEEE_1666_SYSTEMC << endl;
+    cout << "IEEE_1666_SYSTEMC = " << IEEE_1666_SYSTEMC << endl;
 
-  //sc_start();
- 
-  cout << endl << "Success" << endl;
-  return 0;
+    // sc_start();
+
+    cout << endl
+         << "Success" << endl;
+    return 0;
 }
-  

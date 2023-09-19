@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pullup.cpp -- 
+  pullup.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,9 +42,9 @@
 
 void pullup::entry()
 {
-  while (true) {
-    pup.write(sc_logic('H'));
-    wait();
-  }
+    while (true)
+    {
+        pup.write(sc_logic('H'));
+        wait();
+    }
 } // end of entry function
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  display.cpp -- 
+  display.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,29 +35,32 @@
 
  *****************************************************************************/
 
-		/*****************************************/
-		/* Implementation Filename:  display.cc  */
-		/*****************************************/
+/*****************************************/
+/* Implementation Filename:  display.cc  */
+/*****************************************/
 
 #include "display.h"
 
 void displayp::entry()
 {
-  bool_vector 	last_prime;
+    bool_vector last_prime;
 
-  while (true) {
-    
-    last_prime = prime.read();
-    wait();
+    while (true)
+    {
 
-    do {
-       wait();
-       } while (prime.read() == last_prime);
+        last_prime = prime.read();
+        wait();
 
-    cout << prime.read().to_uint() << endl;
+        do
+        {
+            wait();
+        } while (prime.read() == last_prime);
 
-    if (prime.read().to_uint() > 40)  {
-	sc_stop();
+        cout << prime.read().to_uint() << endl;
+
+        if (prime.read().to_uint() > 40)
+        {
+            sc_stop();
+        }
     }
-  }
 }

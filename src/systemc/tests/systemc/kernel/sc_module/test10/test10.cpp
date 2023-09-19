@@ -35,38 +35,37 @@
 
  *****************************************************************************/
 
-
 #include "systemc.h"
 
 SC_MODULE(A)
 {
-	SC_CTOR(A)
-	{
-		SC_THREAD(thread);
-		sensitive << m_clk;
-		set_stack_size(0x600000);
-	}
-	void thread()
-	{
-		int  x[0x100000];    // Grab a lot of stack...
-		x[0x100000-1] = 42;  // ... and then modify the last location`
+    SC_CTOR(A)
+    {
+        SC_THREAD(thread);
+        sensitive << m_clk;
+        set_stack_size(0x600000);
+    }
+    void thread()
+    {
+        int x[0x100000];      // Grab a lot of stack...
+        x[0x100000 - 1] = 42; // ... and then modify the last location`
 
-	    for (;;) 
-		{
-			cout << sc_time_stamp() << endl;
-			wait();
-		}
-	}
-	sc_in_clk m_clk;
+        for (;;)
+        {
+            cout << sc_time_stamp() << endl;
+            wait();
+        }
+    }
+    sc_in_clk m_clk;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-	sc_clock clock;
-	A        a("a");
-	a.m_clk(clock);
+    sc_clock clock;
+    A a("a");
+    a.m_clk(clock);
 
-	sc_start(2, SC_NS);
+    sc_start(2, SC_NS);
 
-	return 0;
+    return 0;
 }

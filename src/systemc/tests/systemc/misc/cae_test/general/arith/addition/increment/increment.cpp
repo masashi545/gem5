@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  increment.cpp -- 
+  increment.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-09
 
@@ -37,49 +37,54 @@
 
 #include "increment.h"
 
-void increment::entry(){
+void increment::entry()
+{
 
-  #define         ONE 1
-  const int       eins = 1;
-  int             tmp1;
-  sc_bigint<5>    tmp2;
+#define ONE 1
+    const int eins = 1;
+    int tmp1;
+    sc_bigint<5> tmp2;
 
-  // reset_loop
-  if (reset.read() == true) {
-    out_valid.write(false);
-    wait();
-  } else wait();
+    // reset_loop
+    if (reset.read() == true)
+    {
+        out_valid.write(false);
+        wait();
+    }
+    else
+        wait();
 
-  //
-  // main loop
-  //
-  //
-  while(1) {
-    while(in_valid.read()==false) wait();
-    wait();
+    //
+    // main loop
+    //
+    //
+    while (1)
+    {
+        while (in_valid.read() == false)
+            wait();
+        wait();
 
-    //reading the inputs
-    tmp1 = in_value1.read();
-    tmp2 = in_value2.read();
+        // reading the inputs
+        tmp1 = in_value1.read();
+        tmp2 = in_value2.read();
 
-    //execute simple operations
-    tmp1 = tmp1 + 1;
-    tmp1 = tmp1 + ONE;
-    tmp1 = tmp1 + eins;
-    tmp2 = tmp2 + 1;
-    tmp2 = tmp2 + ONE;
-    tmp2 = tmp2 + eins;
-    wait();
+        // execute simple operations
+        tmp1 = tmp1 + 1;
+        tmp1 = tmp1 + ONE;
+        tmp1 = tmp1 + eins;
+        tmp2 = tmp2 + 1;
+        tmp2 = tmp2 + ONE;
+        tmp2 = tmp2 + eins;
+        wait();
 
-    // write outputs
-    out_value1.write(tmp1);
-    out_value2.write(tmp2);
-    out_valid.write(true);
-    wait();
-    out_valid.write(false);
-    wait();
-  }
+        // write outputs
+        out_value1.write(tmp1);
+        out_value2.write(tmp2);
+        out_valid.write(true);
+        wait();
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-

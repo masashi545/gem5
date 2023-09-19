@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  clocks.cpp -- 
+  clocks.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,16 +37,15 @@
 
 #include "systemc.h"
 #include "clocks.h"
-#include "tb.h" 	/** Definition of testbench Structure **/
+#include "tb.h" /** Definition of testbench Structure **/
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_clock clk( "CLK", 20, SC_NS, 0.5, 0, SC_NS);
-    sc_clock clk2( "_____________CLK2", 20, SC_NS, 0.2, 5, SC_NS);
+    sc_clock clk("CLK", 20, SC_NS, 0.5, 0, SC_NS);
+    sc_clock clk2("_____________CLK2", 20, SC_NS, 0.2, 5, SC_NS);
 
-    testbench tb1("TB1", clk, clk2);	
+    testbench tb1("TB1", clk, clk2);
 
-    sc_start( 80, SC_NS );          // Simulation control
+    sc_start(80, SC_NS); // Simulation control
     return 0;
 }

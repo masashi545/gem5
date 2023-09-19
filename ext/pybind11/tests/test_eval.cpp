@@ -7,7 +7,6 @@
     BSD-style license that can be found in the LICENSE file.
 */
 
-
 #include <pybind11/eval.h>
 
 #include "pybind11_tests.h"
@@ -19,17 +18,14 @@ TEST_SUBMODULE(eval_, m) {
     auto global = py::dict(py::module_::import("__main__").attr("__dict__"));
 
     m.def("test_eval_statements", [global]() {
-        auto local = py::dict();
-        local["call_test"] = py::cpp_function([&]() -> int {
-            return 42;
-        });
+        auto local         = py::dict();
+        local["call_test"] = py::cpp_function([&]() -> int { return 42; });
 
         // Regular string literal
-        py::exec(
-            "message = 'Hello World!'\n"
-            "x = call_test()",
-            global, local
-        );
+        py::exec("message = 'Hello World!'\n"
+                 "x = call_test()",
+                 global,
+                 local);
 
         // Multi-line raw string literal
         py::exec(R"(
@@ -37,8 +33,9 @@ TEST_SUBMODULE(eval_, m) {
                 print(message)
             else:
                 raise RuntimeError
-            )", global, local
-        );
+            )",
+                 global,
+                 local);
         auto x = local["x"].cast<int>();
 
         return x == 42;
@@ -47,18 +44,16 @@ TEST_SUBMODULE(eval_, m) {
     m.def("test_eval", [global]() {
         auto local = py::dict();
         local["x"] = py::int_(42);
-        auto x = py::eval("x", global, local);
+        auto x     = py::eval("x", global, local);
         return x.cast<int>() == 42;
     });
 
     m.def("test_eval_single_statement", []() {
-        auto local = py::dict();
-        local["call_test"] = py::cpp_function([&]() -> int {
-            return 42;
-        });
+        auto local         = py::dict();
+        local["call_test"] = py::cpp_function([&]() -> int { return 42; });
 
         auto result = py::eval<py::eval_single_statement>("x = call_test()", py::dict(), local);
-        auto x = local["x"].cast<int>();
+        auto x      = local["x"].cast<int>();
         return result.is_none() && x == 42;
     });
 
@@ -66,7 +61,7 @@ TEST_SUBMODULE(eval_, m) {
         auto local = py::dict();
         local["y"] = py::int_(43);
 
-        int val_out = 0;
+        int val_out         = 0;
         local["call_test2"] = py::cpp_function([&](int value) { val_out = value; });
 
         auto result = py::eval_file(std::move(filename), global, local);
@@ -113,7 +108,9 @@ TEST_SUBMODULE(eval_, m) {
 
             def func_local():
                 return local_value
-            )", global, local);
+            )",
+                 global,
+                 local);
         return std::make_pair(global, local);
     });
 }

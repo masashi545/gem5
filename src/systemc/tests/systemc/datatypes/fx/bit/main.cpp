@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,32 +36,29 @@
  *****************************************************************************/
 
 // This may look like C code, but it is really -*- C++ -*-
-// 
-// main.cxx<3> -- 
+//
+// main.cxx<3> --
 // Copyright Synopsys 1998
 // Author          : Ric Hilderink
 // Created On      : Mon Jan 11 13:25:23 1999
 // Status          : none
-// 
-
+//
 
 #define SC_INCLUDE_FX
 #include "systemc.h"
 #include "test_all.hh"
 
+extern void test_bit(ostream &, int, int);
 
-extern void test_bit(ostream&, int, int);
-
-static void test_cases(ostream& out, int wl, int iwl)
+static void test_cases(ostream &out, int wl, int iwl)
 {
-  test_bit(out, wl, iwl);
+    test_bit(out, wl, iwl);
 }
 
-
-int sc_main( int, char** )
+int sc_main(int, char **)
 {
-  int wl = 0, iwl = 0;
-  test_cases(cout, wl, wl);
+    int wl = 0, iwl = 0;
+    test_cases(cout, wl, wl);
 
-  return 0;
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  select.cpp -- 
+  select.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,25 +40,26 @@
 #define WIDTH 32
 #define COUNT 100000
 
-int sc_main( int ac, char* av[] )
+int sc_main(int ac, char *av[])
 {
-  sc_uint_base Bx(WIDTH), By(WIDTH);
+    sc_uint_base Bx(WIDTH), By(WIDTH);
 
-  for(unsigned int i = 0; i < WIDTH; i++){
-    cout << "i = " << i << endl;
-    for(unsigned int j=0; j < COUNT; j++ ){
-      
-      /*    ( By.range(WIDTH-1, i+1), By.range(i,0) ) = Bx;
-	    sc_assert( By == Bx );
-	    */
-      
-      Bx = j;
-      sc_assert( (bool) Bx[i] == (j & (1<<i)? 1 : 0) );
-      By[i] = Bx[i];
-      sc_assert( (bool) By[i] == (j & (1<<i)? 1 : 0) );
+    for (unsigned int i = 0; i < WIDTH; i++)
+    {
+        cout << "i = " << i << endl;
+        for (unsigned int j = 0; j < COUNT; j++)
+        {
+
+            /*    ( By.range(WIDTH-1, i+1), By.range(i,0) ) = Bx;
+              sc_assert( By == Bx );
+              */
+
+            Bx = j;
+            sc_assert((bool)Bx[i] == (j & (1 << i) ? 1 : 0));
+            By[i] = Bx[i];
+            sc_assert((bool)By[i] == (j & (1 << i) ? 1 : 0));
+        }
     }
-  }
 
-  return 0;
+    return 0;
 }
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-47_3.cpp -- 
+  pr-47_3.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,39 +37,38 @@
 
 #include "systemc.h"
 
-SC_MODULE( dub )
+SC_MODULE(dub)
 {
-    SC_HAS_PROCESS( dub );
+    SC_HAS_PROCESS(dub);
 
     sc_in_clk clk;
 
-    const sc_signal<bool>& a;
-    const sc_signal<bool>& b;
-          sc_signal<bool>& c;
-          sc_signal<bool>& d;
+    const sc_signal<bool> &a;
+    const sc_signal<bool> &b;
+    sc_signal<bool> &c;
+    sc_signal<bool> &d;
 
-    dub( sc_module_name NAME,
-         sc_clock& CLK,
-         const sc_signal<bool>& A,
-         const sc_signal<bool>& B,
-               sc_signal<bool>& C,
-               sc_signal<bool>& D )
-        : 
-          a(A),
+    dub(sc_module_name NAME,
+        sc_clock & CLK,
+        const sc_signal<bool> &A,
+        const sc_signal<bool> &B,
+        sc_signal<bool> &C,
+        sc_signal<bool> &D)
+        : a(A),
           b(B),
           c(C),
           d(D)
     {
-      clk(CLK);
-	  SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
 };
 
-void
-dub::entry()
+void dub::entry()
 {
-    while (1) {
+    while (1)
+    {
         d = b;
         wait();
         c = a;
@@ -78,7 +77,7 @@ dub::entry()
     }
 }
 
-int sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     return 0;
 }

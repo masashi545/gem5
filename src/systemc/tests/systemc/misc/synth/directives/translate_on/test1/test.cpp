@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,41 +35,45 @@
 
  *****************************************************************************/
 
-/* 
+/*
    Verifies directives translate_on/translate_off
-   Author: PRP 
+   Author: PRP
    From Test Case translate_on: 15.cc
 */
 
 #include "systemc.h"
 #include "test.h"
 
-void test::entry() 
+void test::entry()
 {
-  int i,j,y,z;
-     
-     a:i = 2;
-     if (i == 2)
-        {
-        foobart: i = 7;
-       i = 4;
-        i = 5;
-        }
-     else
+    int i, j, y, z;
+
+a:
+    i = 2;
+    if (i == 2)
+    {
+    foobart:
         i = 7;
- 
-     y = 3;
-     y = 2;
-     if (y == 3) {
+        i = 4;
+        i = 5;
+    }
+    else
+        i = 7;
+
+    y = 3;
+    y = 2;
+    if (y == 3)
+    {
         z = 1;
-     } else {
+    }
+    else
+    {
         z = 2;
-     }
- 
-  b:i = 3;
-  j = 5;
- 
-  wait();
+    }
 
+b:
+    i = 3;
+    j = 5;
+
+    wait();
 }
-

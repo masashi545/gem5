@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,7 +39,7 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_in_clk clk;
 
@@ -48,9 +48,9 @@ SC_MODULE( mod_a )
         cout << "main_action\n";
     }
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
-        SC_METHOD( main_action );
+        SC_METHOD(main_action);
         sensitive << clk.pos();
     }
 
@@ -60,12 +60,11 @@ SC_MODULE( mod_a )
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_clock clk;
     mod_a a("a");
-    a.clk( clk );
-    sc_start( 100, SC_NS );
+    a.clk(clk);
+    sc_start(100, SC_NS);
     return 0;
 }

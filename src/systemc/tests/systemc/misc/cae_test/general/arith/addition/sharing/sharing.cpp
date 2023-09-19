@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  sharing.cpp -- 
+  sharing.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-09
 
@@ -37,73 +37,78 @@
 
 #include "sharing.h"
 
-void sharing::entry(){
+void sharing::entry()
+{
 
-  sc_bigint<4>    tmp1;
-  sc_biguint<5>   tmp2;
-  sc_bigint<6>    tmp3;
-  sc_biguint<7>   tmp4;
-  sc_biguint<8>   tmp5;
+    sc_bigint<4> tmp1;
+    sc_biguint<5> tmp2;
+    sc_bigint<6> tmp3;
+    sc_biguint<7> tmp4;
+    sc_biguint<8> tmp5;
 
-  // reset_loop
-  if (reset.read() == true) {
-    out_valid.write(false);
-    wait();
-  } else wait();
+    // reset_loop
+    if (reset.read() == true)
+    {
+        out_valid.write(false);
+        wait();
+    }
+    else
+        wait();
 
-  //
-  // main loop
-  //
-  //
-  while(1) {
-    while(in_valid.read()==false) wait();
-    wait();
+    //
+    // main loop
+    //
+    //
+    while (1)
+    {
+        while (in_valid.read() == false)
+            wait();
+        wait();
 
-    //reading the inputs
-    tmp1 = in_value1.read();
-    tmp2 = in_value2.read();
-    tmp3 = in_value3.read();
-    tmp4 = in_value4.read();
-    tmp5 = in_value5.read();
+        // reading the inputs
+        tmp1 = in_value1.read();
+        tmp2 = in_value2.read();
+        tmp3 = in_value3.read();
+        tmp4 = in_value4.read();
+        tmp5 = in_value5.read();
 
-    //execute simple operations
-    tmp1 = tmp1 + 10;
-    tmp2 = tmp2 + 10;
-    tmp3 = tmp3 + 10;
-    tmp4 = tmp4 + 10;
-    tmp5 = tmp5 + 10;
-    wait();
+        // execute simple operations
+        tmp1 = tmp1 + 10;
+        tmp2 = tmp2 + 10;
+        tmp3 = tmp3 + 10;
+        tmp4 = tmp4 + 10;
+        tmp5 = tmp5 + 10;
+        wait();
 
-    // write outputs
-    out_value1.write(tmp1);
-    out_value2.write(tmp2);
-    out_value3.write(tmp3);
-    out_value4.write(tmp4);
-    out_value5.write(tmp5);
-    out_valid.write(true);
-    wait();
-    out_valid.write(false);
-    wait();
-    //execute simple operations
-    tmp1 = tmp1 + 1;
-    tmp2 = tmp2 + 10;
-    tmp3 = tmp3 + 1;
-    tmp4 = tmp4 + 10;
-    tmp5 = tmp5 + 1;
-    wait();
+        // write outputs
+        out_value1.write(tmp1);
+        out_value2.write(tmp2);
+        out_value3.write(tmp3);
+        out_value4.write(tmp4);
+        out_value5.write(tmp5);
+        out_valid.write(true);
+        wait();
+        out_valid.write(false);
+        wait();
+        // execute simple operations
+        tmp1 = tmp1 + 1;
+        tmp2 = tmp2 + 10;
+        tmp3 = tmp3 + 1;
+        tmp4 = tmp4 + 10;
+        tmp5 = tmp5 + 1;
+        wait();
 
-    // write outputs
-    out_value1.write(tmp1);
-    out_value2.write(tmp2);
-    out_value3.write(tmp3);
-    out_value4.write(tmp4);
-    out_value5.write(tmp5);
-    out_valid.write(true);
-    wait();
-    out_valid.write(false);
-    wait();
-  }
+        // write outputs
+        out_value1.write(tmp1);
+        out_value2.write(tmp2);
+        out_value3.write(tmp3);
+        out_value4.write(tmp4);
+        out_value5.write(tmp5);
+        out_valid.write(true);
+        wait();
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-

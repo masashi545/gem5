@@ -1,65 +1,57 @@
 
 #include <systemc.h>
 
-sc_trace_file* sc_tf;
+sc_trace_file *sc_tf;
 
 class Mod : public sc_module
 {
-  public: 
+public:
+    sc_in_clk clk;
 
-	 sc_in_clk clk;
+    sc_in<sc_uint<37>> a;
+    sc_inout<bool> b;
 
-	 sc_in<sc_uint<37> > a;
-	 sc_inout<bool >	 b;
+    SC_HAS_PROCESS(Mod);
 
- 
+    void foo()
+    {
+        cout << sc_time_stamp() << "\n";
+        cout << "    a = " << a << " b = " << b << "\n";
+        cout << "\n";
+        return;
+    } // foo()
 
-	 SC_HAS_PROCESS(Mod);
+    Mod(const sc_module_name &name) : sc_module(name), a("a")
+    {
+        SC_METHOD(foo);
+        sensitive << clk.pos();
+        dont_initialize();
+    }
 
-	 void foo()
-	 {
-	 	cout << sc_time_stamp() << "\n";
-	 	cout << "    a = " << a << " b = " << b << "\n";
-	 	cout << "\n";
-	 	return; 
-	 }	 // foo()
+    void start_of_simulation()
+    {
 
-	 Mod(const sc_module_name& name) : sc_module(name), a("a")
-	 {
-	 	 SC_METHOD(foo);
-	 	 sensitive << clk.pos();
-	 	 dont_initialize();
-	 }
+        sc_trace(sc_tf, a, a.name());
+        sc_trace(sc_tf, b, b.name());
+    }
 
-	 void start_of_simulation() {
+}; // class Mod
 
-		 sc_trace(sc_tf, a, a.name());
-		 sc_trace(sc_tf, b, b.name());
-	 }
-
-};	 // class Mod
-
- 
-
- 
-
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 
 {
-	 sc_clock clk("clk", 50, SC_NS, 0.5, 0, SC_NS);
-	 sc_signal<sc_uint<37> > a;
-	 sc_signal<bool>         b;
-	 sc_tf = sc_create_vcd_trace_file("test14");
-	 Mod mod("mod");
-	 mod.clk(clk);
-	 mod.a(a);
-	 mod.b(b);
-	 sc_trace(sc_tf, clk, clk.name());
-	 sc_start(50, SC_NS);
-	 a = 12;
-	 b = true;
-	 sc_start(50, SC_NS);
-	 return 0;
-}	 // sc_main()
-
-
+    sc_clock clk("clk", 50, SC_NS, 0.5, 0, SC_NS);
+    sc_signal<sc_uint<37>> a;
+    sc_signal<bool> b;
+    sc_tf = sc_create_vcd_trace_file("test14");
+    Mod mod("mod");
+    mod.clk(clk);
+    mod.a(a);
+    mod.b(b);
+    sc_trace(sc_tf, clk, clk.name());
+    sc_start(50, SC_NS);
+    a = 12;
+    b = true;
+    sc_start(50, SC_NS);
+    return 0;
+} // sc_main()

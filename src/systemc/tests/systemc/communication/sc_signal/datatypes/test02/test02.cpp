@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -46,50 +46,61 @@ class my_datatype
 {
 public:
     my_datatype()
-        : m_val( 0 ) {}
-    my_datatype( int val_ )
-        : m_val( val_ ) {}
-    my_datatype( const my_datatype& a )
-        : m_val( a.m_val ) {}
+        : m_val(0) {}
+    my_datatype(int val_)
+        : m_val(val_) {}
+    my_datatype(const my_datatype &a)
+        : m_val(a.m_val) {}
     ~my_datatype()
-        {}
-    my_datatype& operator = ( const my_datatype& a )
-        { m_val = a.m_val; return *this; }
-    friend bool operator == ( const my_datatype& a, const my_datatype& b )
-        { return ( a.m_val == b.m_val ); }
-    friend void sc_trace( sc_trace_file* tf, const my_datatype& a,
-                          const std::string& name )
-        { sc_core::sc_trace( tf, a.m_val, name ); }
-    void print( ostream& os ) const
-        { os << m_val; }
+    {
+    }
+    my_datatype &operator=(const my_datatype &a)
+    {
+        m_val = a.m_val;
+        return *this;
+    }
+    friend bool operator==(const my_datatype &a, const my_datatype &b)
+    {
+        return (a.m_val == b.m_val);
+    }
+    friend void sc_trace(sc_trace_file *tf, const my_datatype &a,
+                         const std::string &name)
+    {
+        sc_core::sc_trace(tf, a.m_val, name);
+    }
+    void print(ostream &os) const
+    {
+        os << m_val;
+    }
+
 private:
     int m_val;
 };
 
-ostream&
-operator << ( ostream& os, const my_datatype& a )
+ostream &
+operator<<(ostream &os, const my_datatype &a)
 {
-    a.print( os );
+    a.print(os);
     return os;
 }
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    my_datatype a( 123 );
-    a.print( cout );
+    my_datatype a(123);
+    a.print(cout);
     cout << endl;
 
     sc_signal<my_datatype> sig;
 
-    sc_trace_file* tf = sc_create_vcd_trace_file( "test02" );
-    sc_trace( tf, sig, "sig" );
-    for( int i = 0; i < 10; ++ i ) {
-        sig = my_datatype( 10 - i );
-        sc_start( 1, SC_NS );
+    sc_trace_file *tf = sc_create_vcd_trace_file("test02");
+    sc_trace(tf, sig, "sig");
+    for (int i = 0; i < 10; ++i)
+    {
+        sig = my_datatype(10 - i);
+        sc_start(1, SC_NS);
         cout << sig.read() << endl;
     }
-    sc_close_vcd_trace_file( tf );
+    sc_close_vcd_trace_file(tf);
 
     return 0;
 }

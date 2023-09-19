@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star106015.cpp -- 
+  star106015.cpp --
 
   Original Author: Stan Liao, Synopsys, Inc., 2000-07-11
 
@@ -38,28 +38,33 @@
 #include <systemc.h>
 #include "mem.h"
 
-void memory::entry(){
+void memory::entry()
+{
 
-  unsigned             tmp1;
-  sc_uint<8> mem[128];
-  sc_uint<8> mem2[128];
+    unsigned tmp1;
+    sc_uint<8> mem[128];
+    sc_uint<8> mem2[128];
 
-  out_valid1.write(false);
-  wait();
-  
-  while(1) {
-    while(in_valid1.read()==false) {
-      mem[1] = 1;
-      wait();
+    out_valid1.write(false);
+    wait();
+
+    while (1)
+    {
+        while (in_valid1.read() == false)
+        {
+            mem[1] = 1;
+            wait();
+        }
+        wait();
+        out_valid1.write(true);
+        wait();
     }
-    wait();
-    out_valid1.write(true);
-    wait();
-  }
-  while(1) {
-    out_valid1.write(false);
-  }
-  while(1) {
-    out_valid1.write(false);
-  }
+    while (1)
+    {
+        out_valid1.write(false);
+    }
+    while (1)
+    {
+        out_valid1.write(false);
+    }
 }

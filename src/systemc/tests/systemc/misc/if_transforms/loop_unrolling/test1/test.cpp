@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -44,108 +44,119 @@
 //	Date Created: 19 Feb 99
 //
 
-
 #include "test.h"
- 
-void test::entry() 
+
+void test::entry()
 {
-  int i,j;
-  int a[10],b[10];
-   
+    int i, j;
+    int a[10], b[10];
 
-  do { wait(); } while  (cont1 == 0);
-  wait ();
+    do
+    {
+        wait();
+    } while (cont1 == 0);
+    wait();
 
-  i = 0;
-  while (i < 4) {
+    i = 0;
+    while (i < 4)
+    {
         a[i] = 0;
         i = i + 1;
-  }
- 
-  i = 0;
-  while (i <= 4) {
+    }
+
+    i = 0;
+    while (i <= 4)
+    {
         b[i] = 10;
         i = i + 1;
-  }
+    }
 
-  i = 9;
-  while (i > 4) {
+    i = 9;
+    while (i > 4)
+    {
         a[i] = 20;
         i = i - 1;
-  }
- 
-  i = 9;
-  while (i >= 4) {
+    }
+
+    i = 9;
+    while (i >= 4)
+    {
         b[i] = 30;
         i = i - 1;
-  }
- 
-  i = -4;
-  while (i < 0) {
-        a[i+4] = 40;
+    }
+
+    i = -4;
+    while (i < 0)
+    {
+        a[i + 4] = 40;
         i = i + 1;
-  }
- 
- 
-  i = -4;
-  while (i < 0) {
-        a[i+4] = 50;
+    }
+
+    i = -4;
+    while (i < 0)
+    {
+        a[i + 4] = 50;
         i = i + 2;
-  }
- 
-  i = -4;
-  while (i <= 0) {
-        a[i+4] = 60;
+    }
+
+    i = -4;
+    while (i <= 0)
+    {
+        a[i + 4] = 60;
         i = i + 2;
-  }
- 
-  i = -4;
-  while (i <= 0) {
-        a[i+4] = 70;
+    }
+
+    i = -4;
+    while (i <= 0)
+    {
+        a[i + 4] = 70;
         i = i + 3;
-  }
-  i = -4;
-  while (i <= 0) {
-        a[i+4] = 80;
+    }
+    i = -4;
+    while (i <= 0)
+    {
+        a[i + 4] = 80;
         i = i + 4;
-  }
- 
-  i = -6;
-  while (i <= 0) {
-        a[i+6] = 90;
+    }
+
+    i = -6;
+    while (i <= 0)
+    {
+        a[i + 6] = 90;
         i = i + 5;
-  }
- 
-  i = 8;
-  if (i) {
+    }
+
+    i = 8;
+    if (i)
+    {
         j = 9;
-  }
- 
-  while (i <= 10) {
+    }
+
+    while (i <= 10)
+    {
         a[i] = 80;
         i = i + 5;
-  }
- 
-  for (i = 0; i < 2; i++)
+    }
+
+    for (i = 0; i < 2; i++)
         a[i] = 8;
- 
-  i = 0;
-  for (; i < 3; i++)
+
+    i = 0;
+    for (; i < 3; i++)
         a[i] = 10;
- 
-  i = 0;
-  wait();
-  for (; i < 3; ++i) {
+
+    i = 0;
+    wait();
+    for (; i < 3; ++i)
+    {
         a[i] = 11;
-        //i = i + 1;
-  wait();
-  }
+        // i = i + 1;
+        wait();
+    }
 
-   i = 0;
-  for (; i < 3; i++)
+    i = 0;
+    for (; i < 3; i++)
         a[i] = 12;
- 
-  wait();
 
+    wait();
 }
- 

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  op_queue.cpp -- 
+  op_queue.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -44,40 +44,48 @@
 
 void op_queue::entry()
 {
-  bool to_pop;
-  int tail, head;
-  bool queue_empty = true;
-  bool queue_full = false;
+    bool to_pop;
+    int tail, head;
+    bool queue_empty = true;
+    bool queue_full = false;
 
-  out = 0.0;
+    out = 0.0;
 
-  head = 0;
-  tail = 0;
-  while (true) {
-    if (!queue_full) {
-      queue[tail] = in.read();
-      tail = (tail + 1) % queue_size;
-      queue_empty = false;
-      if (tail == head) queue_full = true;
+    head = 0;
+    tail = 0;
+    while (true)
+    {
+        if (!queue_full)
+        {
+            queue[tail] = in.read();
+            tail = (tail + 1) % queue_size;
+            queue_empty = false;
+            if (tail == head)
+                queue_full = true;
+        }
+        else
+        {
+            cout << "Warning: Data is being lost because queue is full" << endl;
+        }
+
+        to_pop = pop.read();
+        if (to_pop)
+        {
+            if (!queue_empty)
+            {
+                out.write(queue[head]);
+                head = (head + 1) % queue_size;
+                queue_full = false;
+                if (head == tail)
+                    queue_empty = true;
+            }
+            else
+            {
+                cout << "Warning: No data in queue to be popped" << endl;
+            }
+        }
+
+        wait();
     }
-    else {
-      cout << "Warning: Data is being lost because queue is full" << endl;
-    }
 
-    to_pop = pop.read();
-    if (to_pop) {
-      if (!queue_empty) {
-	out.write(queue[head]);
-	head = (head + 1) % queue_size;
-	queue_full = false;
-	if (head == tail) queue_empty = true;
-      }
-      else {
-	cout << "Warning: No data in queue to be popped" << endl;
-      }
-    }
-
-    wait();
-  }
-    
 } // end of entry function

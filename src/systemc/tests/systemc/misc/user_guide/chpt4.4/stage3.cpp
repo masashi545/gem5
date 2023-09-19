@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stage3.cpp -- 
+  stage3.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -44,27 +44,26 @@
 
 void stage3::entry()
 {
-  double a, b;
-  double c;
+    double a, b;
+    double c;
 
-  a = 20.0;
-  b = 5.0;
-  while (true) {
-    c = pow(a, b);
-    powr.write(c);
-    wait();
-    a = prod.read();
-    b = quot.read();
-  }
+    a = 20.0;
+    b = 5.0;
+    while (true)
+    {
+        c = pow(a, b);
+        powr.write(c);
+        wait();
+        a = prod.read();
+        b = quot.read();
+    }
 } // end of entry function
 
-
 void f_stage3(const char *NAME,
-	      sc_clock& CLK,
-	      const sc_signal<double>& PROD,
-	      const sc_signal<double>& QUOT,
-	      sc_signal<double>& POWR)
+              sc_clock &CLK,
+              const sc_signal<double> &PROD,
+              const sc_signal<double> &QUOT,
+              sc_signal<double> &POWR)
 {
-  SC_NEW(stage3(NAME, CLK, PROD, QUOT, POWR));
+    SC_NEW(stage3(NAME, CLK, PROD, QUOT, POWR));
 }
-

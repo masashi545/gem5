@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,8 +38,7 @@
 #include "proc1.h"
 #include "proc2.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_signal<int> ack;
     sc_signal<int> ready;
@@ -47,14 +46,12 @@ sc_main( int, char*[] )
     ack = 1;
     ready = 1;
 
-    sc_clock clk( "Clock", 20, SC_NS, 0.5, 0.0, SC_NS );
+    sc_clock clk("Clock", 20, SC_NS, 0.5, 0.0, SC_NS);
 
-    proc1 P1( "P1", clk, ack, ready );
-    proc2 P2( "P2", clk, ready, ack );
+    proc1 P1("P1", clk, ack, ready);
+    proc2 P2("P2", clk, ready, ack);
 
-    sc_start( 500, SC_NS );
+    sc_start(500, SC_NS);
 
     return 0;
 }
-  
-  

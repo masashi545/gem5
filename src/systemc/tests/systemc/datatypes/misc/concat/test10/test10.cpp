@@ -38,22 +38,25 @@
 
 #include "systemc.h"
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
 
     sc_bigint<65> hi;
-    hi[64] = 1; hi(63,32) = 0xffffe47b;
-    hi[64] = 1; hi(63,32) = 0xffffe47b;
+    hi[64] = 1;
+    hi(63, 32) = 0xffffe47b;
+    hi[64] = 1;
+    hi(63, 32) = 0xffffe47b;
     sc_bigint<31> lo(1);
     sc_bigint<96> x;
-    cout << "x = " << x.to_string(SC_BIN) << endl << endl;
-    x = (hi,lo);
-    cout  << hex << "hi = " << hi << endl
-          << "lo = " << lo << endl
-          << "x = " << x << endl;
-    cout  << dec << "hi = " << hi.to_string(SC_BIN) << endl
-          << "lo = " << lo.to_string(SC_BIN) << endl
-          << "x = " << x.to_string(SC_BIN) << endl;
+    cout << "x = " << x.to_string(SC_BIN) << endl
+         << endl;
+    x = (hi, lo);
+    cout << hex << "hi = " << hi << endl
+         << "lo = " << lo << endl
+         << "x = " << x << endl;
+    cout << dec << "hi = " << hi.to_string(SC_BIN) << endl
+         << "lo = " << lo.to_string(SC_BIN) << endl
+         << "x = " << x.to_string(SC_BIN) << endl;
     cout << "Program completed" << endl;
     return 0;
 }

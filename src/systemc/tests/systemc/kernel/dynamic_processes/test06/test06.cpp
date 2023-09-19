@@ -42,37 +42,42 @@
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 #include <systemc.h>
 
-void p3() {
-  cerr << sc_time_stamp() << ":entering p3" << endl;
-  wait(30, SC_NS);
-  cerr << sc_time_stamp() << ":exiting p3" << endl;
+void p3()
+{
+    cerr << sc_time_stamp() << ":entering p3" << endl;
+    wait(30, SC_NS);
+    cerr << sc_time_stamp() << ":exiting p3" << endl;
 }
 
-void p2() {
-  cerr << sc_time_stamp() << ":entering p2, spawning p3" << endl;
-  sc_spawn(sc_bind(&p3));
-  wait(20, SC_NS);
-  cerr << sc_time_stamp() << ":exiting p2" << endl;
+void p2()
+{
+    cerr << sc_time_stamp() << ":entering p2, spawning p3" << endl;
+    sc_spawn(sc_bind(&p3));
+    wait(20, SC_NS);
+    cerr << sc_time_stamp() << ":exiting p2" << endl;
 }
 
-void p1() {
-  cerr << sc_time_stamp() << ":entering p1, spawning p2" << endl;
-  sc_spawn(sc_bind(&p2));
-  wait(10, SC_NS);
-  cerr << sc_time_stamp() << ":exiting p1" << endl;
+void p1()
+{
+    cerr << sc_time_stamp() << ":entering p1, spawning p2" << endl;
+    sc_spawn(sc_bind(&p2));
+    wait(10, SC_NS);
+    cerr << sc_time_stamp() << ":exiting p1" << endl;
 }
 
-void p0() {
-  cerr << sc_time_stamp() << ":entering p0, spawning p1" << endl;
-  sc_spawn(sc_bind(&p1));
-  cerr << sc_time_stamp() << ":exiting p0" << endl;
+void p0()
+{
+    cerr << sc_time_stamp() << ":entering p0, spawning p1" << endl;
+    sc_spawn(sc_bind(&p1));
+    cerr << sc_time_stamp() << ":exiting p0" << endl;
 }
 
-int sc_main(int, char**) {
+int sc_main(int, char **)
+{
 
-  sc_start(10, SC_NS);
-  p0();
-  sc_start(50, SC_NS);
+    sc_start(10, SC_NS);
+    p0();
+    sc_start(50, SC_NS);
 
-  return 0;
+    return 0;
 }

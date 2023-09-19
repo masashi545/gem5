@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,15 +38,15 @@
 /* Main file for clock simulation */
 
 #include "clocks.h"
-#include "tb.h" 
+#include "tb.h"
 
 int sc_main(int ac, char *av[])
 {
-  sc_clock clk( "CLK", 20, SC_NS, 0.5, 0, SC_NS); 
-  sc_clock clk2( "CLK2", 20, SC_NS, 0.2, 5, SC_NS);
-  testbench tb1("TB1", clk, clk2);	
+    sc_clock clk("CLK", 20, SC_NS, 0.5, 0, SC_NS);
+    sc_clock clk2("CLK2", 20, SC_NS, 0.2, 5, SC_NS);
+    testbench tb1("TB1", clk, clk2);
 
-  sc_start(80, SC_NS);
-  cout << "Example run successfully" << endl;
-  return 0;
+    sc_start(80, SC_NS);
+    cout << "Example run successfully" << endl;
+    return 0;
 }

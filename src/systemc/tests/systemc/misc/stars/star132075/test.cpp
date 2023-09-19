@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -45,31 +45,31 @@ It does work with sc_bigint, however.
 
 #include <systemc.h>
 
-int sc_main(int, char**)
+int sc_main(int, char **)
 {
-  {
-    // sc_biguint<32> a,b;
-    sc_uint<32> a,b;
-    a=15;
-    b=45;
+    {
+        // sc_biguint<32> a,b;
+        sc_uint<32> a, b;
+        a = 15;
+        b = 45;
 
-    cout << (a.range(5,2) <  b.range(5,2)) << "\n";
-    cout << (a.range(5,2) <= b.range(5,2)) << "\n";
-    cout << (a.range(5,2) >  b.range(5,2)) << "\n";
-    cout << (a.range(5,2) >= b.range(5,2)) << "\n";
-  }
+        cout << (a.range(5, 2) < b.range(5, 2)) << "\n";
+        cout << (a.range(5, 2) <= b.range(5, 2)) << "\n";
+        cout << (a.range(5, 2) > b.range(5, 2)) << "\n";
+        cout << (a.range(5, 2) >= b.range(5, 2)) << "\n";
+    }
 
-  {
-    // sc_bigint<32> a,b;
-    sc_int<32> a,b;
-    a=15;
-    b=45;
+    {
+        // sc_bigint<32> a,b;
+        sc_int<32> a, b;
+        a = 15;
+        b = 45;
 
-    cout << (a.range(5,2) <  b.range(5,2)) << "\n";
-    cout << (a.range(5,2) <= b.range(5,2)) << "\n";
-    cout << (a.range(5,2) >  b.range(5,2)) << "\n";
-    cout << (a.range(5,2) >= b.range(5,2)) << "\n";
-  }
+        cout << (a.range(5, 2) < b.range(5, 2)) << "\n";
+        cout << (a.range(5, 2) <= b.range(5, 2)) << "\n";
+        cout << (a.range(5, 2) > b.range(5, 2)) << "\n";
+        cout << (a.range(5, 2) >= b.range(5, 2)) << "\n";
+    }
 
-  return 0;
+    return 0;
 }

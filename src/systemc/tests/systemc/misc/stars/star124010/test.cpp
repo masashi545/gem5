@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,19 +38,18 @@
 // test of sc_dt::sc_string_old's pos() method -- star 124010
 
 #ifdef SC_USE_STD_STRING
-#   undef SC_USE_STD_STRING
+#undef SC_USE_STD_STRING
 #endif
 #define SC_USE_SC_STRING_OLD
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_dt::sc_string_old a( "aap noot mies" );
+    sc_dt::sc_string_old a("aap noot mies");
 
-    cout << a.pos( "noot" ) << endl;
-    cout << a.pos( "not" ) << endl;
-    cout << a.pos( "" ) << endl;
+    cout << a.pos("noot") << endl;
+    cout << a.pos("not") << endl;
+    cout << a.pos("") << endl;
 
     return 0;
 }

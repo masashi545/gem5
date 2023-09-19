@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  fx_ufixed_limits.cpp -- 
+  fx_ufixed_limits.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,14 +36,13 @@
  *****************************************************************************/
 
 // This may look like C code, but it is really -*- C++ -*-
-// 
-// fx_ufixed<8, 5>_limits.cxx -- 
+//
+// fx_ufixed<8, 5>_limits.cxx --
 // Copyright Synopsys 1998
 // Author          : Ric Hilderink
 // Created On      : Fri Jan  8 14:30:41 1999
 // Status          : none
-// 
-
+//
 
 #include <limits.h>
 #include <math.h>
@@ -53,44 +52,45 @@
 #include "fx_precision_double.h"
 
 #define SHOW(a) out << #a << " : " << a.to_string(SC_HEX) << "\n"
-#define SHOW_EXP(a) { res = a; out << #a << " : " << res.to_string(SC_HEX) << "\n"; }
+#define SHOW_EXP(a)                                          \
+    {                                                        \
+        res = a;                                             \
+        out << #a << " : " << res.to_string(SC_HEX) << "\n"; \
+    }
 
-
-#define SHOW_EXPRS(a, b) \
-  SHOW_EXP(a b zero_min);   \
-  SHOW_EXP(a b zero_plus);  \
-  SHOW_EXP(a b zero);       \
-  SHOW_EXP(a b long_max);   \
-  SHOW_EXP(a b long_min);   \
-  SHOW_EXP(a b int_max);    \
-  SHOW_EXP(a b int_min);    \
-  SHOW_EXP(a b uint_max);   \
-  SHOW_EXP(a b ulong_max);  \
-  SHOW_EXP(a b double_min); \
-  SHOW_EXP(a b double_max); \
-  SHOW_EXP(a b float_min);  \
-  SHOW_EXP(a b float_max);  
+#define SHOW_EXPRS(a, b)      \
+    SHOW_EXP(a b zero_min);   \
+    SHOW_EXP(a b zero_plus);  \
+    SHOW_EXP(a b zero);       \
+    SHOW_EXP(a b long_max);   \
+    SHOW_EXP(a b long_min);   \
+    SHOW_EXP(a b int_max);    \
+    SHOW_EXP(a b int_min);    \
+    SHOW_EXP(a b uint_max);   \
+    SHOW_EXP(a b ulong_max);  \
+    SHOW_EXP(a b double_min); \
+    SHOW_EXP(a b double_max); \
+    SHOW_EXP(a b float_min);  \
+    SHOW_EXP(a b float_max);
 
 #define SHOW_EXPS(a) \
-  SHOW_EXPRS(a, /) \
-  SHOW_EXPRS(a, *) \
-  SHOW_EXPRS(a, +) \
-  SHOW_EXPRS(a, -) \
-  SHOW_EXPRS(a, * a *)
+    SHOW_EXPRS(a, /) \
+    SHOW_EXPRS(a, *) \
+    SHOW_EXPRS(a, +) \
+    SHOW_EXPRS(a, -) \
+    SHOW_EXPRS(a, *a *)
 
-  extern void test_fx_ufixed_limits_zero(ostream&);
-  extern void test_fx_ufixed_limits_inf(ostream&);
-  extern void test_fx_ufixed_limits_long(ostream&);
-  extern void test_fx_ufixed_limits_double(ostream&);
+extern void test_fx_ufixed_limits_zero(ostream &);
+extern void test_fx_ufixed_limits_inf(ostream &);
+extern void test_fx_ufixed_limits_long(ostream &);
+extern void test_fx_ufixed_limits_double(ostream &);
 
-
-void test_fx_ufixed_limits(ostream& out)
+void test_fx_ufixed_limits(ostream &out)
 {
-  out << "****************** limits fx_ufixed<8, 5>\n";
+    out << "****************** limits fx_ufixed<8, 5>\n";
 
-  test_fx_ufixed_limits_zero(out);
-  test_fx_ufixed_limits_inf(out);
-  test_fx_ufixed_limits_long(out);
-  test_fx_ufixed_limits_double(out);
+    test_fx_ufixed_limits_zero(out);
+    test_fx_ufixed_limits_inf(out);
+    test_fx_ufixed_limits_long(out);
+    test_fx_ufixed_limits_double(out);
 }
-

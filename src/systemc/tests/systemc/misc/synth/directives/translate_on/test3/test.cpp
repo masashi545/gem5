@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,22 +35,20 @@
 
  *****************************************************************************/
 
-/* 
+/*
    Verifies directives translate_on/translate_off
-   Author: PRP 
+   Author: PRP
    From Test Case translate_on: 17.cc
 */
 
 #include "systemc.h"
 #include "test.h"
 
-void test::entry() 
+void test::entry()
 {
-     int i;
-      
-       i = 4; 
- 
-  wait();
+    int i;
 
+    i = 4;
+
+    wait();
 }
-

@@ -16,13 +16,13 @@
   permissions and limitations under the License.
 
  *****************************************************************************/
-    
+
 /*****************************************************************************
 
   test01.cpp -- Test using sc_join as barrier mechanism.
 
   Original Author: Andy Goodrich, Forte Design Systems, 10 October 2004
-    
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -31,53 +31,52 @@
   changes you are making here.
 
       Name, Affiliation, Date:
-  Description of Modification:    
-    
+  Description of Modification:
+
  *****************************************************************************/
 
 #include "systemc.h"
 
 SC_MODULE(X)
 {
-	SC_CTOR(X)
-	{
-		m_join.add_process( sc_spawn( sc_bind(&X::sync, this, 3 ) ) );
-		m_join.add_process( sc_spawn( sc_bind(&X::sync, this, 4 ) ) );
-		m_join.add_process( sc_spawn( sc_bind(&X::sync, this, 5 ) ) );
-		m_join.add_process( sc_spawn( sc_bind(&X::sync, this, 5 ) ) );
-		m_join.add_process( sc_spawn( sc_bind(&X::sync, this, 7 ) ) );
-		m_join.add_process( sc_spawn( sc_bind(&X::sync, this, 11 ) ) );
-		m_join.add_process( sc_spawn( sc_bind(&X::sync, this, 21 ) ) );
+    SC_CTOR(X)
+    {
+        m_join.add_process(sc_spawn(sc_bind(&X::sync, this, 3)));
+        m_join.add_process(sc_spawn(sc_bind(&X::sync, this, 4)));
+        m_join.add_process(sc_spawn(sc_bind(&X::sync, this, 5)));
+        m_join.add_process(sc_spawn(sc_bind(&X::sync, this, 5)));
+        m_join.add_process(sc_spawn(sc_bind(&X::sync, this, 7)));
+        m_join.add_process(sc_spawn(sc_bind(&X::sync, this, 11)));
+        m_join.add_process(sc_spawn(sc_bind(&X::sync, this, 21)));
 
-		SC_THREAD(waiting);
-	}
-	void sync(int context)
-	{
-		for ( int i = 0; i < context; i++ ) 
-		{
-			wait(m_clk.posedge_event());
-		}
-		cout << sc_time_stamp() << ": sync(" << context << ") terminating" << endl;
-	}
-	void waiting()
-	{
-		m_join.wait();
-		cout << sc_time_stamp() << ": waiting waking" << endl;
-	}
+        SC_THREAD(waiting);
+    }
+    void sync(int context)
+    {
+        for (int i = 0; i < context; i++)
+        {
+            wait(m_clk.posedge_event());
+        }
+        cout << sc_time_stamp() << ": sync(" << context << ") terminating" << endl;
+    }
+    void waiting()
+    {
+        m_join.wait();
+        cout << sc_time_stamp() << ": waiting waking" << endl;
+    }
 
-	sc_in_clk m_clk;
-	sc_join   m_join;
+    sc_in_clk m_clk;
+    sc_join m_join;
 };
 
-int sc_main( int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-	sc_clock clock;
-	X x("x");
-	x.m_clk(clock);
+    sc_clock clock;
+    X x("x");
+    x.m_clk(clock);
 
-	sc_start(1000, SC_NS);
+    sc_start(1000, SC_NS);
 
-	cout << "Program completed" << endl;
-	return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }
-

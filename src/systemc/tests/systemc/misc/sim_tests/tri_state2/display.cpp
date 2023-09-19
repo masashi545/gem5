@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  display.cpp -- 
+  display.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,6 +42,5 @@
 
 void display::entry()
 {
-  cout << "Value on Bus = " << bus.read() << endl;
+    cout << "Value on Bus = " << bus.read() << endl;
 } // end of entry function
-

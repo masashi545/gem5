@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test_bit.cpp -- 
+  test_bit.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,51 +36,49 @@
  *****************************************************************************/
 
 // This may look like C code, but it is really -*- C++ -*-
-// 
-// test_bit.cxx -- 
+//
+// test_bit.cxx --
 // Copyright Synopsys 1998
 // Author          : Ric Hilderink
 // Created On      : Thu Jan 21 10:27:26 1999
 // Status          : none
-// 
-
+//
 
 #define SC_INCLUDE_FX
 #include "systemc.h"
 #include "test_all.hh"
 
-
-void test_bit(ostream& out, int wl, int iwl)
+void test_bit(ostream &out, int wl, int iwl)
 {
 #undef T_WL
 #undef T_IWL
 #define T_WL 13
 #define T_IWL 13
-  TEST_BIT;
+    TEST_BIT;
 #undef T_WL
 #undef T_IWL
 #define T_WL 13
 #define T_IWL 0
-  TEST_BIT;
+    TEST_BIT;
 #undef T_WL
 #undef T_IWL
 #define T_WL 5
 #define T_IWL 13
-  TEST_BIT;
+    TEST_BIT;
 
 #undef T_WL
 #undef T_IWL
 #define T_WL 65
 #define T_IWL 65
-  TEST_BIT;
+    TEST_BIT;
 #undef T_WL
 #undef T_IWL
 #define T_WL 65
 #define T_IWL 33
-  TEST_BIT;
+    TEST_BIT;
 #undef T_WL
 #undef T_IWL
 #define T_WL 65
 #define T_IWL 111
-  TEST_BIT;
+    TEST_BIT;
 }

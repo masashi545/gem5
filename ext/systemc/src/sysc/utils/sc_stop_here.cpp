@@ -31,74 +31,75 @@
 
 #include "sysc/utils/sc_stop_here.h"
 
-
-namespace sc_core {
-
-static const char* info_id    = 0;
-static const char* warning_id = 0;
-static const char* error_id   = 0;
-static const char* fatal_id   = 0;
-
-// ----------------------------------------------------------------------------
-//  FUNCTION : sc_interrupt_here
-//
-//  Debugging aid for warning, error, and fatal reports.
-//  This function *cannot* be inlined.
-// ----------------------------------------------------------------------------
-
-void
-sc_interrupt_here( const char* id, sc_severity severity )
+namespace sc_core
 {
-    // you can set a breakpoint at some of the lines below, either to
-    // interrupt with any severity, or to interrupt with a specific severity
 
-    switch( severity ) {
-      case SC_INFO: 
-	info_id = id;
-	break;
-      case SC_WARNING: 
-	warning_id = id;
-	break;
-      case SC_ERROR: 
-	error_id = id;
-	break;
-      default:
-      case SC_FATAL: 
-	fatal_id = id;
-	break;
+    static const char *info_id = 0;
+    static const char *warning_id = 0;
+    static const char *error_id = 0;
+    static const char *fatal_id = 0;
+
+    // ----------------------------------------------------------------------------
+    //  FUNCTION : sc_interrupt_here
+    //
+    //  Debugging aid for warning, error, and fatal reports.
+    //  This function *cannot* be inlined.
+    // ----------------------------------------------------------------------------
+
+    void
+    sc_interrupt_here(const char *id, sc_severity severity)
+    {
+        // you can set a breakpoint at some of the lines below, either to
+        // interrupt with any severity, or to interrupt with a specific severity
+
+        switch (severity)
+        {
+        case SC_INFO:
+            info_id = id;
+            break;
+        case SC_WARNING:
+            warning_id = id;
+            break;
+        case SC_ERROR:
+            error_id = id;
+            break;
+        default:
+        case SC_FATAL:
+            fatal_id = id;
+            break;
+        }
     }
-}
 
+    // ----------------------------------------------------------------------------
+    //  FUNCTION : sc_stop_here
+    //
+    //  Debugging aid for warning, error, and fatal reports.
+    //  This function *cannot* be inlined.
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-//  FUNCTION : sc_stop_here
-//
-//  Debugging aid for warning, error, and fatal reports.
-//  This function *cannot* be inlined.
-// ----------------------------------------------------------------------------
+    void
+    sc_stop_here(const char *id, sc_severity severity)
+    {
+        // you can set a breakpoint at some of the lines below, either to
+        // stop with any severity, or to stop with a specific severity
 
-void
-sc_stop_here( const char* id, sc_severity severity )
-{
-    // you can set a breakpoint at some of the lines below, either to
-    // stop with any severity, or to stop with a specific severity
-
-    switch( severity ) {
-      case SC_INFO: 
-	info_id = id;
-	break;
-      case SC_WARNING: 
-	warning_id = id;
-	break;
-      case SC_ERROR: 
-	error_id = id;
-	break;
-      default:
-      case SC_FATAL: 
-	fatal_id = id;
-	break;
+        switch (severity)
+        {
+        case SC_INFO:
+            info_id = id;
+            break;
+        case SC_WARNING:
+            warning_id = id;
+            break;
+        case SC_ERROR:
+            error_id = id;
+            break;
+        default:
+        case SC_FATAL:
+            fatal_id = id;
+            break;
+        }
     }
-}
 
 } // namespace sc_core
 

@@ -39,88 +39,96 @@
 
 using sc_core::sc_vector;
 
-typedef sc_vector< sc_fifo_out<int> > port_vec;
+typedef sc_vector<sc_fifo_out<int>> port_vec;
 
 static void
-dump_port_array( const char* from, const port_vec& in )
+dump_port_array(const char *from, const port_vec &in)
 {
-    std::cout << "\n" << from << "\n";
-    for( unsigned i=0; i<in.size(); ++i )
+    std::cout << "\n"
+              << from << "\n";
+    for (unsigned i = 0; i < in.size(); ++i)
     {
-      std::cout
-        << "  "
-        << in[i].name()
-        << ".size() == " << in[i].size();
-
-      for( int j=0; j<in[i].size(); ++j)
-      {
         std::cout
-          << " - "
-          << dynamic_cast<const sc_core::sc_object*>(in[i][j])->name()
-          << " @ " << j;
-      }
-      std::cout << std::endl;
+            << "  "
+            << in[i].name()
+            << ".size() == " << in[i].size();
+
+        for (int j = 0; j < in[i].size(); ++j)
+        {
+            std::cout
+                << " - "
+                << dynamic_cast<const sc_core::sc_object *>(in[i][j])->name()
+                << " @ " << j;
+        }
+        std::cout << std::endl;
     }
 }
 
 SC_MODULE(sub_module)
 {
-  port_vec in;
+    port_vec in;
 
-  sub_module( sc_core::sc_module_name, unsigned n_sub )
-    : in("in", n_sub ) {}
+    sub_module(sc_core::sc_module_name, unsigned n_sub)
+        : in("in", n_sub) {}
 
-  void before_end_of_elaboration()
-    { dump_port_array( "sub_module::before_end_of_elaboration", in ); }
-  void end_of_elaboration()
-    { dump_port_array( "sub_module::end_of_elaboration", in ); }
+    void before_end_of_elaboration()
+    {
+        dump_port_array("sub_module::before_end_of_elaboration", in);
+    }
+    void end_of_elaboration()
+    {
+        dump_port_array("sub_module::end_of_elaboration", in);
+    }
 };
-
 
 SC_MODULE(module)
 {
-  sub_module sub;
-  port_vec   in;
+    sub_module sub;
+    port_vec in;
 
-  SC_CTOR(module)
-    : sub("sub", 4), in("in",4)
-  {
-    // vector to vector binding
-    sub.in( in );
-  }
+    SC_CTOR(module)
+        : sub("sub", 4), in("in", 4)
+    {
+        // vector to vector binding
+        sub.in(in);
+    }
 
-  void before_end_of_elaboration()
-    { dump_port_array( "module::before_end_of_elaboration", in ); }
-  void end_of_elaboration()
-    { dump_port_array( "module::end_of_elaboration", in ); }
+    void before_end_of_elaboration()
+    {
+        dump_port_array("module::before_end_of_elaboration", in);
+    }
+    void end_of_elaboration()
+    {
+        dump_port_array("module::end_of_elaboration", in);
+    }
 };
 
-int sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
 
-  module top("top");
+    module top("top");
 
-  const unsigned size = 4;
-  const unsigned half = 2;
+    const unsigned size = 4;
+    const unsigned half = 2;
 
-  sc_assert( top.in.size() == size );
+    sc_assert(top.in.size() == size);
 
-  sc_vector< sc_fifo<int> >
-    fifo_1( "src_1", half ),
-    fifo_2( "src_2", size );
+    sc_vector<sc_fifo<int>>
+        fifo_1("src_1", half),
+        fifo_2("src_2", size);
 
-  // bind full vector (smaller than target)
-  port_vec::iterator mid = top.in( fifo_1 );
-  sc_assert( ( mid - top.in.begin() ) - half == 0 );
+    // bind full vector (smaller than target)
+    port_vec::iterator mid = top.in(fifo_1);
+    sc_assert((mid - top.in.begin()) - half == 0);
 
-  // bind range, starting from last position
-  mid = top.in.bind( fifo_2.begin(), fifo_2.end(), mid );
-  sc_assert( mid == top.in.end() );
+    // bind range, starting from last position
+    mid = top.in.bind(fifo_2.begin(), fifo_2.end(), mid);
+    sc_assert(mid == top.in.end());
 
-  // bind a plain C array of channels
-  sc_fifo<int> fifo_a[ half ];
-  top.sub.in( fifo_a, fifo_a + half );
+    // bind a plain C array of channels
+    sc_fifo<int> fifo_a[half];
+    top.sub.in(fifo_a, fifo_a + half);
 
-  sc_start();
-  return 0;
+    sc_start();
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test06.cpp -- 
+  test06.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,45 +39,46 @@
 
 #include "systemc.h"
 
-SC_MODULE( source )
+SC_MODULE(source)
 {
-    sc_in_clk   clk;
+    sc_in_clk clk;
     sc_out<int> out;
 
     int a;
 
     void main_action()
     {
-        if( m_first_time ) {
-            sc_set_time_resolution( 10, SC_PS );
+        if (m_first_time)
+        {
+            sc_set_time_resolution(10, SC_PS);
             a = 0;
             m_first_time = false;
-        } else {
-            out = ++ a;
+        }
+        else
+        {
+            out = ++a;
         }
     }
 
-    SC_CTOR( source )
-    : m_first_time( true )
+    SC_CTOR(source)
+        : m_first_time(true)
     {
-        SC_METHOD( main_action );
+        SC_METHOD(main_action);
         sensitive << clk.pos();
     }
 
 private:
-
     bool m_first_time;
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_clock clk( "clk" );
-    sc_signal<int> sig( "sig" );
+    sc_clock clk("clk");
+    sc_signal<int> sig("sig");
 
-    source src( "src" );
-    src.clk( clk );
-    src.out( sig );
+    source src("src");
+    src.clk(clk);
+    src.out(sig);
 
     sc_start();
 

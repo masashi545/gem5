@@ -23,18 +23,17 @@
 #include "SimpleLTTarget_ext.h"
 #include "extension_adaptors.h"
 
-
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  SimpleLTInitiator1_dmi initiator("initiator1", 10, 0x0);
-  adapt_gp2ext<32>       bridge("bridge");
-  SimpleLTTarget_ext     target("target1");
+    SimpleLTInitiator1_dmi initiator("initiator1", 10, 0x0);
+    adapt_gp2ext<32> bridge("bridge");
+    SimpleLTTarget_ext target("target1");
 
-  initiator.socket(bridge.target_socket);
-  bridge.initiator_socket(target.socket);
+    initiator.socket(bridge.target_socket);
+    bridge.initiator_socket(target.socket);
 
-  sc_core::sc_start();
-  sc_core::sc_stop();
+    sc_core::sc_start();
+    sc_core::sc_stop();
 
-  return 0;
+    return 0;
 }

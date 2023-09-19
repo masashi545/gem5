@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,101 +39,104 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_in_clk clk;
 
-    void write( const char* msg )
+    void write(const char *msg)
     {
         cout << sc_time_stamp() << " " << msg << endl;
     }
 
     void method_a()
     {
-        write( "method_a" );
+        write("method_a");
     }
 
     void thread_a()
     {
-        while( true ) {
-            write( "thread_a" );
+        while (true)
+        {
+            write("thread_a");
             wait();
         }
     }
 
     void cthread_a()
     {
-        while( true ) {
-            write( "cthread_a" );
+        while (true)
+        {
+            write("cthread_a");
             wait();
         }
     }
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
-        SC_METHOD( method_a );
+        SC_METHOD(method_a);
         sensitive << clk.neg();
-        SC_THREAD( thread_a );
+        SC_THREAD(thread_a);
         sensitive << clk.neg();
-        SC_CTHREAD( cthread_a, clk.neg() );
+        SC_CTHREAD(cthread_a, clk.neg());
     }
 };
 
-SC_MODULE( mod_b )
+SC_MODULE(mod_b)
 {
     sc_in_clk clk;
 
-    void write( const char* msg )
+    void write(const char *msg)
     {
         cout << sc_time_stamp() << " " << msg << endl;
     }
 
     void method_b()
     {
-        write( "method_b" );
+        write("method_b");
     }
 
     void thread_b()
     {
-        while( true ) {
-            write( "thread_b" );
+        while (true)
+        {
+            write("thread_b");
             wait();
         }
     }
 
     void cthread_b()
     {
-        while( true ) {
-            write( "cthread_b" );
+        while (true)
+        {
+            write("cthread_b");
             wait();
         }
     }
 
-    SC_CTOR( mod_b )
+    SC_CTOR(mod_b)
     {
-        SC_METHOD( method_b );
+        SC_METHOD(method_b);
         sensitive << clk.neg();
         dont_initialize();
-        SC_THREAD( thread_b );
+        SC_THREAD(thread_b);
         sensitive << clk.neg();
         dont_initialize();
-        SC_CTHREAD( cthread_b, clk.neg() );
+        SC_CTHREAD(cthread_b, clk.neg());
         dont_initialize();
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_clock clk;
 
-    mod_a a( "a" );
-    mod_b b( "b" );
+    mod_a a("a");
+    mod_b b("b");
 
-    a.clk( clk );
-    b.clk( clk );
+    a.clk(clk);
+    b.clk(clk);
 
-    sc_start( 3, SC_NS );
+    sc_start(3, SC_NS);
 
     return 0;
 }

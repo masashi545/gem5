@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test03.cpp -- 
+  test03.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,31 +40,30 @@
 #include "systemc.h"
 
 class my_signal
-: public sc_signal<int>
+    : public sc_signal<int>
 {
 public:
-
     my_signal()
         : sc_signal<int>()
-        {}
+    {
+    }
 
 protected:
-
     virtual void update()
+    {
+        if (m_new_val != m_cur_val)
         {
-            if( m_new_val != m_cur_val ) {
-                m_cur_val = m_new_val;
-                ((sc_event&)value_changed_event()).notify(); // immediate notification!?
-            }
+            m_cur_val = m_new_val;
+            ((sc_event &)value_changed_event()).notify(); // immediate notification!?
         }
+    }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     my_signal sig;
 
-    sig.write( 1 );
+    sig.write(1);
 
     sc_start();
 

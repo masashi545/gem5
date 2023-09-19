@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  inlining.cpp -- 
+  inlining.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-22
 
@@ -35,62 +35,71 @@
 
  *****************************************************************************/
 
-
 #include "inlining.h"
 
 // list of defines
 // #define MAXI(a,b) ((a)>(b)?(a):(b))
-#define MAXI(a,b) ( (a) > (b) ? sc_biguint<4>( a ) : sc_biguint<4>( b ) )
+#define MAXI(a, b) ((a) > (b) ? sc_biguint<4>(a) : sc_biguint<4>(b))
 #define clockedge wait()
-#define my_print(a) cout << #a << " my print " <<  a << endl
-#define my_if(a, b, c)   if (a < 6 ) { \
-                           b = 0;      \
-                         } else  {     \
-                           b = c;      \
-                         };
+#define my_print(a) cout << #a << " my print " << a << endl
+#define my_if(a, b, c) \
+    if (a < 6)         \
+    {                  \
+        b = 0;         \
+    }                  \
+    else               \
+    {                  \
+        b = c;         \
+    };
 
-void inlining::entry(){
+void inlining::entry()
+{
 
-  sc_biguint<4>   tmp1;
-  sc_biguint<4>    tmp2;
-  sc_lv<4>        tmp3;
-  sc_bv<4>        tmp4;
+    sc_biguint<4> tmp1;
+    sc_biguint<4> tmp2;
+    sc_lv<4> tmp3;
+    sc_bv<4> tmp4;
 
-  // reset_loop
-    if (reset.read() == true) {
-      out_value1.write(0);
-      out_value2.write(0);
-      out_valid.write(false);
-      clockedge;
-    } else clockedge;
+    // reset_loop
+    if (reset.read() == true)
+    {
+        out_value1.write(0);
+        out_value2.write(0);
+        out_valid.write(false);
+        clockedge;
+    }
+    else
+        clockedge;
 
-  //
-  // main loop
-  //
-  while(1) {
-    do { wait(); } while  (in_valid == false);
+    //
+    // main loop
+    //
+    while (1)
+    {
+        do
+        {
+            wait();
+        } while (in_valid == false);
 
-    //reading inputs
-    tmp1 = in_value1.read();
-    tmp2 = in_value2.read();
-    tmp3 = in_value3.read();
-    tmp4 = in_value4.read();
+        // reading inputs
+        tmp1 = in_value1.read();
+        tmp2 = in_value2.read();
+        tmp3 = in_value3.read();
+        tmp4 = in_value4.read();
 
-    //execution
-    ++tmp1;
-    out_value1.write(MAXI(tmp1, tmp2));
-    my_print(tmp1);
-    my_print(tmp2);
-    clockedge;
+        // execution
+        ++tmp1;
+        out_value1.write(MAXI(tmp1, tmp2));
+        my_print(tmp1);
+        my_print(tmp2);
+        clockedge;
 
-    my_if(tmp2, tmp3, tmp4);
-    out_value2.write(tmp4);
-    out_valid.write(true);
-    clockedge;
-    out_valid.write(false);
-
-  }
+        my_if(tmp2, tmp3, tmp4);
+        out_value2.write(tmp4);
+        out_valid.write(true);
+        clockedge;
+        out_valid.write(false);
+    }
 }
 
 // EOF
-

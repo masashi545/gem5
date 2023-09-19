@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  adder_sub.cpp -- 
+  adder_sub.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,35 +42,38 @@
 
 int add(int a, int b)
 {
-  return (a + b);
+    return (a + b);
 }
 
 void adder_sub::entry()
 {
-  int sum;
-  int a, b, c, d;
+    int sum;
+    int a, b, c, d;
 
-  while (true) {
-    // Wait until you get signal to go
-    do { wait(); } while (adder_sub_ready != true);
-    // Read inputs
-    a = Sa.read();
-    b = Sb.read();
-    c = Sc.read();
-    
-    // Perform the computation.
-    sum = add(a, b);
-    sum = add(sum, c);
-    d = a - b;
+    while (true)
+    {
+        // Wait until you get signal to go
+        do
+        {
+            wait();
+        } while (adder_sub_ready != true);
+        // Read inputs
+        a = Sa.read();
+        b = Sb.read();
+        c = Sc.read();
 
-    // Write outputs
-    adder_sub_done.write(true);
-    Ssum.write(sum);
-    Sd.write(d);
-    wait();
-    adder_sub_done.write(false);
-    // Loop back to do { wait(); } while . 
-  }
+        // Perform the computation.
+        sum = add(a, b);
+        sum = add(sum, c);
+        d = a - b;
+
+        // Write outputs
+        adder_sub_done.write(true);
+        Ssum.write(sum);
+        Sd.write(d);
+        wait();
+        adder_sub_done.write(false);
+        // Loop back to do { wait(); } while .
+    }
 
 } // end of entry function
-

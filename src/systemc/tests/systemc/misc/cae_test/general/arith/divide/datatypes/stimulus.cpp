@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stimulus.cpp -- 
+  stimulus.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-10-01
 
@@ -35,10 +35,10 @@
 
  *****************************************************************************/
 
-
 #include "stimulus.h"
 
-void stimulus::entry() {
+void stimulus::entry()
+{
 
     reset.write(true);
     wait();
@@ -58,29 +58,36 @@ void stimulus::entry() {
     tmp3 = "010";
     tmp4 = "011";
 
-
-    while(true){
-       // handshake
-       out_valid.write(true); 
-       // write stimuli    
-       out_value1.write(tmp1);
-       out_value2.write(tmp2);
-       out_value3.write(tmp3);
-       out_value4.write(tmp4);
-       cout << "Stimuli: "<< tmp1 << " " << tmp2 << " " << tmp3 << " " << tmp4 << endl;
-       // update stimuli
-       tmp1 = tmp1 + 1;
-       if (tmp1 == zero_2) tmp1 = "01";
-       tmp2 = tmp2 + 1;
-       if (tmp2 == zero_2) tmp2 = "01";
-       tmp3 = tmp3 + 1;
-       if (tmp3 == zero_3) tmp3 = "001";
-       tmp4 = tmp4 + 1;
-       if (tmp4 == zero_3) tmp4 = "001";
-       // handshake
-       do { wait(); } while (in_ack==false);
-       out_valid.write(false);
-       wait();
+    while (true)
+    {
+        // handshake
+        out_valid.write(true);
+        // write stimuli
+        out_value1.write(tmp1);
+        out_value2.write(tmp2);
+        out_value3.write(tmp3);
+        out_value4.write(tmp4);
+        cout << "Stimuli: " << tmp1 << " " << tmp2 << " " << tmp3 << " " << tmp4 << endl;
+        // update stimuli
+        tmp1 = tmp1 + 1;
+        if (tmp1 == zero_2)
+            tmp1 = "01";
+        tmp2 = tmp2 + 1;
+        if (tmp2 == zero_2)
+            tmp2 = "01";
+        tmp3 = tmp3 + 1;
+        if (tmp3 == zero_3)
+            tmp3 = "001";
+        tmp4 = tmp4 + 1;
+        if (tmp4 == zero_3)
+            tmp4 = "001";
+        // handshake
+        do
+        {
+            wait();
+        } while (in_ack == false);
+        out_valid.write(false);
+        wait();
     }
 }
 // EOF

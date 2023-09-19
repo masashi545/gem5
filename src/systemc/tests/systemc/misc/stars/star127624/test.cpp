@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,8 +37,7 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_uint<3> ia;
     sc_uint<1> ib;
@@ -46,11 +45,11 @@ sc_main( int, char*[] )
 
     ia = 7;
     ib = 1;
-    ic = ( ia[2] & ib, ia );
+    ic = (ia[2] & ib, ia);
     cout << ic << endl;
 
     ib = 0;
-    ic = ( ia[2] & ib, ia );
+    ic = (ia[2] & ib, ia);
     cout << ic << endl;
 
     return 0;

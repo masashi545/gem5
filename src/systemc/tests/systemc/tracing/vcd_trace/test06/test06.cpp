@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test06.cpp -- 
+  test06.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,61 +37,62 @@
 
 #include "systemc.h"
 
-SC_MODULE( proc1 )
+SC_MODULE(proc1)
 {
-  SC_HAS_PROCESS( proc1 ); 
+    SC_HAS_PROCESS(proc1);
 
-  sc_in<bool> clk;
+    sc_in<bool> clk;
 
-  float obj1;
-  double obj2;
+    float obj1;
+    double obj2;
 
-  proc1( sc_module_name NAME,
-	 sc_signal<bool>& CLK )
-  {
-    clk(CLK);
-    SC_THREAD( entry );
-    sensitive << clk;
-    obj1 = 0.0;
-    obj2 = 0.0;
-  }
+    proc1(sc_module_name NAME,
+          sc_signal<bool> & CLK)
+    {
+        clk(CLK);
+        SC_THREAD(entry);
+        sensitive << clk;
+        obj1 = 0.0;
+        obj2 = 0.0;
+    }
 
-  void entry();
+    void entry();
 };
-  
-void proc1::entry() 
+
+void proc1::entry()
 {
-  wait();
-  while(true) {
-    obj1 = 12.345;
-    obj2 = -13.5678923;
     wait();
-    obj1 = -182634876.5659374;
-    obj2 = 1672357.298346;
-    wait();
-  }
+    while (true)
+    {
+        obj1 = 12.345;
+        obj2 = -13.5678923;
+        wait();
+        obj1 = -182634876.5659374;
+        obj2 = 1672357.298346;
+        wait();
+    }
 }
-  
 
 int sc_main(int ac, char *av[])
 {
-  sc_trace_file *tf;
-  sc_signal<bool> clock;
+    sc_trace_file *tf;
+    sc_signal<bool> clock;
 
-  proc1 P1("P1", clock);
+    proc1 P1("P1", clock);
 
-  tf = sc_create_vcd_trace_file("test06");
-  sc_trace(tf, P1.obj1, "Float");
-  sc_trace(tf, P1.obj2, "Double");
+    tf = sc_create_vcd_trace_file("test06");
+    sc_trace(tf, P1.obj1, "Float");
+    sc_trace(tf, P1.obj2, "Double");
 
-  clock.write(0);
-  sc_start(0, SC_NS);
-  for (int i = 0; i< 10; i++) {
-    clock.write(1);
-    sc_start(10, SC_NS);
     clock.write(0);
-    sc_start(10, SC_NS);
-  }
-  sc_close_vcd_trace_file( tf );
-  return 0;
+    sc_start(0, SC_NS);
+    for (int i = 0; i < 10; i++)
+    {
+        clock.write(1);
+        sc_start(10, SC_NS);
+        clock.write(0);
+        sc_start(10, SC_NS);
+    }
+    sc_close_vcd_trace_file(tf);
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  nor.cpp -- 
+  nor.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,5 +42,5 @@
 
 void nor::entry()
 {
-  c.write(!(a.read() | b.read()));
+    c.write(!(a.read() | b.read()));
 } // end of entry function

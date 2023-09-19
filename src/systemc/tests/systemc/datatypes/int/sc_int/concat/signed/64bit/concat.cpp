@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  concat.cpp -- 
+  concat.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,20 +37,20 @@
 
 #include "systemc.h"
 
-#define WIDTH 64 
+#define WIDTH 64
 
-int sc_main(int ac, char* av[] )
+int sc_main(int ac, char *av[])
 {
-    
-  sc_int<WIDTH> a_si64, b_si64;
 
-  for(int i=0; i < WIDTH-1; i++ ){
-      cout << "i = " << i << endl;
-      a_si64 = i;
-      b_si64 = (a_si64.range(WIDTH-1,i+1), a_si64.range(i,0));
-      sc_assert( a_si64 == b_si64 );
-  }
+    sc_int<WIDTH> a_si64, b_si64;
 
-  return 0;
+    for (int i = 0; i < WIDTH - 1; i++)
+    {
+        cout << "i = " << i << endl;
+        a_si64 = i;
+        b_si64 = (a_si64.range(WIDTH - 1, i + 1), a_si64.range(i, 0));
+        sc_assert(a_si64 == b_si64);
+    }
+
+    return 0;
 }
-  

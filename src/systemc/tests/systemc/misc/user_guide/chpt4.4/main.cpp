@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,22 +42,21 @@
 #include "testbench.h"
 #include "f_pipeline.h"
 
-int sc_main(int ac, char* av[])
+int sc_main(int ac, char *av[])
 {
-  sc_signal<double> in1;
-  sc_signal<double> in2;
-  sc_signal<double> powr;
+    sc_signal<double> in1;
+    sc_signal<double> in2;
+    sc_signal<double> powr;
 
-  in1 = 0.0;
-  in2 = 0.0;
-  powr = 0.0;
+    in1 = 0.0;
+    in2 = 0.0;
+    powr = 0.0;
 
-  sc_clock clk("CLOCK", 20.0, SC_NS, 0.5, 0.0, SC_NS);
+    sc_clock clk("CLOCK", 20.0, SC_NS, 0.5, 0.0, SC_NS);
 
-  testbench T("Testbench", clk, powr, in1, in2);
-  f_pipeline("PIPE", clk, in1, in2, powr);
+    testbench T("Testbench", clk, powr, in1, in2);
+    f_pipeline("PIPE", clk, in1, in2, powr);
 
-  sc_start(1000, SC_NS);
-  return 0;
+    sc_start(1000, SC_NS);
+    return 0;
 }
-

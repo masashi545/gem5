@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-08-02
 
@@ -39,65 +39,66 @@
 #include "display.h"
 #include "bitwidth.h"
 
-int sc_main (int argc , char *argv[]) {
-  sc_clock        clock;
-  sc_signal<bool> reset;
-  sc_signal_bool_vector4      stimulus_line1;
-  sc_signal_bool_vector4      stimulus_line2;
-  sc_signal_bool_vector6      stimulus_line3;
-  sc_signal_bool_vector6      stimulus_line4;
-  sc_signal_bool_vector8      stimulus_line5;
-  sc_signal_bool_vector8      stimulus_line6;
-  sc_signal<bool>             input_valid;
-  sc_signal<bool>             output_valid;
-  sc_signal_bool_vector4      result_line1;
-  sc_signal_bool_vector4      result_line2;
-  sc_signal_bool_vector6      result_line3;
-  sc_signal_bool_vector6      result_line4;
-  sc_signal_bool_vector8      result_line5;
-  sc_signal_bool_vector8      result_line6;
+int sc_main(int argc, char *argv[])
+{
+    sc_clock clock;
+    sc_signal<bool> reset;
+    sc_signal_bool_vector4 stimulus_line1;
+    sc_signal_bool_vector4 stimulus_line2;
+    sc_signal_bool_vector6 stimulus_line3;
+    sc_signal_bool_vector6 stimulus_line4;
+    sc_signal_bool_vector8 stimulus_line5;
+    sc_signal_bool_vector8 stimulus_line6;
+    sc_signal<bool> input_valid;
+    sc_signal<bool> output_valid;
+    sc_signal_bool_vector4 result_line1;
+    sc_signal_bool_vector4 result_line2;
+    sc_signal_bool_vector6 result_line3;
+    sc_signal_bool_vector6 result_line4;
+    sc_signal_bool_vector8 result_line5;
+    sc_signal_bool_vector8 result_line6;
 
-  stimulus stimulus1("stimulus_block",
-                      clock,
-		      reset,
-                      stimulus_line1,
-                      stimulus_line2,
-                      stimulus_line3,
-                      stimulus_line4,
-                      stimulus_line5,
-                      stimulus_line6,
-		      input_valid);
-
-  bitwidth   bitwidth1    ( "process_body",
-                       clock, 
-		       reset,
+    stimulus stimulus1("stimulus_block",
+                       clock,
+                       reset,
                        stimulus_line1,
                        stimulus_line2,
                        stimulus_line3,
                        stimulus_line4,
                        stimulus_line5,
                        stimulus_line6,
-		       input_valid,
-                       result_line1, 
-                       result_line2, 
-                       result_line3, 
-                       result_line4, 
-                       result_line5, 
-                       result_line6, 
-		       output_valid);
+                       input_valid);
 
-  display  display1 ( "display",
+    bitwidth bitwidth1("process_body",
                        clock,
-		       result_line1,
-		       result_line2,
-		       result_line3,
-		       result_line4,
-		       result_line5,
-		       result_line6,
-		       output_valid);
+                       reset,
+                       stimulus_line1,
+                       stimulus_line2,
+                       stimulus_line3,
+                       stimulus_line4,
+                       stimulus_line5,
+                       stimulus_line6,
+                       input_valid,
+                       result_line1,
+                       result_line2,
+                       result_line3,
+                       result_line4,
+                       result_line5,
+                       result_line6,
+                       output_valid);
 
-  sc_start();
-  return 0;
+    display display1("display",
+                     clock,
+                     result_line1,
+                     result_line2,
+                     result_line3,
+                     result_line4,
+                     result_line5,
+                     result_line6,
+                     output_valid);
+
+    sc_start();
+    return 0;
 }
 
 // EOF

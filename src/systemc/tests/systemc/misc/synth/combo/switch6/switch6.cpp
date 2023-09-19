@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  switch6.cpp -- 
+  switch6.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,18 +37,22 @@
 
 #include "systemc.h"
 unsigned short
-select( unsigned a, unsigned b, unsigned c )
+select(unsigned a, unsigned b, unsigned c)
 {
     sc_unsigned x(7);
     sc_unsigned y(9);
 
-    switch ((c >> 2) & 3) {
+    switch ((c >> 2) & 3)
+    {
     case 0:
         x = a + b;
-        if (a > 23349212) {
+        if (a > 23349212)
+        {
             x = x + 1;
             break;
-        } else {
+        }
+        else
+        {
             x = x - 1;
         }
         return x.to_uint();
@@ -60,10 +64,13 @@ select( unsigned a, unsigned b, unsigned c )
         return x.to_uint();
     case 3:
         x = (a << 16) - (b >> 16);
-        if (b < 234328112) {
+        if (b < 234328112)
+        {
             x = x - 1;
             break;
-        } else {
+        }
+        else
+        {
             x = x + 1;
             return x.to_uint();
         }
@@ -74,8 +81,7 @@ select( unsigned a, unsigned b, unsigned c )
     return y.to_uint();
 }
 
-int
-sc_main( int, char** argv )   
+int sc_main(int, char **argv)
 {
     return 0;
 }

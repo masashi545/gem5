@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  paramadd.cpp -- 
+  paramadd.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,48 +42,50 @@
 
 void paramadd::entry()
 {
-  sc_biguint<5>	sum1;
-  sc_unsigned  	a1(data_width);
-  sc_unsigned  	b1(data_width);
-  bool c1;
- 
-  // Reset handler
-  sum.write(0); 
-  co.write(0);
-  wait();
+    sc_biguint<5> sum1;
+    sc_unsigned a1(data_width);
+    sc_unsigned b1(data_width);
+    bool c1;
 
-  while(true) {	 // Main Loop
-
-    // HANDSHAKE
-    done.write(0);
-    do { wait(); } while (ready != 1);
-
-    // COMPUTATION
-    a1 = a.read();
-    b1 = b.read();
-    c1 = cin.read();
-
-    sum1 = a1 + b1 + c1;
-
-    // sum.write( sum1.range(data_width-1,0) );
-    sc_unsigned tmp( data_width );
-    tmp = sum1.range( data_width - 1, 0 );
-    sum.write( tmp );
-    co.write( sum1[data_width] );
-    wait( 2 );
-
-    cout  << sc_time_stamp() << "\t : "
-          << a1 << " + " 
-          << b1 << " + " 
-          << cin << " = " << sum1
-          << "\t => carry = " << co 
-          << " sum = " << sum
-          << endl; 
-
-
-    // HANDSHAKE
-    done.write(1);
+    // Reset handler
+    sum.write(0);
+    co.write(0);
     wait();
-  } 
-}
 
+    while (true)
+    { // Main Loop
+
+        // HANDSHAKE
+        done.write(0);
+        do
+        {
+            wait();
+        } while (ready != 1);
+
+        // COMPUTATION
+        a1 = a.read();
+        b1 = b.read();
+        c1 = cin.read();
+
+        sum1 = a1 + b1 + c1;
+
+        // sum.write( sum1.range(data_width-1,0) );
+        sc_unsigned tmp(data_width);
+        tmp = sum1.range(data_width - 1, 0);
+        sum.write(tmp);
+        co.write(sum1[data_width]);
+        wait(2);
+
+        cout << sc_time_stamp() << "\t : "
+             << a1 << " + "
+             << b1 << " + "
+             << cin << " = " << sum1
+             << "\t => carry = " << co
+             << " sum = " << sum
+             << endl;
+
+        // HANDSHAKE
+        done.write(1);
+        wait();
+    }
+}

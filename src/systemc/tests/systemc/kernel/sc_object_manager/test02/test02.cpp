@@ -18,16 +18,16 @@
  *****************************************************************************/
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
   Original Author: Andy Goodrich, Forte Design Systems
 
  *****************************************************************************/
 /*****************************************************************************
-  MODIFICATION LOG - modifiers, enter your name, affiliation, date and  
+  MODIFICATION LOG - modifiers, enter your name, affiliation, date and
   changes you are making here.
 
-      Name, Affiliation, Date: 
-  Description of Modification: 
+      Name, Affiliation, Date:
+  Description of Modification:
 
  *****************************************************************************/
 
@@ -36,58 +36,58 @@
 
 #include "systemc.h"
 
-class my_object : public sc_object 
+class my_object : public sc_object
 {
-  public:
-	my_object() {}
-	virtual ~my_object() {}
+public:
+    my_object() {}
+    virtual ~my_object() {}
 };
 
 SC_MODULE(DUT)
 {
-	SC_CTOR(DUT)
-	{
-		SC_CTHREAD(thread,m_clk.pos());
-		reset_signal_is(m_reset, true);
-	}
-	void before_end_of_elaboration()
-	{
-		m_before_p = new my_object;		
-	}
-	void end_of_elaboration()
-	{
-		m_end_p = new my_object;		
-	}
-	void thread()
-	{
-		for (;;)
-		{
-			wait();
-			if ( m_before_p->get_parent_object() == 0 )
-				cout << "before_end_of_elaboration parent is 0!" <<endl;
-			if ( m_end_p->get_parent_object() == 0 )
-				cout << "end_of_elaboration parent is 0!" <<endl;
-		}
-	}
-	my_object*  m_before_p;
-	sc_in<bool> m_clk;
-	my_object*  m_end_p;
-	sc_in<bool> m_reset;
+    SC_CTOR(DUT)
+    {
+        SC_CTHREAD(thread, m_clk.pos());
+        reset_signal_is(m_reset, true);
+    }
+    void before_end_of_elaboration()
+    {
+        m_before_p = new my_object;
+    }
+    void end_of_elaboration()
+    {
+        m_end_p = new my_object;
+    }
+    void thread()
+    {
+        for (;;)
+        {
+            wait();
+            if (m_before_p->get_parent_object() == 0)
+                cout << "before_end_of_elaboration parent is 0!" << endl;
+            if (m_end_p->get_parent_object() == 0)
+                cout << "end_of_elaboration parent is 0!" << endl;
+        }
+    }
+    my_object *m_before_p;
+    sc_in<bool> m_clk;
+    my_object *m_end_p;
+    sc_in<bool> m_reset;
 };
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-	sc_clock        clock;
-	DUT             dut("dut");
-	sc_signal<bool> reset;
+    sc_clock clock;
+    DUT dut("dut");
+    sc_signal<bool> reset;
 
-	dut.m_clk(clock);
-	dut.m_reset(reset);
+    dut.m_clk(clock);
+    dut.m_reset(reset);
 
-	reset = true;
-	sc_start(1, SC_NS);
-	reset = false;
-	sc_start(1, SC_NS);
+    reset = true;
+    sc_start(1, SC_NS);
+    reset = false;
+    sc_start(1, SC_NS);
 
-	cout << "Program completed" << endl;
-	return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }

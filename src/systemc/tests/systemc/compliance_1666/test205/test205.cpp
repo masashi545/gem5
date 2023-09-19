@@ -9,61 +9,62 @@ using std::endl;
 
 void global()
 {
-  wait();
-  sc_assert(sc_time_stamp() == sc_time(0, SC_NS));
-  wait(3);
-  sc_assert(sc_time_stamp() == sc_time(3, SC_NS));
+    wait();
+    sc_assert(sc_time_stamp() == sc_time(0, SC_NS));
+    wait(3);
+    sc_assert(sc_time_stamp() == sc_time(3, SC_NS));
 }
 
-struct Prim: sc_prim_channel
+struct Prim : sc_prim_channel
 {
-  void method()
-  {
-    wait();
-    sc_assert(sc_time_stamp() == sc_time(4, SC_NS));
-    wait(3);
-    sc_assert(sc_time_stamp() == sc_time(7, SC_NS));
-  }
+    void method()
+    {
+        wait();
+        sc_assert(sc_time_stamp() == sc_time(4, SC_NS));
+        wait(3);
+        sc_assert(sc_time_stamp() == sc_time(7, SC_NS));
+    }
 };
 
 SC_MODULE(M)
 {
-  sc_in_clk clk;
-  Prim prim;
-  SC_CTOR(M)
-  {
-    SC_THREAD(T);
-    sensitive << clk.pos();
-  }
-  void T()
-  {
-    global();
-    prim.method();
-    wait();
-    sc_assert(sc_time_stamp() == sc_time(8, SC_NS));
-    wait(3);
-    sc_assert(sc_time_stamp() == sc_time(11, SC_NS));
-    sc_stop();
-  }
+    sc_in_clk clk;
+    Prim prim;
+    SC_CTOR(M)
+    {
+        SC_THREAD(T);
+        sensitive << clk.pos();
+    }
+    void T()
+    {
+        global();
+        prim.method();
+        wait();
+        sc_assert(sc_time_stamp() == sc_time(8, SC_NS));
+        wait(3);
+        sc_assert(sc_time_stamp() == sc_time(11, SC_NS));
+        sc_stop();
+    }
 };
 
-struct Top: sc_module
+struct Top : sc_module
 {
-  M *m;
-  sc_clock clk;
-  Top(sc_module_name)
-  {
-    m = new M("m");
-    m->clk.bind(clk);
-  }
+    M *m;
+    sc_clock clk;
+    Top(sc_module_name)
+    {
+        m = new M("m");
+        m->clk.bind(clk);
+    }
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  cout << "Should be silent..." << endl;
-  Top top("top");
-  sc_start();
+    cout << "Should be silent..." << endl;
+    Top top("top");
+    sc_start();
 
-  cout << endl << "Success" << endl;
-  return 0;
+    cout << endl
+         << "Success" << endl;
+    return 0;
 }

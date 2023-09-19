@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test08.cpp -- 
+  test08.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-03-22
 
@@ -39,13 +39,10 @@
 
 #include "systemc.h"
 
-SC_MODULE( my_mod )
-{
-    my_mod() {}
-};
+SC_MODULE(my_mod){
+    my_mod(){}};
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     my_mod m;
 

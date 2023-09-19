@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stimgen.cpp -- 
+  stimgen.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,32 +35,35 @@
 
  *****************************************************************************/
 
-                /*******************************************/
-                /* Implementation Filename:  stimgen.cc  */
-                /*******************************************/
- 
+/*******************************************/
+/* Implementation Filename:  stimgen.cc  */
+/*******************************************/
+
 #include "stimgen.h"
- 
-void
-stimgen::entry()
+
+void stimgen::entry()
 {
-  ready.write(0);
-  wait();
-
-  a.write("01010101");
-  b.write("11110000");
-  ready.write(1);
-
-  for (int i=0; i < 4; i++) {
-    mode.write(i);
+    ready.write(0);
     wait();
-    cout << "a = " << a << "  b = " << b << "  mode = " << mode << endl;
-    do { wait(); } while (done != 1);
-    cout << "\t c = " << c << "  d = " << d << endl;
-  }
 
-  ready.write(0);
-  wait();
+    a.write("01010101");
+    b.write("11110000");
+    ready.write(1);
 
-  sc_stop();
+    for (int i = 0; i < 4; i++)
+    {
+        mode.write(i);
+        wait();
+        cout << "a = " << a << "  b = " << b << "  mode = " << mode << endl;
+        do
+        {
+            wait();
+        } while (done != 1);
+        cout << "\t c = " << c << "  d = " << d << endl;
+    }
+
+    ready.write(0);
+    wait();
+
+    sc_stop();
 }

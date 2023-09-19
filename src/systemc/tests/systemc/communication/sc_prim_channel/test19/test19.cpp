@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test19.cpp -- 
+  test19.cpp --
 
   Original Author: Ucar Aziz, Synopsys, Inc., 2002-02-15
                    Martin Janssen, Synopsys, Inc., 2002-02-15
@@ -40,110 +40,113 @@
 
 #include <systemc.h>
 
-//write and read interfaces
-class write_if : virtual public
-sc_interface
- {
-  public:
-   virtual void write() = 0;
+// write and read interfaces
+class write_if : virtual public sc_interface
+{
+public:
+    virtual void write() = 0;
 };
 
-class read_if : virtual public 
-sc_interface
+class read_if : virtual public sc_interface
 {
- public:
-  virtual void read( ) = 0;
+public:
+    virtual void read() = 0;
 };
 
 // channel implements write_if and read_if interfaces
-class channel :
-  public sc_channel,
-  public write_if,
-  public read_if
+class channel : public sc_channel,
+                public write_if,
+                public read_if
 {
 
-  public :
-
-  //constructor
-  channel(sc_module_name name):sc_channel(name)  , data(0)
-  { }
-
-  //write to channel 
-  void write(){
-    int i = 0;
-
-    while(1){
-    wait(10, SC_NS);
-    data = i;
-    cout <<"simulation time" << ":" << sc_time_stamp()<<"    ";
-    cout<<"writting "<< data <<" to channel" << endl;
-  
-      write_event_2.notify(5, SC_NS);
-      write_event_1.notify(5, SC_NS);
-      i++;
+public:
+    // constructor
+    channel(sc_module_name name) : sc_channel(name), data(0)
+    {
     }
-  }
 
-  //read from channel
-  void read( ){
-    int j;
+    // write to channel
+    void write()
+    {
+        int i = 0;
 
-    while(1){
-    wait(write_event_1 & write_event_2);
-    j = data;
-    cout <<"simulation time" << ":" << sc_time_stamp();
-    cout<<"    reading "<<j<<" from channel" << endl;
-   }
-  }
+        while (1)
+        {
+            wait(10, SC_NS);
+            data = i;
+            cout << "simulation time"
+                 << ":" << sc_time_stamp() << "    ";
+            cout << "writting " << data << " to channel" << endl;
 
-  private:
-  int data;
-  sc_event write_event_1, write_event_2;
+            write_event_2.notify(5, SC_NS);
+            write_event_1.notify(5, SC_NS);
+            i++;
+        }
+    }
 
+    // read from channel
+    void read()
+    {
+        int j;
+
+        while (1)
+        {
+            wait(write_event_1 & write_event_2);
+            j = data;
+            cout << "simulation time"
+                 << ":" << sc_time_stamp();
+            cout << "    reading " << j << " from channel" << endl;
+        }
+    }
+
+private:
+    int data;
+    sc_event write_event_1, write_event_2;
 };
 
-//source module
+// source module
 SC_MODULE(mod_a)
 {
-  sc_port<write_if> out;
+    sc_port<write_if> out;
 
-  void write( )
-  {
-    out->write();
-  }  
+    void write()
+    {
+        out->write();
+    }
 
-  SC_CTOR( mod_a ){
-  
-    SC_THREAD(write);
-  }
+    SC_CTOR(mod_a)
+    {
+
+        SC_THREAD(write);
+    }
 };
-  
-//sink module
+
+// sink module
 SC_MODULE(mod_b)
 {
-  sc_port<read_if> input;
-  int i;
+    sc_port<read_if> input;
+    int i;
 
-  void read( )
-  {
-   input->read();
-  }  
+    void read()
+    {
+        input->read();
+    }
 
-  SC_CTOR( mod_b ){
-  
-    SC_THREAD(read);
-  }
+    SC_CTOR(mod_b)
+    {
+
+        SC_THREAD(read);
+    }
 };
-  
 
-int sc_main(int, char*[] )
+int sc_main(int, char *[])
 {
-  channel a("a");
-  mod_a modul_a("modul_a");
-  mod_b modul_b("modul_b");
-  modul_a.out(a);
-  modul_b.input(a); 
+    channel a("a");
+    mod_a modul_a("modul_a");
+    mod_b modul_b("modul_b");
+    modul_a.out(a);
+    modul_b.input(a);
 
-  sc_start(60, SC_NS);
-  return 0;
+    sc_start(60, SC_NS);
+    return 0;
 }

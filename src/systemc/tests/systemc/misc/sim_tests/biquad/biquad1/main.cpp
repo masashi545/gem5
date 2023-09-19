@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,32 +42,34 @@
 
 float signal_freq;
 
-int
-sc_main(int ac, char *av[])
+int sc_main(int ac, char *av[])
 {
-  sc_signal<float> sample;
-  sc_signal<float> result;
-  sc_signal<bool> reset;
+    sc_signal<float> sample;
+    sc_signal<float> result;
+    sc_signal<bool> reset;
 
-  sample = 0.0;
-  result = 0.0;
-  reset = false;
+    sample = 0.0;
+    result = 0.0;
+    reset = false;
 
-  sc_clock clk("Clock", CLOCK_PERIOD, SC_NS);
+    sc_clock clk("Clock", CLOCK_PERIOD, SC_NS);
 
-  biquad filter("BFILTER", clk, sample, reset, result);
-  testbench TB("TB", clk, result, reset, sample);
+    biquad filter("BFILTER", clk, sample, reset, result);
+    testbench TB("TB", clk, result, reset, sample);
 
-  int n = 10000;
-  signal_freq = 100000;
-  for (int i = 1; i < ac; i++) {
-    if (av[i][0] == '-') {
-      signal_freq = atof(av[i+1]); i++;
-      continue;
+    int n = 10000;
+    signal_freq = 100000;
+    for (int i = 1; i < ac; i++)
+    {
+        if (av[i][0] == '-')
+        {
+            signal_freq = atof(av[i + 1]);
+            i++;
+            continue;
+        }
+        n = atoi(av[i]);
     }
-    n = atoi(av[i]);
-  }
 
-  sc_start(n, SC_NS);
-  return 0;
+    sc_start(n, SC_NS);
+    return 0;
 }

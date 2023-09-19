@@ -18,11 +18,11 @@
  *****************************************************************************/
 
 /*****************************************************************************
- 
+
   dist.cpp -- Implementation of the odometers.
- 
+
   Original Author: Ali Dasdan, Synopsys, Inc.
- 
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -56,33 +56,33 @@
 #include "dist.h"
 
 // Compute the total and partial distances travelled.
-void
-dist_mod::get_dist_proc()
+void dist_mod::get_dist_proc()
 {
-  wait();
+    wait();
 
-  double total = 0.0;
-  double partial = 0.0;
+    double total = 0.0;
+    double partial = 0.0;
 
-  while (true) {
+    while (true)
+    {
 
-    // More than one pulse is needed for a distance increment.  This
-    // function collects NUM_PULSES_FOR_DIST_INCR pulses for that
-    // purpose.
-    AWAIT(NUM_PULSES_FOR_DIST_INCR);
+        // More than one pulse is needed for a distance increment.  This
+        // function collects NUM_PULSES_FOR_DIST_INCR pulses for that
+        // purpose.
+        AWAIT(NUM_PULSES_FOR_DIST_INCR);
 
-    // Increment the distances:
-    total = total + DIST_INCR;
-    partial = partial + DIST_INCR;
+        // Increment the distances:
+        total = total + DIST_INCR;
+        partial = partial + DIST_INCR;
 
-    cout << "Current total distance displayed = " 
-         << total << " km @ " << sc_time_stamp() << endl;  
-    cout << "Current partial distance displayed = " 
-         << partial << " km @ " << sc_time_stamp() << endl;  
+        cout << "Current total distance displayed = "
+             << total << " km @ " << sc_time_stamp() << endl;
+        cout << "Current partial distance displayed = "
+             << partial << " km @ " << sc_time_stamp() << endl;
 
-    if (total >= 3 * DIST_INCR)
-      sc_stop();
-  }
+        if (total >= 3 * DIST_INCR)
+            sc_stop();
+    }
 }
 
 // End of file

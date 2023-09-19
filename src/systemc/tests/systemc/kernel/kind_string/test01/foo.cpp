@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  foo.cpp -- 
+  foo.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,15 +37,17 @@
 
 #include "systemc.h"
 
-void
-foo( const sc_signal<int>& sig_ )
+void foo(const sc_signal<int> &sig_)
 {
     sc_signal<int> sig;
 
-    if( std::string(sig_.kind()) == std::string(sig.kind()) ) {
+    if (std::string(sig_.kind()) == std::string(sig.kind()))
+    {
         cout << "kind() the same\n";
-    } else {
-        cout << "kind() different: '" << sig_.kind() << "' ~= ' " 
-		     << sig.kind() << "'\n";
+    }
+    else
+    {
+        cout << "kind() different: '" << sig_.kind() << "' ~= ' "
+             << sig.kind() << "'\n";
     }
 }

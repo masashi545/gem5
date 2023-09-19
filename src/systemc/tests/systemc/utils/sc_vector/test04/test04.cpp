@@ -37,72 +37,69 @@
 
 #include "systemc.h"
 
-SC_MODULE( mesh_node )
+SC_MODULE(mesh_node)
 {
-  // constructor with additional parameters
-  mesh_node( sc_core::sc_module_name, int x, int y );
+    // constructor with additional parameters
+    mesh_node(sc_core::sc_module_name, int x, int y);
 };
 
-typedef sc_vector< mesh_node > row_type;
-typedef sc_vector< row_type  > mesh_type;
+typedef sc_vector<mesh_node> row_type;
+typedef sc_vector<row_type> mesh_type;
 
 SC_MODULE(mesh)
 {
-  mesh_type nodes;
+    mesh_type nodes;
 
-  mesh( sc_module_name, int n, int m );
+    mesh(sc_module_name, int n, int m);
 
-  struct node_creator
-  {
-    node_creator( int row ) : x(row) {}
-
-    mesh_node* operator()(const char * name, size_t idx )
+    struct node_creator
     {
-      return new mesh_node( name, x, idx );
-    }
-    int x;
-  };
+        node_creator(int row) : x(row) {}
 
-  struct row_creator
-  {
-    row_creator( int n_cols ) : cols_( n_cols ) {}
+        mesh_node *operator()(const char *name, size_t idx)
+        {
+            return new mesh_node(name, x, idx);
+        }
+        int x;
+    };
 
-    row_type* operator()( const char* name, size_t idx )
+    struct row_creator
     {
-      return new row_type( name, cols_, node_creator(idx) );
-    }
-    int cols_;
-  };
+        row_creator(int n_cols) : cols_(n_cols) {}
 
-  const unsigned rows;
-  const unsigned cols;
+        row_type *operator()(const char *name, size_t idx)
+        {
+            return new row_type(name, cols_, node_creator(idx));
+        }
+        int cols_;
+    };
 
+    const unsigned rows;
+    const unsigned cols;
 };
 
-mesh_node::mesh_node( sc_module_name, int x, int y )
+mesh_node::mesh_node(sc_module_name, int x, int y)
 {
-  std::cout << name() << " created @ "
-            << x << "x" << y << std::endl;
+    std::cout << name() << " created @ "
+              << x << "x" << y << std::endl;
 }
 
-mesh::mesh( sc_module_name, int n, int m )
-  : nodes("nodes")
-  , rows( n )
-  , cols( m )
+mesh::mesh(sc_module_name, int n, int m)
+    : nodes("nodes"), rows(n), cols(m)
 {
-  nodes.init( n, row_creator(m) );
+    nodes.init(n, row_creator(m));
 }
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  mesh dut("dut", 4, 5);
+    mesh dut("dut", 4, 5);
 
-  for (size_t j=0; j<dut.cols; ++j )
-    for (size_t i=0; i<dut.rows; ++i )
-      cout << dut.nodes[i][j].name() << " - "
-           << dut.nodes[i][j].kind()
-           << endl;
+    for (size_t j = 0; j < dut.cols; ++j)
+        for (size_t i = 0; i < dut.rows; ++i)
+            cout << dut.nodes[i][j].name() << " - "
+                 << dut.nodes[i][j].kind()
+                 << endl;
 
-  cout << "Program completed" << endl;
-  return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }

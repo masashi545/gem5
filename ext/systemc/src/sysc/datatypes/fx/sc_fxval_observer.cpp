@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  sc_fxval_observer.cpp - 
+  sc_fxval_observer.cpp -
 
   Original Author: Martin Janssen, Synopsys, Inc.
 
@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 // $Log: sc_fxval_observer.cpp,v $
 // Revision 1.1.1.1  2006/12/15 20:20:04  acg
 // SystemC 2.3
@@ -47,30 +46,27 @@
 
 #include "sysc/datatypes/fx/sc_fxval_observer.h"
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_fxval_observer
-//
-//  Abstract base class for fixed-point value type observers;
-//  arbitrary precision.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_fxval_observer
+    //
+    //  Abstract base class for fixed-point value type observers;
+    //  arbitrary precision.
+    // ----------------------------------------------------------------------------
 
-sc_fxval_observer* (*sc_fxval_observer::default_observer) () = 0;
+    sc_fxval_observer *(*sc_fxval_observer::default_observer)() = 0;
 
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_fxval_fast_observer
+    //
+    //  Abstract base class for fixed-point value type observers;
+    //  limited precision.
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_fxval_fast_observer
-//
-//  Abstract base class for fixed-point value type observers;
-//  limited precision.
-// ----------------------------------------------------------------------------
-
-sc_fxval_fast_observer* (*sc_fxval_fast_observer::default_observer) () = 0;
+    sc_fxval_fast_observer *(*sc_fxval_fast_observer::default_observer)() = 0;
 
 } // namespace sc_dt
-
 
 // Taf!

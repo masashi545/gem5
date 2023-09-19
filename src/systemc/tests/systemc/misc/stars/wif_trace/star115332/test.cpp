@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,40 +37,36 @@
 
 #include "flop.h"
 #include "systemc.h"
-  
 
 int sc_main(int argc, char *argv[]) //(int ac, char** av)
 
 {
 
-  sc_signal<sc_uint<1> > int1 ;
-  sc_signal<sc_uint<1> > int2 ;
+    sc_signal<sc_uint<1>> int1;
+    sc_signal<sc_uint<1>> int2;
 
+    sc_clock clk("clk", 20, SC_NS, 0.5);
 
-  sc_clock clk("clk", 20, SC_NS, 0.5);
+    // instanciate Processes
 
+    flop FLOP("flip_flop");
+    FLOP.clk(clk);
+    FLOP.in(int1);
+    FLOP.out(int2);
 
+    sc_trace_file *tf = sc_create_wif_trace_file("test");
+    sc_trace(tf, clk, "clk");
+    sc_trace(tf, int1, "int1");
+    sc_trace(tf, int2, "int2");
 
-// instanciate Processes
+    /*
+    sc_trace_file * tf2 = sc_create_vcd_trace_file("dump_vcd");
+    sc_trace( tf2, clk, "clk");
+    sc_trace( tf2, int1, "int1");
+    sc_trace( tf2, int2, "int2");
+    */
 
-  flop  FLOP("flip_flop");
-  FLOP.clk(clk) ;
-  FLOP.in(int1) ;
-  FLOP.out(int2) ;
-
-  sc_trace_file * tf = sc_create_wif_trace_file("test");
-  sc_trace( tf, clk, "clk");
-  sc_trace( tf, int1, "int1");
-  sc_trace( tf, int2, "int2");
-
-  /*
-  sc_trace_file * tf2 = sc_create_vcd_trace_file("dump_vcd");
-  sc_trace( tf2, clk, "clk");
-  sc_trace( tf2, int1, "int1");
-  sc_trace( tf2, int2, "int2");
-  */
-
-  sc_start(1000, SC_NS);
-  sc_close_wif_trace_file( tf );
-  return 0;
+    sc_start(1000, SC_NS);
+    sc_close_wif_trace_file(tf);
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  switch3.cpp -- 
+  switch3.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,12 +36,12 @@
  *****************************************************************************/
 
 #include "systemc.h"
-short
-select( int a, int b, int c )
+short select(int a, int b, int c)
 {
     sc_signed x(7);
 
-    switch ((c >> 2) & 3) {
+    switch ((c >> 2) & 3)
+    {
     default:
     case 0:
         x = a + b;
@@ -58,8 +58,7 @@ select( int a, int b, int c )
     }
 }
 
-int
-sc_main( int, char** argv )   
+int sc_main(int, char **argv)
 {
     return 0;
 }

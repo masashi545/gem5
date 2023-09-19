@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  std_to_bool.cpp -- 
+  std_to_bool.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -41,17 +41,17 @@
 
 int sc_main(int ac, char *av[])
 {
-  sc_bv<3> a;
-  sc_lv<3> b;
+    sc_bv<3> a;
+    sc_lv<3> b;
 
-  b[2] = '1';
-  b[1] = '0';
-  b[0] = '0'; 
+    b[2] = '1';
+    b[1] = '0';
+    b[0] = '0';
 
-  a = b;
-  cout << a << endl;
-  // the following line causes error
+    a = b;
+    cout << a << endl;
+    // the following line causes error
     b[1] = 'Z';
-    a = b; 
-  return 0;
+    a = b;
+    return 0;
 }

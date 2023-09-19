@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,167 +39,195 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     // check_length for sc_int_base
 
-    try {
+    try
+    {
         sc_int<-3> a;
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_int<-3>\n";
     }
 
-    try {
-        sc_int<0>  a;
+    try
+    {
+        sc_int<0> a;
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_int<0>\n";
     }
 
-    try {
+    try
+    {
         sc_int<100> a;
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_int<100>\n";
     }
 
-
     // check_index for sc_int_base
 
-    try {
+    try
+    {
         sc_int<8> a = 42;
         cout << a[-1] << "\n";
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_int<8>[-1]\n";
     }
 
-    try {
+    try
+    {
         sc_int<8> a = 42;
         cout << a[8] << "\n";
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_int<8>[8]\n";
     }
 
-
     // check_range for sc_int_base
 
-    try {
+    try
+    {
         sc_int<8> a = 42;
-        cout << a( 3, -1 ) << "\n";
+        cout << a(3, -1) << "\n";
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_int<8>( 3, -1 )\n";
     }
 
-    try {
+    try
+    {
         sc_int<8> a = 42;
-        cout << a( 8, 4 ) << "\n";
+        cout << a(8, 4) << "\n";
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_int<8>( 8, 4 )\n";
     }
 
-    try {
+    try
+    {
         sc_int<8> a = 42;
-        cout << a( 0, 3 ) << endl;
+        cout << a(0, 3) << endl;
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_int<8>( 0, 3 )\n";
     }
 
-
     // check_length for sc_int_concref<T1,T2>
 
-    try {
+    try
+    {
         sc_int<42> a;
-        cout << ( a, a ) << "\n";
+        cout << (a, a) << "\n";
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for ( sc_int<42>, sc_int<42> )\n";
     }
 
-
     // check_length for sc_uint_base
 
-    try {
+    try
+    {
         sc_uint<-3> a;
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_uint<-3>\n";
     }
 
-    try {
-        sc_uint<0>  a;
+    try
+    {
+        sc_uint<0> a;
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_uint<0>\n";
     }
 
-    try {
+    try
+    {
         sc_uint<100> a;
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_uint<100>\n";
     }
 
-
     // check_index for sc_uint_base
 
-    try {
+    try
+    {
         sc_uint<8> a = 42;
         cout << a[-1] << "\n";
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_uint<8>[-1]\n";
     }
 
-    try {
+    try
+    {
         sc_uint<8> a = 42;
         cout << a[8] << "\n";
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_uint<8>[8]\n";
     }
 
-
     // check_range for sc_uint_base
 
-    try {
+    try
+    {
         sc_uint<8> a = 42;
-        cout << a( 3, -1 ) << "\n";
+        cout << a(3, -1) << "\n";
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_uint<8>( 3, -1 )\n";
     }
 
-    try {
+    try
+    {
         sc_uint<8> a = 42;
-        cout << a( 8, 4 ) << "\n";
+        cout << a(8, 4) << "\n";
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_uint<8>( 8, 4 )\n";
     }
 
-    try {
+    try
+    {
         sc_uint<8> a = 42;
-        cout << a( 0, 3 ) << endl;
+        cout << a(0, 3) << endl;
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for sc_uint<8>( 0, 3 )\n";
     }
 
-
     // check_length for sc_uint_concref<T1,T2>
 
-    try {
+    try
+    {
         sc_uint<42> a;
-        cout << ( a, a ) << "\n";
+        cout << (a, a) << "\n";
     }
-    catch( sc_report ) {
+    catch (sc_report)
+    {
         cout << "caught exception for ( sc_uint<42>, sc_uint<42> )\n";
     }
 

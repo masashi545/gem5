@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,16 +42,16 @@
 
 int sc_main(int ac, char *av[])
 {
-  sc_signal<bool> data_ready;
-  sc_signal<bool> data_ack;
-  sc_signal<int> data;
+    sc_signal<bool> data_ready;
+    sc_signal<bool> data_ack;
+    sc_signal<int> data;
 
-  sc_clock clock("CLOCK", 10, SC_NS, 0.5, 0.0, SC_NS);
+    sc_clock clock("CLOCK", 10, SC_NS, 0.5, 0.0, SC_NS);
 
-  proc1 Master("MasterProcess", clock, data_ack, data, data_ready);
-  proc2 Slave("SlaveProcess", clock, data_ready, data, data_ack);
+    proc1 Master("MasterProcess", clock, data_ack, data, data_ready);
+    proc2 Slave("SlaveProcess", clock, data_ready, data, data_ack);
 
-  sc_start();
-  cout << "SIMULATION COMPLETED AT TIME " << sc_time_stamp() << endl;
-  return 0;
+    sc_start();
+    cout << "SIMULATION COMPLETED AT TIME " << sc_time_stamp() << endl;
+    return 0;
 }

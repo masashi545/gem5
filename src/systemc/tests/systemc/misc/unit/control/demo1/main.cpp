@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -43,14 +43,14 @@
 
 int sc_main(int ac, char *av[])
 {
-  sc_signal<bool> data_ready("Ready");
-  sc_signal<bool> data_ack("Ack");
+    sc_signal<bool> data_ready("Ready");
+    sc_signal<bool> data_ack("Ack");
 
-  sc_clock clock("CLOCK", 10, SC_NS, 0.5, 0.0, SC_NS);
+    sc_clock clock("CLOCK", 10, SC_NS, 0.5, 0.0, SC_NS);
 
-  proc1 Master("MasterProcess", clock, data_ack, data_ready);
-  proc2 Slave("SlaveProcess", clock, data_ready, data_ack);
+    proc1 Master("MasterProcess", clock, data_ack, data_ready);
+    proc2 Slave("SlaveProcess", clock, data_ready, data_ack);
 
-  sc_start(100, SC_NS);
-  return 0;
+    sc_start(100, SC_NS);
+    return 0;
 }

@@ -34,334 +34,340 @@
 #include "sysc/kernel/sc_object_int.h"
 
 #ifndef SC_DISABLE_ASYNC_UPDATES
-#  include "sysc/communication/sc_host_mutex.h"
+#include "sysc/communication/sc_host_mutex.h"
 #endif
 
-namespace sc_core {
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_prim_channel
-//
-//  Abstract base class of all primitive channel classes.
-// ----------------------------------------------------------------------------
-
-// constructors
-
-sc_prim_channel::sc_prim_channel()
-: sc_object( 0 ),
-  m_registry( simcontext()->get_prim_channel_registry() ),
-  m_update_next_p( 0 ) 
+namespace sc_core
 {
-    m_registry->insert( *this );
-}
 
-sc_prim_channel::sc_prim_channel( const char* name_ )
-: sc_object( name_ ),
-  m_registry( simcontext()->get_prim_channel_registry() ),
-  m_update_next_p( 0 )
-{
-    m_registry->insert( *this );
-}
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_prim_channel
+    //
+    //  Abstract base class of all primitive channel classes.
+    // ----------------------------------------------------------------------------
 
+    // constructors
 
-// destructor
+    sc_prim_channel::sc_prim_channel()
+        : sc_object(0),
+          m_registry(simcontext()->get_prim_channel_registry()),
+          m_update_next_p(0)
+    {
+        m_registry->insert(*this);
+    }
 
-sc_prim_channel::~sc_prim_channel()
-{
-    m_registry->remove( *this );
-}
+    sc_prim_channel::sc_prim_channel(const char *name_)
+        : sc_object(name_),
+          m_registry(simcontext()->get_prim_channel_registry()),
+          m_update_next_p(0)
+    {
+        m_registry->insert(*this);
+    }
 
+    // destructor
 
-// the update method (does nothing by default)
+    sc_prim_channel::~sc_prim_channel()
+    {
+        m_registry->remove(*this);
+    }
 
-void
-sc_prim_channel::update()
-{}
+    // the update method (does nothing by default)
 
+    void
+    sc_prim_channel::update()
+    {
+    }
 
-// called by construction_done (does nothing by default)
+    // called by construction_done (does nothing by default)
 
-void sc_prim_channel::before_end_of_elaboration() 
-{}
+    void sc_prim_channel::before_end_of_elaboration()
+    {
+    }
 
-// called when construction is done
+    // called when construction is done
 
-void
-sc_prim_channel::construction_done()
-{
-    sc_object::hierarchy_scope scope( get_parent_object() );
-    before_end_of_elaboration();
-}
+    void
+    sc_prim_channel::construction_done()
+    {
+        sc_object::hierarchy_scope scope(get_parent_object());
+        before_end_of_elaboration();
+    }
 
-// called by elaboration_done (does nothing by default)
+    // called by elaboration_done (does nothing by default)
 
-void
-sc_prim_channel::end_of_elaboration()
-{}
+    void
+    sc_prim_channel::end_of_elaboration()
+    {
+    }
 
+    // called when elaboration is done
 
-// called when elaboration is done
+    void
+    sc_prim_channel::elaboration_done()
+    {
+        sc_object::hierarchy_scope scope(get_parent_object());
+        end_of_elaboration();
+    }
 
-void
-sc_prim_channel::elaboration_done()
-{
-    sc_object::hierarchy_scope scope( get_parent_object() );
-    end_of_elaboration();
-}
+    // called by start_simulation (does nothing)
 
-// called by start_simulation (does nothing)
+    void
+    sc_prim_channel::start_of_simulation()
+    {
+    }
 
-void
-sc_prim_channel::start_of_simulation()
-{}
+    // called before simulation begins
 
-// called before simulation begins
+    void
+    sc_prim_channel::start_simulation()
+    {
+        sc_object::hierarchy_scope scope(get_parent_object());
+        start_of_simulation();
+    }
 
-void
-sc_prim_channel::start_simulation()
-{
-    sc_object::hierarchy_scope scope( get_parent_object() );
-    start_of_simulation();
-}
+    // called by simulation_done (does nothing)
 
-// called by simulation_done (does nothing)
+    void
+    sc_prim_channel::end_of_simulation()
+    {
+    }
 
-void
-sc_prim_channel::end_of_simulation()
-{}
+    // called after simulation ends
 
-// called after simulation ends
+    void
+    sc_prim_channel::simulation_done()
+    {
+        sc_object::hierarchy_scope scope(get_parent_object());
+        end_of_simulation();
+    }
 
-void
-sc_prim_channel::simulation_done()
-{
-    sc_object::hierarchy_scope scope( get_parent_object() );
-    end_of_simulation();
-}
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_prim_channel_registry::async_update_list
+    //
+    //  Thread-safe list of pending external updates
+    //  FOR INTERNAL USE ONLY!
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_prim_channel_registry::async_update_list
-//
-//  Thread-safe list of pending external updates
-//  FOR INTERNAL USE ONLY!
-// ----------------------------------------------------------------------------
-
-class sc_prim_channel_registry::async_update_list
-{
+    class sc_prim_channel_registry::async_update_list
+    {
 #ifndef SC_DISABLE_ASYNC_UPDATES
-public:
+    public:
+        bool pending() const
+        {
+            return m_push_queue.size() != 0;
+        }
 
-    bool pending() const
-    {
-	return m_push_queue.size() != 0;
-    }
+        void append(sc_prim_channel &prim_channel_)
+        {
+            sc_scoped_lock lock(m_mutex);
+            m_push_queue.push_back(&prim_channel_);
+            // return releases the mutex
+        }
 
-    void append( sc_prim_channel& prim_channel_ )
-    {
-	sc_scoped_lock lock( m_mutex );
-	m_push_queue.push_back( &prim_channel_ );
-	// return releases the mutex
-    }
+        void accept_updates()
+        {
+            sc_assert(!m_pop_queue.size());
+            {
+                sc_scoped_lock lock(m_mutex);
+                m_push_queue.swap(m_pop_queue);
+                // leaving the block releases the mutex
+            }
 
-    void accept_updates()
-    {
-	sc_assert( ! m_pop_queue.size() );
-	{
-	    sc_scoped_lock lock( m_mutex );
-	    m_push_queue.swap( m_pop_queue );
-	    // leaving the block releases the mutex
-	}
+            std::vector<sc_prim_channel *>::const_iterator
+                it = m_pop_queue.begin(),
+                end = m_pop_queue.end();
+            while (it != end)
+            {
+                // we use request_update instead of perform_update
+                // to skip duplicates
+                (*it++)->request_update();
+            }
+            m_pop_queue.clear();
+        }
 
-	std::vector< sc_prim_channel* >::const_iterator
-	    it = m_pop_queue.begin(), end = m_pop_queue.end();
-	while( it!= end )
-	{
-	    // we use request_update instead of perform_update
-	    // to skip duplicates
-	    (*it++)->request_update();
-	}
-	m_pop_queue.clear();
-    }
-
-private:
-    sc_host_mutex                   m_mutex;
-    std::vector< sc_prim_channel* > m_push_queue;
-    std::vector< sc_prim_channel* > m_pop_queue;
+    private:
+        sc_host_mutex m_mutex;
+        std::vector<sc_prim_channel *> m_push_queue;
+        std::vector<sc_prim_channel *> m_pop_queue;
 
 #endif // ! SC_DISABLE_ASYNC_UPDATES
-};
+    };
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_prim_channel_registry
-//
-//  Registry for all primitive channels.
-//  FOR INTERNAL USE ONLY!
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_prim_channel_registry
+    //
+    //  Registry for all primitive channels.
+    //  FOR INTERNAL USE ONLY!
+    // ----------------------------------------------------------------------------
 
-void
-sc_prim_channel_registry::insert( sc_prim_channel& prim_channel_ )
-{
-    if( sc_is_running() ) {
-       SC_REPORT_ERROR( SC_ID_INSERT_PRIM_CHANNEL_, "simulation running" );
-    }
+    void
+    sc_prim_channel_registry::insert(sc_prim_channel &prim_channel_)
+    {
+        if (sc_is_running())
+        {
+            SC_REPORT_ERROR(SC_ID_INSERT_PRIM_CHANNEL_, "simulation running");
+        }
 
-    if( m_simc->elaboration_done() ) {
+        if (m_simc->elaboration_done())
+        {
 
-	SC_REPORT_ERROR( SC_ID_INSERT_PRIM_CHANNEL_, "elaboration done" );
-    }
+            SC_REPORT_ERROR(SC_ID_INSERT_PRIM_CHANNEL_, "elaboration done");
+        }
 
 #ifdef DEBUG_SYSTEMC
-    // check if prim_channel_ is already inserted
-    for( int i = 0; i < size(); ++ i ) {
-	if( &prim_channel_ == m_prim_channel_vec[i] ) {
-	    SC_REPORT_ERROR( SC_ID_INSERT_PRIM_CHANNEL_, "already inserted" );
-	}
-    }
+        // check if prim_channel_ is already inserted
+        for (int i = 0; i < size(); ++i)
+        {
+            if (&prim_channel_ == m_prim_channel_vec[i])
+            {
+                SC_REPORT_ERROR(SC_ID_INSERT_PRIM_CHANNEL_, "already inserted");
+            }
+        }
 #endif
 
-    // insert
-    m_prim_channel_vec.push_back( &prim_channel_ );
-
-}
-
-void
-sc_prim_channel_registry::remove( sc_prim_channel& prim_channel_ )
-{
-    int i;
-    for( i = 0; i < size(); ++ i ) {
-	if( &prim_channel_ == m_prim_channel_vec[i] ) {
-	    break;
-	}
-    }
-    if( i == size() ) {
-	SC_REPORT_ERROR( SC_ID_REMOVE_PRIM_CHANNEL_, 0 );
+        // insert
+        m_prim_channel_vec.push_back(&prim_channel_);
     }
 
-    // remove
-    m_prim_channel_vec[i] = m_prim_channel_vec[size() - 1];
-    m_prim_channel_vec.resize(size()-1);
-}
-
-bool
-sc_prim_channel_registry::pending_async_updates() const
-{
-#ifndef SC_DISABLE_ASYNC_UPDATES
-    return m_async_update_list_p->pending();
-#else
-    return false;
-#endif
-}
-
-void
-sc_prim_channel_registry::async_request_update( sc_prim_channel& prim_channel_ )
-{
-#ifndef SC_DISABLE_ASYNC_UPDATES
-    m_async_update_list_p->append( prim_channel_ );
-#else
-    SC_REPORT_ERROR( SC_ID_NO_ASYNC_UPDATE_, prim_channel_.name() );
-#endif
-}
-
-// +----------------------------------------------------------------------------
-// |"sc_prim_channel_registry::perform_update"
-// |
-// | This method updates the values of the primitive channels in its update
-// | lists.
-// +----------------------------------------------------------------------------
-void
-sc_prim_channel_registry::perform_update()
-{
-    // Update the values for the primitive channels set external to the
-    // simulator.
-
-#ifndef SC_DISABLE_ASYNC_UPDATES
-    if( m_async_update_list_p->pending() )
-	m_async_update_list_p->accept_updates();
-#endif
-
-    sc_prim_channel* next_p; // Next update to perform.
-    sc_prim_channel* now_p;  // Update now performing.
-
-    // Update the values for the primitive channels in the simulator's list.
-
-    now_p = m_update_list_p;
-    m_update_list_p = (sc_prim_channel*)sc_prim_channel::list_end;
-    for ( ; now_p != (sc_prim_channel*)sc_prim_channel::list_end;
-	now_p = next_p )
+    void
+    sc_prim_channel_registry::remove(sc_prim_channel &prim_channel_)
     {
-	next_p = now_p->m_update_next_p;
-	now_p->perform_update();
+        int i;
+        for (i = 0; i < size(); ++i)
+        {
+            if (&prim_channel_ == m_prim_channel_vec[i])
+            {
+                break;
+            }
+        }
+        if (i == size())
+        {
+            SC_REPORT_ERROR(SC_ID_REMOVE_PRIM_CHANNEL_, 0);
+        }
+
+        // remove
+        m_prim_channel_vec[i] = m_prim_channel_vec[size() - 1];
+        m_prim_channel_vec.resize(size() - 1);
     }
-}
 
-// constructor
+    bool
+    sc_prim_channel_registry::pending_async_updates() const
+    {
+#ifndef SC_DISABLE_ASYNC_UPDATES
+        return m_async_update_list_p->pending();
+#else
+        return false;
+#endif
+    }
 
-sc_prim_channel_registry::sc_prim_channel_registry( sc_simcontext& simc_ )
-  :  m_async_update_list_p(0)
-  ,  m_construction_done(0)
-  ,  m_prim_channel_vec()
-  ,  m_simc( &simc_ )
-  ,  m_update_list_p((sc_prim_channel*)sc_prim_channel::list_end)
-{
-#   ifndef SC_DISABLE_ASYNC_UPDATES
+    void
+    sc_prim_channel_registry::async_request_update(sc_prim_channel &prim_channel_)
+    {
+#ifndef SC_DISABLE_ASYNC_UPDATES
+        m_async_update_list_p->append(prim_channel_);
+#else
+        SC_REPORT_ERROR(SC_ID_NO_ASYNC_UPDATE_, prim_channel_.name());
+#endif
+    }
+
+    // +----------------------------------------------------------------------------
+    // |"sc_prim_channel_registry::perform_update"
+    // |
+    // | This method updates the values of the primitive channels in its update
+    // | lists.
+    // +----------------------------------------------------------------------------
+    void
+    sc_prim_channel_registry::perform_update()
+    {
+        // Update the values for the primitive channels set external to the
+        // simulator.
+
+#ifndef SC_DISABLE_ASYNC_UPDATES
+        if (m_async_update_list_p->pending())
+            m_async_update_list_p->accept_updates();
+#endif
+
+        sc_prim_channel *next_p; // Next update to perform.
+        sc_prim_channel *now_p;  // Update now performing.
+
+        // Update the values for the primitive channels in the simulator's list.
+
+        now_p = m_update_list_p;
+        m_update_list_p = (sc_prim_channel *)sc_prim_channel::list_end;
+        for (; now_p != (sc_prim_channel *)sc_prim_channel::list_end;
+             now_p = next_p)
+        {
+            next_p = now_p->m_update_next_p;
+            now_p->perform_update();
+        }
+    }
+
+    // constructor
+
+    sc_prim_channel_registry::sc_prim_channel_registry(sc_simcontext &simc_)
+        : m_async_update_list_p(0), m_construction_done(0), m_prim_channel_vec(), m_simc(&simc_), m_update_list_p((sc_prim_channel *)sc_prim_channel::list_end)
+    {
+#ifndef SC_DISABLE_ASYNC_UPDATES
         m_async_update_list_p = new async_update_list();
-#   endif
-}
-
-
-// destructor
-
-sc_prim_channel_registry::~sc_prim_channel_registry()
-{
-    delete m_async_update_list_p;
-}
-
-// called when construction is done
-
-bool
-sc_prim_channel_registry::construction_done()
-{
-    if( size() == m_construction_done )
-        // nothing has been updated
-        return true;
-
-    for( ; m_construction_done < size(); ++m_construction_done ) {
-        m_prim_channel_vec[m_construction_done]->construction_done();
+#endif
     }
 
-    return false;
-}
+    // destructor
 
-
-// called when elaboration is done
-
-void
-sc_prim_channel_registry::elaboration_done()
-{
-    for( int i = 0; i < size(); ++ i ) {
-	m_prim_channel_vec[i]->elaboration_done();
+    sc_prim_channel_registry::~sc_prim_channel_registry()
+    {
+        delete m_async_update_list_p;
     }
-}
 
-// called before simulation begins
+    // called when construction is done
 
-void
-sc_prim_channel_registry::start_simulation()
-{
-    for( int i = 0; i < size(); ++ i ) {
-	m_prim_channel_vec[i]->start_simulation();
+    bool
+    sc_prim_channel_registry::construction_done()
+    {
+        if (size() == m_construction_done)
+            // nothing has been updated
+            return true;
+
+        for (; m_construction_done < size(); ++m_construction_done)
+        {
+            m_prim_channel_vec[m_construction_done]->construction_done();
+        }
+
+        return false;
     }
-}
 
-// called after simulation ends
+    // called when elaboration is done
 
-void
-sc_prim_channel_registry::simulation_done()
-{
-    for( int i = 0; i < size(); ++ i ) {
-	m_prim_channel_vec[i]->simulation_done();
+    void
+    sc_prim_channel_registry::elaboration_done()
+    {
+        for (int i = 0; i < size(); ++i)
+        {
+            m_prim_channel_vec[i]->elaboration_done();
+        }
     }
-}
+
+    // called before simulation begins
+
+    void
+    sc_prim_channel_registry::start_simulation()
+    {
+        for (int i = 0; i < size(); ++i)
+        {
+            m_prim_channel_vec[i]->start_simulation();
+        }
+    }
+
+    // called after simulation ends
+
+    void
+    sc_prim_channel_registry::simulation_done()
+    {
+        for (int i = 0; i < size(); ++i)
+        {
+            m_prim_channel_vec[i]->simulation_done();
+        }
+    }
 
 } // namespace sc_core
 
@@ -375,9 +381,8 @@ sc_prim_channel_registry::simulation_done()
                                25 August, 2003
 
   Description of Modification: phase callbacks
-    
- *****************************************************************************/
 
+ *****************************************************************************/
 
 // $Log: sc_prim_channel.cpp,v $
 // Revision 1.11  2011/08/26 21:38:32  acg

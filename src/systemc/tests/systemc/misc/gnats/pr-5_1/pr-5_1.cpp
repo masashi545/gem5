@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-5_1.cpp -- 
+  pr-5_1.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,30 +37,29 @@
 
 #include "systemc.h"
 
-SC_MODULE( matrix )
+SC_MODULE(matrix)
 {
-    SC_HAS_PROCESS( matrix );
+    SC_HAS_PROCESS(matrix);
 
     sc_in_clk clk;
 
     // Constructor
-    matrix (
-        sc_module_name NAME, 
-        sc_clock& CLK,
+    matrix(
+        sc_module_name NAME,
+        sc_clock & CLK,
 
-        const sc_signal<bool>& RESET
-	)
-          : reset(RESET)
+        const sc_signal<bool> &RESET)
+        : reset(RESET)
     {
-        clk (CLK);
-		SC_CTHREAD( entry, clk.pos() );
-		reset_signal_is(reset,true);
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
+        reset_signal_is(reset, true);
     }
 
     void entry();
 
     // INPUTS
-    const sc_signal<bool>& reset;
+    const sc_signal<bool> &reset;
 };
 
-int sc_main(int, char**) { return 0; }
+int sc_main(int, char **) { return 0; }

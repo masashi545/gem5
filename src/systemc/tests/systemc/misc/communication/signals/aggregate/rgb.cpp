@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  rgb.cpp -- 
+  rgb.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,40 +38,40 @@
 #include "systemc.h"
 #include "rgb.h"
 
-void sc_trace(sc_trace_file* tf,const rgb_t& s, const std::string& NAME) {
-  sc_trace(tf, s.red, NAME + ".red");
-  sc_trace(tf, s.green, NAME + ".green");
-  sc_trace(tf, s.blue, NAME + ".blue");
+void sc_trace(sc_trace_file *tf, const rgb_t &s, const std::string &NAME)
+{
+    sc_trace(tf, s.red, NAME + ".red");
+    sc_trace(tf, s.green, NAME + ".green");
+    sc_trace(tf, s.blue, NAME + ".blue");
 }
 
-void
-some_process::entry()
+void some_process::entry()
 {
     rgb_t clin;
     rgb_t clout;
-  
-    while( true ) {
+
+    while (true)
+    {
         clin = color_in.read();
         clout = clin;
         clout.red >>= 1;
         clout.green >>= 2;
         clout.blue <<= 1;
-        color_out.write( clout );
+        color_out.write(clout);
         wait();
     }
 }
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_signal<rgb_t> in;
     sc_signal<rgb_t> out;
 
-    sc_clock clk( "CLK" );
+    sc_clock clk("CLK");
 
-    some_process foo( "FOO", clk, in, out );
-  
-    sc_start( 1000, SC_NS );
+    some_process foo("FOO", clk, in, out);
+
+    sc_start(1000, SC_NS);
 
     return 0;
 }

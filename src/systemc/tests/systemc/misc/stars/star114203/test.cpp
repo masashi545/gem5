@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -45,33 +45,32 @@ and gcc.
 
 #include <systemc.h>
 
-int sc_main(int argc, char* arg[]) 
+int sc_main(int argc, char *arg[])
 {
-    sc_bv<10>      bv10 = "0000111100";
-    sc_bigint<10>  bi10;
+    sc_bv<10> bv10 = "0000111100";
+    sc_bigint<10> bi10;
     sc_biguint<10> bu10;
 
     // works fine
-    bi10 = sc_bigint<10> (bv10);
+    bi10 = sc_bigint<10>(bv10);
 
     // causes errors on g++, SC5.0 :
-    // g++ : 
-    //   .../include/numeric_bit/sc_biguint.h: 
+    // g++ :
+    //   .../include/numeric_bit/sc_biguint.h:
     //   In method `sc_biguint<10>::sc_biguint(const sc_bv_ns::sc_bv<10> &)':
     //   str.cc:10:   instantiated from here
-    //   .../include/numeric_bit/sc_biguint.h:186: type `sc_signed' 
+    //   .../include/numeric_bit/sc_biguint.h:186: type `sc_signed'
     //   is not a base type for type `sc_biguint<10>'
-    //   .../include/numeric_bit/sc_unsigned.h:1365: 
+    //   .../include/numeric_bit/sc_unsigned.h:1365:
     //   `sc_unsigned::sc_unsigned()' is private
     //   .../include/numeric_bit/sc_biguint.h:186: within this context
     // SC5.0:
-    //   ".../include/numeric_bit/sc_biguint.h", line 186: 
+    //   ".../include/numeric_bit/sc_biguint.h", line 186:
     //   Error: sc_signed is not a direct base class of sc_biguint<10>.
-    //   ".../include/numeric_bit/sc_biguint.h", line 187: 
+    //   ".../include/numeric_bit/sc_biguint.h", line 187:
     //    Error: sc_unsigned::sc_unsigned() is not accessible from .
 
     bu10 = sc_biguint<10>(bv10);
-
 
     cout << bv10.to_string() << endl;
     cout << bi10.to_string(SC_BIN) << endl;

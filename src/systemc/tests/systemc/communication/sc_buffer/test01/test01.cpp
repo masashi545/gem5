@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -47,27 +47,28 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_in<bool> clk;
     sc_out<int> out;
 
     void main_action()
     {
-        while( true ) {
+        while (true)
+        {
             wait();
             out = 3;
         }
     }
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
         sensitive << clk.pos();
     }
 };
 
-SC_MODULE( mod_b )
+SC_MODULE(mod_b)
 {
     sc_in<int> in;
 
@@ -76,27 +77,26 @@ SC_MODULE( mod_b )
         cout << sc_time_stamp() << " " << in.read() << endl;
     }
 
-    SC_CTOR( mod_b )
+    SC_CTOR(mod_b)
     {
-        SC_METHOD( main_action );
+        SC_METHOD(main_action);
         sensitive << in;
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    mod_a a( "a" );
-    mod_b b( "b" );
+    mod_a a("a");
+    mod_b b("b");
 
     sc_clock clk;
     sc_buffer<int> buf;
 
-    a.clk( clk );
-    a.out( buf );
-    b.in( buf );
+    a.clk(clk);
+    a.out(buf);
+    b.in(buf);
 
-    sc_start( 100, SC_NS);
+    sc_start(100, SC_NS);
 
     return 0;
 }

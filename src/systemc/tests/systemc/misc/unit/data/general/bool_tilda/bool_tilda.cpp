@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  bool_tilda.cpp -- 
+  bool_tilda.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,24 +40,24 @@
 int sc_main(int ac, char *av[])
 {
 
-  bool  value1 = 1;
-  bool  value0 = 0;
+    bool value1 = 1;
+    bool value0 = 0;
 
-  bool	a;  
-  bool	b;  
-  bool	c;  
-  bool	d;  
+    bool a;
+    bool b;
+    bool c;
+    bool d;
 
-  a = !value1;		
-  b = !value0;
-  c = ~value1;
-  d = ~value0;
+    a = !value1;
+    b = !value0;
+    c = ~value1;
+    d = ~value0;
 
-  cout << "\n a = " << a << " (!1)"
-       << "\n b = " << b << " (!0)"
-       << "\n c = " << c << " (~1)"
-       << "\n d = " << d << " (~0)"
-       << endl;
-  sc_start(0, SC_NS);
-  return 0;
-} 
+    cout << "\n a = " << a << " (!1)"
+         << "\n b = " << b << " (!0)"
+         << "\n c = " << c << " (~1)"
+         << "\n d = " << d << " (~0)"
+         << endl;
+    sc_start(0, SC_NS);
+    return 0;
+}

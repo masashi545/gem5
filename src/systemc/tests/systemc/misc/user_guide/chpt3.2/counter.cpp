@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  counter.cpp -- 
+  counter.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -41,12 +41,16 @@
 
 void counter::entry()
 {
-  int count;
+    int count;
 
-  count = 0;
-  while (true) { // infinite loop
-    do { wait(); } while (found != true);
-    count = count + 1;
-    cout << "\nFound Count is " << count << "\n";
-  }
+    count = 0;
+    while (true)
+    { // infinite loop
+        do
+        {
+            wait();
+        } while (found != true);
+        count = count + 1;
+        cout << "\nFound Count is " << count << "\n";
+    }
 }

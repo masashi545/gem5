@@ -6,56 +6,56 @@ using namespace sc_core;
 using std::cout;
 using std::endl;
 
-struct M5: sc_module
+struct M5 : sc_module
 {
-  M5(sc_module_name _name)
-  {
-    SC_THREAD(ticker);
-    SC_THREAD(calling);
-    SC_METHOD(target);
-      sensitive << ev;
-      dont_initialize();
-      t = sc_get_current_process_handle();
-  }
-
-  sc_process_handle t;
-  sc_event ev;
-
-  void ticker()
-  {
-    for (;;)
+    M5(sc_module_name _name)
     {
-      wait(10, SC_NS);
-      ev.notify();
+        SC_THREAD(ticker);
+        SC_THREAD(calling);
+        SC_METHOD(target);
+        sensitive << ev;
+        dont_initialize();
+        t = sc_get_current_process_handle();
     }
-  }
 
-  void calling()
-  {
-    wait(15, SC_NS);
-    // target runs at 10 NS due to notification of ev
+    sc_process_handle t;
+    sc_event ev;
 
-    t.reset();
-    // target runs at 15 NS due to reset.
+    void ticker()
+    {
+        for (;;)
+        {
+            wait(10, SC_NS);
+            ev.notify();
+        }
+    }
 
-    sc_stop();
-  }
+    void calling()
+    {
+        wait(15, SC_NS);
+        // target runs at 10 NS due to notification of ev
 
-  void target()
-  {
-    cout << "Target called at " << sc_time_stamp() << endl;
-  }
+        t.reset();
+        // target runs at 15 NS due to reset.
 
-  SC_HAS_PROCESS(M5);
+        sc_stop();
+    }
+
+    void target()
+    {
+        cout << "Target called at " << sc_time_stamp() << endl;
+    }
+
+    SC_HAS_PROCESS(M5);
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  M5 m("m");
+    M5 m("m");
 
-  sc_start();
+    sc_start();
 
-  cout << endl << "Success" << endl;
-  return 0;
+    cout << endl
+         << "Success" << endl;
+    return 0;
 }
-

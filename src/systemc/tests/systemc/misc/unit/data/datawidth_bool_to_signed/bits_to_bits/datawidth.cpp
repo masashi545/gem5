@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  datawidth.cpp -- 
+  datawidth.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,32 +35,35 @@
 
  *****************************************************************************/
 
-                /*******************************************/
-                /* Implementation Filename:  datawidth.cc  */
-                /*******************************************/
- 
+/*******************************************/
+/* Implementation Filename:  datawidth.cc  */
+/*******************************************/
+
 #include "datawidth.h"
- 
-void
-datawidth::entry()
+
+void datawidth::entry()
 {
-  bool_vector6  tmp_a;
-  bool_vector6  tmp_b;
-  bool_vector7  tmp_result;
+    bool_vector6 tmp_a;
+    bool_vector6 tmp_b;
+    bool_vector7 tmp_result;
 
-  while (true) {
-    
-    // HANDSHAKING
-    do { wait(); } while (ready != 1);
+    while (true)
+    {
 
-    // COMPUTATION
-    tmp_a = in1.read();
-    tmp_b = in2.read();
+        // HANDSHAKING
+        do
+        {
+            wait();
+        } while (ready != 1);
 
-    tmp_result = tmp_a.to_int() + tmp_b.to_int();
+        // COMPUTATION
+        tmp_a = in1.read();
+        tmp_b = in2.read();
 
-    // WRITE OUTPUT
-    result.write(tmp_result);		// result = in1 + in2
-    wait();
-  }
+        tmp_result = tmp_a.to_int() + tmp_b.to_int();
+
+        // WRITE OUTPUT
+        result.write(tmp_result); // result = in1 + in2
+        wait();
+    }
 }

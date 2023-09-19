@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,13 +36,13 @@
  *****************************************************************************/
 
 // This may look like C code, but it is really -*- C++ -*-
-// 
-// 4.cxx -- 
+//
+// 4.cxx --
 // Copyright Synopsys 1998
 // Author          : Ric Hilderink
 // Created On      : Wed Dec 30 08:50:50 1998
 // Status          : none
-// 
+//
 
 #include <limits.h>
 
@@ -50,25 +50,25 @@
 #include "systemc.h"
 #include "fx_precision_double.h"
 
-typedef unsigned int   uint;
+typedef unsigned int uint;
 typedef unsigned short ushort;
-typedef unsigned long  ulong;
- 
+typedef unsigned long ulong;
+
 extern void default_constructor();
 extern void assign_constructor();
 extern void default_assign();
 extern void assign();
 extern void array();
 
-int sc_main( int, char** )
+int sc_main(int, char **)
 {
-  cerr.precision(15);
-  default_constructor();
-  assign_constructor();
-  default_assign();
-  assign();
+    cerr.precision(15);
+    default_constructor();
+    assign_constructor();
+    default_assign();
+    assign();
 
-  array();
+    array();
 
-  return 0;
+    return 0;
 }

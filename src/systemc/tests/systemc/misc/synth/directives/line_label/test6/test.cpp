@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,35 +35,37 @@
 
  *****************************************************************************/
 
-/* 
+/*
    Verifies directive line_label.
-   Author: PRP 
+   Author: PRP
    From Test Case line_label: 7.cc
 */
 
 #include "systemc.h"
 #include "test.h"
 
-void test::entry() 
+void test::entry()
 {
-  int i,j;
- 
-  { 
-     int i;
-      
-     a:i = 2;
-     if (i == 2)
-        {
-        foobart: i = 7;
-       i = 4;
-        i = 5;
-        }
-     else
-        i = 7;
-  }
-  b:i = 3;
-  j = 5;
- 
-  wait();
+    int i, j;
 
+    {
+        int i;
+
+    a:
+        i = 2;
+        if (i == 2)
+        {
+        foobart:
+            i = 7;
+            i = 4;
+            i = 5;
+        }
+        else
+            i = 7;
+    }
+b:
+    i = 3;
+    j = 5;
+
+    wait();
 }

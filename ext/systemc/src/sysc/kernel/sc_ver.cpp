@@ -36,138 +36,133 @@
 #include "sysc/utils/sc_iostream.h"
 #include "sysc/utils/sc_report.h"
 
-using std::getenv;
-using std::strcmp;
 using std::cerr;
 using std::endl;
+using std::getenv;
+using std::strcmp;
 
-namespace sc_core {
-
-
-static
-const char systemc_version[] =
-    "SystemC " SC_VERSION " --- " __DATE__ " " __TIME__;
-
-const unsigned int sc_version_major = SC_VERSION_MAJOR;
-const unsigned int sc_version_minor = SC_VERSION_MINOR;
-const unsigned int sc_version_patch = SC_VERSION_PATCH;
-const bool         sc_is_prerelease = SC_IS_PRERELEASE;
-
-const std::string  sc_version_originator   = SC_VERSION_ORIGINATOR;
-const std::string  sc_version_release_date = SC_VERSION_RELEASE_DATE;
-const std::string  sc_version_prerelease   = SC_VERSION_PRERELEASE;
-const std::string  sc_version_string       = SC_VERSION;
-const std::string  sc_copyright_string     = SC_COPYRIGHT;
-
-const char*
-sc_copyright()
+namespace sc_core
 {
-    return SC_COPYRIGHT;
-}
 
+    static const char systemc_version[] =
+        "SystemC " SC_VERSION " --- " __DATE__ " " __TIME__;
 
-const char*
-sc_release()
-{
-    return SC_VERSION;
-}
+    const unsigned int sc_version_major = SC_VERSION_MAJOR;
+    const unsigned int sc_version_minor = SC_VERSION_MINOR;
+    const unsigned int sc_version_patch = SC_VERSION_PATCH;
+    const bool sc_is_prerelease = SC_IS_PRERELEASE;
 
+    const std::string sc_version_originator = SC_VERSION_ORIGINATOR;
+    const std::string sc_version_release_date = SC_VERSION_RELEASE_DATE;
+    const std::string sc_version_prerelease = SC_VERSION_PRERELEASE;
+    const std::string sc_version_string = SC_VERSION;
+    const std::string sc_copyright_string = SC_COPYRIGHT;
 
-const char*
-sc_version()
-{
-    return systemc_version;
-}
+    const char *
+    sc_copyright()
+    {
+        return SC_COPYRIGHT;
+    }
 
+    const char *
+    sc_release()
+    {
+        return SC_VERSION;
+    }
+
+    const char *
+    sc_version()
+    {
+        return systemc_version;
+    }
 
 #if !defined(SC_DISABLE_COPYRIGHT_MESSAGE)
-#  define SC_DISABLE_COPYRIGHT_MESSAGE 0
+#define SC_DISABLE_COPYRIGHT_MESSAGE 0
 #endif
 
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-void
-pln()
-{
-    static bool lnp = SC_DISABLE_COPYRIGHT_MESSAGE;
-    if ( lnp || getenv("SYSTEMC_DISABLE_COPYRIGHT_MESSAGE") != 0 ) 
-        lnp = true;
-    if ( const char * lnp_env = getenv("SC_COPYRIGHT_MESSAGE") ) {
-        lnp = !strcmp( lnp_env, "DISABLE" );
-    }
-    if( ! lnp ) {
-
-        static const char indent[] = "        ";
-        std::string       line;
-        std::stringstream copyright;
-
-        // temporary stream to print copyright line-wise with indentation
-        copyright << sc_copyright();
-
-        cerr << endl;
-        cerr << indent << sc_version() << endl;
-        while( getline( copyright, line ) )
-            cerr << indent << line << endl;
-
-        //  regressions check point
-
-        if( getenv( "SYSTEMC_REGRESSION" ) != 0 ) {
-            cerr << "SystemC Simulation" << endl;
+    void
+    pln()
+    {
+        static bool lnp = SC_DISABLE_COPYRIGHT_MESSAGE;
+        if (lnp || getenv("SYSTEMC_DISABLE_COPYRIGHT_MESSAGE") != 0)
+            lnp = true;
+        if (const char *lnp_env = getenv("SC_COPYRIGHT_MESSAGE"))
+        {
+            lnp = !strcmp(lnp_env, "DISABLE");
         }
+        if (!lnp)
+        {
 
-        lnp = true;
+            static const char indent[] = "        ";
+            std::string line;
+            std::stringstream copyright;
+
+            // temporary stream to print copyright line-wise with indentation
+            copyright << sc_copyright();
+
+            cerr << endl;
+            cerr << indent << sc_version() << endl;
+            while (getline(copyright, line))
+                cerr << indent << line << endl;
+
+            //  regressions check point
+
+            if (getenv("SYSTEMC_REGRESSION") != 0)
+            {
+                cerr << "SystemC Simulation" << endl;
+            }
+
+            lnp = true;
+        }
     }
-}
 
-#define SC_API_PERFORM_CHECK_( Type, Name, Symbol ) \
-  do { \
-    static bool SC_CONCAT_UNDERSCORE_( Name, config_seen ) = false; \
-    static Type SC_CONCAT_UNDERSCORE_( Name, config ); \
-    if( ! SC_CONCAT_UNDERSCORE_( Name, config_seen ) ) { \
-      SC_CONCAT_UNDERSCORE_( Name, config_seen ) = true; \
-      SC_CONCAT_UNDERSCORE_( Name, config ) = Name; \
-    } else if( SC_CONCAT_UNDERSCORE_( Name, config ) != Name ) { \
-      SC_REPORT_FATAL( SC_ID_INCONSISTENT_API_CONFIG_, Symbol ); \
-    } \
-  } while( false )
+#define SC_API_PERFORM_CHECK_(Type, Name, Symbol)                     \
+    do                                                                \
+    {                                                                 \
+        static bool SC_CONCAT_UNDERSCORE_(Name, config_seen) = false; \
+        static Type SC_CONCAT_UNDERSCORE_(Name, config);              \
+        if (!SC_CONCAT_UNDERSCORE_(Name, config_seen))                \
+        {                                                             \
+            SC_CONCAT_UNDERSCORE_(Name, config_seen) = true;          \
+            SC_CONCAT_UNDERSCORE_(Name, config) = Name;               \
+        }                                                             \
+        else if (SC_CONCAT_UNDERSCORE_(Name, config) != Name)         \
+        {                                                             \
+            SC_REPORT_FATAL(SC_ID_INCONSISTENT_API_CONFIG_, Symbol);  \
+        }                                                             \
+    } while (false)
 
-// THIS CONSTRUCTOR ROOTS OUT OLD OBJECTS AT LINK TIME
-//
-// Each source file which includes sc_ver.h for this SystemC version 
-// will have a static instance of the class sc_api_version_XXX defined 
-// in it. That object instanciation will cause the constructor below 
-// to be invoked. If the version of the SystemC being linked against
-// does not contain the constructor below a linkage error will occur.
-//
-// Some preprocessor switches need to be consistent between the application
-// and the library (e.g. if sizes of classes are affected or other parts of
-// the ABI are affected).  (Some of) these are checked here at link-time as
-// well, by setting template parameters to sc_api_version_XXX, while only
-// one variant is defined here.
-//
-// Some preprocessor switches need to be consistent between different
-// translation units of an application.  Those can't be easily checked
-// during link-time.  Instead, perform a check during run-time by
-// passing the value to the constructor of the api_version_check object.
+    // THIS CONSTRUCTOR ROOTS OUT OLD OBJECTS AT LINK TIME
+    //
+    // Each source file which includes sc_ver.h for this SystemC version
+    // will have a static instance of the class sc_api_version_XXX defined
+    // in it. That object instanciation will cause the constructor below
+    // to be invoked. If the version of the SystemC being linked against
+    // does not contain the constructor below a linkage error will occur.
+    //
+    // Some preprocessor switches need to be consistent between the application
+    // and the library (e.g. if sizes of classes are affected or other parts of
+    // the ABI are affected).  (Some of) these are checked here at link-time as
+    // well, by setting template parameters to sc_api_version_XXX, while only
+    // one variant is defined here.
+    //
+    // Some preprocessor switches need to be consistent between different
+    // translation units of an application.  Those can't be easily checked
+    // during link-time.  Instead, perform a check during run-time by
+    // passing the value to the constructor of the api_version_check object.
 
-// const int DEBUG_SYSTEMC_CHECK_           = 1;
-const int SC_DISABLE_VIRTUAL_BIND_CHECK_ = 1;
+    // const int DEBUG_SYSTEMC_CHECK_           = 1;
+    const int SC_DISABLE_VIRTUAL_BIND_CHECK_ = 1;
 
-template<>
-SC_API_VERSION_STRING
-<
-//   & DEBUG_SYSTEMC_CHECK_,
-  & SC_DISABLE_VIRTUAL_BIND_CHECK_
->
-::SC_API_VERSION_STRING
-(
-  sc_writer_policy default_writer_policy
-)
-{
-  SC_API_PERFORM_CHECK_( sc_writer_policy
-                          , default_writer_policy
-                          , "SC_DEFAULT_WRITER_POLICY" );
-}
+    template <>
+    SC_API_VERSION_STRING<
+        //   & DEBUG_SYSTEMC_CHECK_,
+        &SC_DISABLE_VIRTUAL_BIND_CHECK_>::SC_API_VERSION_STRING(sc_writer_policy default_writer_policy)
+    {
+        SC_API_PERFORM_CHECK_(sc_writer_policy, default_writer_policy, "SC_DEFAULT_WRITER_POLICY");
+    }
 
 } // namespace sc_core
 

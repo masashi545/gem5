@@ -43,169 +43,184 @@
 #include "sysc/kernel/sc_spawn.h"
 #include "sysc/utils/sc_utils_ids.h"
 
-namespace sc_core {
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_clock
-//
-//  The clock channel.
-// ----------------------------------------------------------------------------
-
-// constructors
-
-sc_clock::sc_clock() : 
-    base_type( sc_gen_unique_name( "clock" ) ),
-    m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
-    m_posedge_time(), m_negedge_time(),
-    m_next_posedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-                          "_next_posedge_event").c_str()),
-    m_next_negedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-                          "_next_negedge_event").c_str())
-
+namespace sc_core
 {
-    init( sc_time::from_value(simcontext()->m_time_params->default_time_unit),
-	  0.5,
-	  SC_ZERO_TIME,
-	  true );
 
-    m_next_posedge_event.notify_internal( m_start_time );
-}
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_clock
+    //
+    //  The clock channel.
+    // ----------------------------------------------------------------------------
 
-sc_clock::sc_clock( const char* name_ ) :
-    base_type( name_ ),
-    m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
-    m_posedge_time(), m_negedge_time(),
-    m_next_posedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-			   std::string(name_) + "_next_posedge_event").c_str()),
-    m_next_negedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-			   std::string(name_) + "_next_negedge_event").c_str())
-{
-    init( sc_time::from_value(simcontext()->m_time_params->default_time_unit),
-	  0.5,
-	  SC_ZERO_TIME,
-	  true );
+    // constructors
 
-    m_next_posedge_event.notify_internal( m_start_time );
-}
+    sc_clock::sc_clock() : base_type(sc_gen_unique_name("clock")),
+                           m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
+                           m_posedge_time(), m_negedge_time(),
+                           m_next_posedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                 "_next_posedge_event")
+                                                    .c_str()),
+                           m_next_negedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                 "_next_negedge_event")
+                                                    .c_str())
 
-sc_clock::sc_clock( const char* name_,
-		    const sc_time& period_,
-		    double         duty_cycle_,
-		    const sc_time& start_time_,
-		    bool           posedge_first_ ) :
-    base_type( name_ ),
-    m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
-    m_posedge_time(), m_negedge_time(),
-    m_next_posedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-			   std::string(name_) + "_next_posedge_event").c_str()),
-    m_next_negedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-			   std::string(name_) + "_next_negedge_event").c_str())
-{
-    init( period_,
-	  duty_cycle_,
-	  start_time_,
-	  posedge_first_ );
-
-    if( posedge_first_ ) {
-	// posedge first
-	m_next_posedge_event.notify_internal( m_start_time );
-    } else {
-	// negedge first
-	m_next_negedge_event.notify_internal( m_start_time );
-    }
-}
-
-sc_clock::sc_clock( const char* name_,
-		    double         period_v_,
-		    sc_time_unit   period_tu_,
-		    double         duty_cycle_ ) :
-    base_type( name_ ),
-    m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
-    m_posedge_time(), m_negedge_time(),
-    m_next_posedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-			   std::string(name_) + "_next_posedge_event").c_str()),
-    m_next_negedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-			   std::string(name_) + "_next_negedge_event").c_str())
-{
-    init( sc_time( period_v_, period_tu_, simcontext() ),
-	  duty_cycle_,
-	  SC_ZERO_TIME,
-	  true );
-
-    // posedge first
-    m_next_posedge_event.notify_internal( m_start_time );
-}
-
-sc_clock::sc_clock( const char* name_,
-		    double         period_v_,
-		    sc_time_unit   period_tu_,
-		    double         duty_cycle_,
-		    double         start_time_v_,
-		    sc_time_unit   start_time_tu_,
-		    bool           posedge_first_ ) :
-    base_type( name_ ),
-    m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
-    m_posedge_time(), m_negedge_time(),
-    m_next_posedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-			   std::string(name_) + "_next_posedge_event").c_str()),
-    m_next_negedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-			   std::string(name_) + "_next_negedge_event").c_str())
-{
-    init( sc_time( period_v_, period_tu_, simcontext() ),
-	  duty_cycle_,
-	  sc_time( start_time_v_, start_time_tu_, simcontext() ),
-	  posedge_first_ );
-
-    if( posedge_first_ ) {
-	// posedge first
-	m_next_posedge_event.notify_internal( m_start_time );
-    } else {
-	// negedge first
-	m_next_negedge_event.notify_internal( m_start_time );
-    }
-}
-
-// for backward compatibility with 1.0
-sc_clock::sc_clock( const char* name_,
-		    double         period_,      // in default time units
-		    double         duty_cycle_,
-		    double         start_time_,  // in default time units
-		    bool           posedge_first_ ) :
-    base_type( name_ ),
-    m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
-    m_posedge_time(), m_negedge_time(),
-    m_next_posedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-			   std::string(name_) + "_next_posedge_event").c_str()),
-    m_next_negedge_event( (std::string(SC_KERNEL_EVENT_PREFIX) + 
-			   std::string(name_) + "_next_negedge_event").c_str())
-{
-    static bool warn_sc_clock=true;
-    if ( warn_sc_clock )
     {
-        warn_sc_clock = false;
-	SC_REPORT_INFO(SC_ID_IEEE_1666_DEPRECATION_, 
-	   "\n    sc_clock(const char*, double, double, double, bool)\n"
-	   "    is deprecated use a form that includes sc_time or\n"
-	   "    sc_time_unit");
+        init(sc_time::from_value(simcontext()->m_time_params->default_time_unit),
+             0.5,
+             SC_ZERO_TIME,
+             true);
+
+        m_next_posedge_event.notify_internal(m_start_time);
     }
 
-    sc_time default_time =
-      sc_time::from_value( simcontext()->m_time_params->default_time_unit );
+    sc_clock::sc_clock(const char *name_) : base_type(name_),
+                                            m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
+                                            m_posedge_time(), m_negedge_time(),
+                                            m_next_posedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                                  std::string(name_) + "_next_posedge_event")
+                                                                     .c_str()),
+                                            m_next_negedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                                  std::string(name_) + "_next_negedge_event")
+                                                                     .c_str())
+    {
+        init(sc_time::from_value(simcontext()->m_time_params->default_time_unit),
+             0.5,
+             SC_ZERO_TIME,
+             true);
 
-    init( ( period_ * default_time ),
-	  duty_cycle_,
-	  ( start_time_ * default_time ),
-	  posedge_first_ );
-
-    if( posedge_first_ ) {
-	// posedge first
-	m_next_posedge_event.notify_internal( m_start_time );
-    } else {
-	// negedge first
-	m_next_negedge_event.notify_internal( m_start_time );
+        m_next_posedge_event.notify_internal(m_start_time);
     }
-}
 
+    sc_clock::sc_clock(const char *name_,
+                       const sc_time &period_,
+                       double duty_cycle_,
+                       const sc_time &start_time_,
+                       bool posedge_first_) : base_type(name_),
+                                              m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
+                                              m_posedge_time(), m_negedge_time(),
+                                              m_next_posedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                                    std::string(name_) + "_next_posedge_event")
+                                                                       .c_str()),
+                                              m_next_negedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                                    std::string(name_) + "_next_negedge_event")
+                                                                       .c_str())
+    {
+        init(period_,
+             duty_cycle_,
+             start_time_,
+             posedge_first_);
+
+        if (posedge_first_)
+        {
+            // posedge first
+            m_next_posedge_event.notify_internal(m_start_time);
+        }
+        else
+        {
+            // negedge first
+            m_next_negedge_event.notify_internal(m_start_time);
+        }
+    }
+
+    sc_clock::sc_clock(const char *name_,
+                       double period_v_,
+                       sc_time_unit period_tu_,
+                       double duty_cycle_) : base_type(name_),
+                                             m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
+                                             m_posedge_time(), m_negedge_time(),
+                                             m_next_posedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                                   std::string(name_) + "_next_posedge_event")
+                                                                      .c_str()),
+                                             m_next_negedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                                   std::string(name_) + "_next_negedge_event")
+                                                                      .c_str())
+    {
+        init(sc_time(period_v_, period_tu_, simcontext()),
+             duty_cycle_,
+             SC_ZERO_TIME,
+             true);
+
+        // posedge first
+        m_next_posedge_event.notify_internal(m_start_time);
+    }
+
+    sc_clock::sc_clock(const char *name_,
+                       double period_v_,
+                       sc_time_unit period_tu_,
+                       double duty_cycle_,
+                       double start_time_v_,
+                       sc_time_unit start_time_tu_,
+                       bool posedge_first_) : base_type(name_),
+                                              m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
+                                              m_posedge_time(), m_negedge_time(),
+                                              m_next_posedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                                    std::string(name_) + "_next_posedge_event")
+                                                                       .c_str()),
+                                              m_next_negedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                                    std::string(name_) + "_next_negedge_event")
+                                                                       .c_str())
+    {
+        init(sc_time(period_v_, period_tu_, simcontext()),
+             duty_cycle_,
+             sc_time(start_time_v_, start_time_tu_, simcontext()),
+             posedge_first_);
+
+        if (posedge_first_)
+        {
+            // posedge first
+            m_next_posedge_event.notify_internal(m_start_time);
+        }
+        else
+        {
+            // negedge first
+            m_next_negedge_event.notify_internal(m_start_time);
+        }
+    }
+
+    // for backward compatibility with 1.0
+    sc_clock::sc_clock(const char *name_,
+                       double period_, // in default time units
+                       double duty_cycle_,
+                       double start_time_, // in default time units
+                       bool posedge_first_) : base_type(name_),
+                                              m_period(), m_duty_cycle(), m_start_time(), m_posedge_first(),
+                                              m_posedge_time(), m_negedge_time(),
+                                              m_next_posedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                                    std::string(name_) + "_next_posedge_event")
+                                                                       .c_str()),
+                                              m_next_negedge_event((std::string(SC_KERNEL_EVENT_PREFIX) +
+                                                                    std::string(name_) + "_next_negedge_event")
+                                                                       .c_str())
+    {
+        static bool warn_sc_clock = true;
+        if (warn_sc_clock)
+        {
+            warn_sc_clock = false;
+            SC_REPORT_INFO(SC_ID_IEEE_1666_DEPRECATION_,
+                           "\n    sc_clock(const char*, double, double, double, bool)\n"
+                           "    is deprecated use a form that includes sc_time or\n"
+                           "    sc_time_unit");
+        }
+
+        sc_time default_time =
+            sc_time::from_value(simcontext()->m_time_params->default_time_unit);
+
+        init((period_ * default_time),
+             duty_cycle_,
+             (start_time_ * default_time),
+             posedge_first_);
+
+        if (posedge_first_)
+        {
+            // posedge first
+            m_next_posedge_event.notify_internal(m_start_time);
+        }
+        else
+        {
+            // negedge first
+            m_next_negedge_event.notify_internal(m_start_time);
+        }
+    }
 
 //------------------------------------------------------------------------------
 //"sc_clock::before_end_of_elaboration"
@@ -215,131 +230,143 @@ sc_clock::sc_clock( const char* name_,
 // so that the processes are registered with the global simcontext rather
 // than the scope of the clock's parent.
 //------------------------------------------------------------------------------
-#if ( defined(_MSC_VER) && _MSC_VER < 1300 ) //VC++6.0 doesn't support sc_spawn with functor.
-#   define sc_clock_posedge_callback(ptr) sc_clock_posedge_callback
+#if (defined(_MSC_VER) && _MSC_VER < 1300) // VC++6.0 doesn't support sc_spawn with functor.
+#define sc_clock_posedge_callback(ptr) sc_clock_posedge_callback
 
-#   define sc_clock_negedge_callback(ptr) sc_clock_negedge_callback
+#define sc_clock_negedge_callback(ptr) sc_clock_negedge_callback
 
-#   define sc_spawn(a,b,c) { \
-        sc_process_handle result(new sc_spawn_object<a>(a(this),b,c)); \
+#define sc_spawn(a, b, c)                                                \
+    {                                                                    \
+        sc_process_handle result(new sc_spawn_object<a>(a(this), b, c)); \
     }
 #endif // ( defined(_MSC_VER) && _MSC_VER < 1300 )
 
-void sc_clock::before_end_of_elaboration()
-{
-    std::string gen_base;
-    sc_spawn_options posedge_options;	// Options for posedge process.
-    sc_spawn_options negedge_options;	// Options for negedge process.
+    void sc_clock::before_end_of_elaboration()
+    {
+        std::string gen_base;
+        sc_spawn_options posedge_options; // Options for posedge process.
+        sc_spawn_options negedge_options; // Options for negedge process.
 
-    posedge_options.spawn_method();
-    posedge_options.dont_initialize();
-    posedge_options.set_sensitivity(&m_next_posedge_event);
-    gen_base = basename();
-    gen_base += "_posedge_action";
-    sc_spawn(sc_clock_posedge_callback(this),
-	sc_gen_unique_name( gen_base.c_str() ), &posedge_options);
+        posedge_options.spawn_method();
+        posedge_options.dont_initialize();
+        posedge_options.set_sensitivity(&m_next_posedge_event);
+        gen_base = basename();
+        gen_base += "_posedge_action";
+        sc_spawn(sc_clock_posedge_callback(this),
+                 sc_gen_unique_name(gen_base.c_str()), &posedge_options);
 
-    negedge_options.spawn_method();
-    negedge_options.dont_initialize();
-    negedge_options.set_sensitivity(&m_next_negedge_event);
-    gen_base = basename();
-    gen_base += "_negedge_action";
-    sc_spawn( sc_clock_negedge_callback(this),
-    	sc_gen_unique_name( gen_base.c_str() ), &negedge_options );
-}
+        negedge_options.spawn_method();
+        negedge_options.dont_initialize();
+        negedge_options.set_sensitivity(&m_next_negedge_event);
+        gen_base = basename();
+        gen_base += "_negedge_action";
+        sc_spawn(sc_clock_negedge_callback(this),
+                 sc_gen_unique_name(gen_base.c_str()), &negedge_options);
+    }
 
-//clear VC++6.0 macros
+// clear VC++6.0 macros
 #undef sc_clock_posedge_callback
 #undef sc_clock_negedge_callback
 #undef sc_spawn
 
-// destructor (does nothing)
+    // destructor (does nothing)
 
-sc_clock::~sc_clock()
-{}
-
-void sc_clock::register_port( sc_port_base& /*port*/, const char* if_typename_ )
-{
-    std::string nm( if_typename_ );
-    if( nm == typeid( sc_signal_inout_if<bool> ).name() ) {
-	    SC_REPORT_ERROR(SC_ID_ATTEMPT_TO_BIND_CLOCK_TO_OUTPUT_, "");
-    }
-}
-
-void
-sc_clock::write( const bool& /* value */ )
-{
-    SC_REPORT_ERROR(SC_ID_ATTEMPT_TO_WRITE_TO_CLOCK_, "");
-}
-
-// interface methods
-
-// get the current time
-
-const sc_time&
-sc_clock::time_stamp()
-{
-    return sc_time_stamp();
-}
-
-
-// error reporting
-
-void
-sc_clock::report_error( const char* id, const char* add_msg ) const
-{
-    char msg[BUFSIZ];
-    if( add_msg != 0 ) {
-	std::sprintf( msg, "%s: clock '%s'", add_msg, name() );
-    } else {
-	std::sprintf( msg, "clock '%s'", name() );
-    }
-    SC_REPORT_ERROR( id, msg );
-}
-
-
-void
-sc_clock::init( const sc_time& period_,
-		double         duty_cycle_,
-		const sc_time& start_time_,
-		bool           posedge_first_ )
-{
-    if( period_ == SC_ZERO_TIME ) {
-	report_error( SC_ID_CLOCK_PERIOD_ZERO_,
-		      "increase the period" );
-    }
-    m_period = period_;
-    m_posedge_first = posedge_first_;
-
-    if( duty_cycle_ <= 0.0 || duty_cycle_ >= 1.0 ) {
-	m_duty_cycle = 0.5;
-    } else {
-	m_duty_cycle = duty_cycle_;
+    sc_clock::~sc_clock()
+    {
     }
 
-    m_negedge_time = m_period * m_duty_cycle;
-    m_posedge_time = m_period - m_negedge_time;
-
-    if( m_negedge_time == SC_ZERO_TIME ) {
-	report_error( SC_ID_CLOCK_HIGH_TIME_ZERO_,
-		      "increase the period or increase the duty cycle" );
-    }
-    if( m_posedge_time == SC_ZERO_TIME ) {
-	report_error( SC_ID_CLOCK_LOW_TIME_ZERO_,
-		      "increase the period or decrease the duty cycle" );
+    void sc_clock::register_port(sc_port_base & /*port*/, const char *if_typename_)
+    {
+        std::string nm(if_typename_);
+        if (nm == typeid(sc_signal_inout_if<bool>).name())
+        {
+            SC_REPORT_ERROR(SC_ID_ATTEMPT_TO_BIND_CLOCK_TO_OUTPUT_, "");
+        }
     }
 
-    if( posedge_first_ ) {
-	this->m_cur_val = false;
-	this->m_new_val = false;
-    } else {
-	this->m_cur_val = true;
-	this->m_new_val = true;
+    void
+    sc_clock::write(const bool & /* value */)
+    {
+        SC_REPORT_ERROR(SC_ID_ATTEMPT_TO_WRITE_TO_CLOCK_, "");
     }
 
-    m_start_time = start_time_;
+    // interface methods
 
-}
+    // get the current time
+
+    const sc_time &
+    sc_clock::time_stamp()
+    {
+        return sc_time_stamp();
+    }
+
+    // error reporting
+
+    void
+    sc_clock::report_error(const char *id, const char *add_msg) const
+    {
+        char msg[BUFSIZ];
+        if (add_msg != 0)
+        {
+            std::sprintf(msg, "%s: clock '%s'", add_msg, name());
+        }
+        else
+        {
+            std::sprintf(msg, "clock '%s'", name());
+        }
+        SC_REPORT_ERROR(id, msg);
+    }
+
+    void
+    sc_clock::init(const sc_time &period_,
+                   double duty_cycle_,
+                   const sc_time &start_time_,
+                   bool posedge_first_)
+    {
+        if (period_ == SC_ZERO_TIME)
+        {
+            report_error(SC_ID_CLOCK_PERIOD_ZERO_,
+                         "increase the period");
+        }
+        m_period = period_;
+        m_posedge_first = posedge_first_;
+
+        if (duty_cycle_ <= 0.0 || duty_cycle_ >= 1.0)
+        {
+            m_duty_cycle = 0.5;
+        }
+        else
+        {
+            m_duty_cycle = duty_cycle_;
+        }
+
+        m_negedge_time = m_period * m_duty_cycle;
+        m_posedge_time = m_period - m_negedge_time;
+
+        if (m_negedge_time == SC_ZERO_TIME)
+        {
+            report_error(SC_ID_CLOCK_HIGH_TIME_ZERO_,
+                         "increase the period or increase the duty cycle");
+        }
+        if (m_posedge_time == SC_ZERO_TIME)
+        {
+            report_error(SC_ID_CLOCK_LOW_TIME_ZERO_,
+                         "increase the period or decrease the duty cycle");
+        }
+
+        if (posedge_first_)
+        {
+            this->m_cur_val = false;
+            this->m_new_val = false;
+        }
+        else
+        {
+            this->m_cur_val = true;
+            this->m_new_val = true;
+        }
+
+        m_start_time = start_time_;
+    }
 
 } // namespace sc_core
 

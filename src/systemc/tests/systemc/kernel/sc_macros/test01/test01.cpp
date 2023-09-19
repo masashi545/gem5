@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,8 +40,7 @@
 #define SC_INCLUDE_FX
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     cout << "\n*** fx" << endl;
 
@@ -50,9 +49,9 @@ sc_main( int, char*[] )
         sc_fxval a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_fxval_fast
@@ -60,9 +59,9 @@ sc_main( int, char*[] )
         sc_fxval_fast a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_fix
@@ -70,9 +69,9 @@ sc_main( int, char*[] )
         sc_fix a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_fix_fast
@@ -80,9 +79,9 @@ sc_main( int, char*[] )
         sc_fix_fast a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_ufix
@@ -90,9 +89,9 @@ sc_main( int, char*[] )
         sc_ufix a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_ufix_fast
@@ -100,71 +99,71 @@ sc_main( int, char*[] )
         sc_ufix_fast a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_fixed
     {
-        sc_fixed<32,32> a;
+        sc_fixed<32, 32> a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_fixed_fast
     {
-        sc_fixed_fast<32,32> a;
+        sc_fixed_fast<32, 32> a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_ufixed
     {
-        sc_ufixed<32,32> a;
+        sc_ufixed<32, 32> a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_ufixed_fast
     {
-        sc_ufixed_fast<32,32> a;
+        sc_ufixed_fast<32, 32> a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     cout << "\n*** int" << endl;
 
     // sc_signed
     {
-        sc_signed a( 32 );
+        sc_signed a(32);
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_unsigned
     {
-        sc_unsigned a( 32 );
+        sc_unsigned a(32);
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_bigint
@@ -172,9 +171,9 @@ sc_main( int, char*[] )
         sc_bigint<32> a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_biguint
@@ -182,9 +181,9 @@ sc_main( int, char*[] )
         sc_biguint<32> a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_signed_subref
@@ -192,22 +191,22 @@ sc_main( int, char*[] )
 
     // sc_int_base
     {
-        sc_int_base a( 32 );
+        sc_int_base a(32);
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_uint_base
     {
-        sc_uint_base a( 32 );
+        sc_uint_base a(32);
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_int
@@ -215,9 +214,9 @@ sc_main( int, char*[] )
         sc_int<32> a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_uint
@@ -225,9 +224,9 @@ sc_main( int, char*[] )
         sc_uint<32> a;
         cout << endl;
         a = 1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
         a = -1;
-        cout << sc_abs( a ) << endl;
+        cout << sc_abs(a) << endl;
     }
 
     // sc_int_subref

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,27 +35,27 @@
 
  *****************************************************************************/
 
-                /***************************************/
-                /* Main Filename: 	main.cc        */
-                /***************************************/
+/***************************************/
+/* Main Filename: 	main.cc        */
+/***************************************/
 
 #include "display.h"
 
 int sc_main(int ac, char *av[])
 {
 
-// Signal Instantiation
-  signal_bool_vector      prime	("prime");
+    // Signal Instantiation
+    signal_bool_vector prime("prime");
 
-// Clock Instantiation
-  sc_clock 	clk ("CLK", 6, SC_NS, 0.5, 0, SC_NS);	// 167 Mhz
+    // Clock Instantiation
+    sc_clock clk("CLK", 6, SC_NS, 0.5, 0, SC_NS); // 167 Mhz
 
-// Process Instantiation
- 
-  displayp	T2 ("T2", clk, prime);
- 
-// Simulation Run Control
-  sc_start( 30, SC_NS, SC_EXIT_ON_STARVATION );
-  cout << sc_time_stamp() << " : STOPPING SIM - start button" << endl;
-   return 0;
+    // Process Instantiation
+
+    displayp T2("T2", clk, prime);
+
+    // Simulation Run Control
+    sc_start(30, SC_NS, SC_EXIT_ON_STARVATION);
+    cout << sc_time_stamp() << " : STOPPING SIM - start button" << endl;
+    return 0;
 }

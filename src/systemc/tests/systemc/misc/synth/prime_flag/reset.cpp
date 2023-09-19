@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  reset.cpp -- 
+  reset.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,19 +35,19 @@
 
  *****************************************************************************/
 
-		/***************************************/
-		/* Implementation Filename:  reset.cc  */
-		/***************************************/
+/***************************************/
+/* Implementation Filename:  reset.cc  */
+/***************************************/
 
 #include "reset.h"
 
 void resetp::entry()
 {
-  reset.write(0);
-  wait(3);	
-  
-  reset.write(1);
-  wait();
+    reset.write(0);
+    wait(3);
 
-  halt();
+    reset.write(1);
+    wait();
+
+    halt();
 }

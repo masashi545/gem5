@@ -39,35 +39,35 @@
 
 SC_MODULE(DUT)
 {
-	SC_CTOR(DUT)
-	{
-		SC_CTHREAD(thread,m_clk.pos());
-	}
-	void thread()
-	{
-		m_data = false;
-		for (;;)
-		{
-			wait();
-		}
-	}
-	sc_in<bool>  m_clk;
-	sc_out<bool> m_data;
+    SC_CTOR(DUT)
+    {
+        SC_CTHREAD(thread, m_clk.pos());
+    }
+    void thread()
+    {
+        m_data = false;
+        for (;;)
+        {
+            wait();
+        }
+    }
+    sc_in<bool> m_clk;
+    sc_out<bool> m_data;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-	sc_clock        clock;
-	sc_signal<bool> data;
-	DUT             dut("dut");
+    sc_clock clock;
+    sc_signal<bool> data;
+    DUT dut("dut");
 
-	dut.m_clk(clock);
-	dut.m_data(data);
+    dut.m_clk(clock);
+    dut.m_data(data);
 
-	sc_start(1, SC_NS);
-	data = true;
-	sc_start(1, SC_NS);
+    sc_start(1, SC_NS);
+    data = true;
+    sc_start(1, SC_NS);
 
-	cout << "Program completed" << endl;
-	return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test03.cpp -- 
+  test03.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,8 +39,7 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     // 1) check the existence of the reduce methods
 
@@ -57,21 +56,21 @@ sc_main( int, char*[] )
 
     // sc_signed_subref
     cout << endl;
-    cout << a( 7, 0 ).and_reduce() << endl;
-    cout << a( 7, 0 ).or_reduce() << endl;
-    cout << a( 7, 0 ).xor_reduce() << endl;
-    cout << a( 7, 0 ).nand_reduce() << endl;
-    cout << a( 7, 0 ).nor_reduce() << endl;
-    cout << a( 7, 0 ).xnor_reduce() << endl;
+    cout << a(7, 0).and_reduce() << endl;
+    cout << a(7, 0).or_reduce() << endl;
+    cout << a(7, 0).xor_reduce() << endl;
+    cout << a(7, 0).nand_reduce() << endl;
+    cout << a(7, 0).nor_reduce() << endl;
+    cout << a(7, 0).xnor_reduce() << endl;
 
     // concatenation
     cout << endl;
-    cout << ( a( 7, 0 ), a( 15, 8 ) ).and_reduce() << endl;
-    cout << ( a( 7, 0 ), a( 15, 8 ) ).or_reduce() << endl;
-    cout << ( a( 7, 0 ), a( 15, 8 ) ).xor_reduce() << endl;
-    cout << ( a( 7, 0 ), a( 15, 8 ) ).nand_reduce() << endl;
-    cout << ( a( 7, 0 ), a( 15, 8 ) ).nor_reduce() << endl;
-    cout << ( a( 7, 0 ), a( 15, 8 ) ).xnor_reduce() << endl;
+    cout << (a(7, 0), a(15, 8)).and_reduce() << endl;
+    cout << (a(7, 0), a(15, 8)).or_reduce() << endl;
+    cout << (a(7, 0), a(15, 8)).xor_reduce() << endl;
+    cout << (a(7, 0), a(15, 8)).nand_reduce() << endl;
+    cout << (a(7, 0), a(15, 8)).nor_reduce() << endl;
+    cout << (a(7, 0), a(15, 8)).xnor_reduce() << endl;
 
     sc_biguint<42> b = 42;
 
@@ -86,21 +85,21 @@ sc_main( int, char*[] )
 
     // sc_unsigned_subref
     cout << endl;
-    cout << b( 7, 0 ).and_reduce() << endl;
-    cout << b( 7, 0 ).or_reduce() << endl;
-    cout << b( 7, 0 ).xor_reduce() << endl;
-    cout << b( 7, 0 ).nand_reduce() << endl;
-    cout << b( 7, 0 ).nor_reduce() << endl;
-    cout << b( 7, 0 ).xnor_reduce() << endl;
+    cout << b(7, 0).and_reduce() << endl;
+    cout << b(7, 0).or_reduce() << endl;
+    cout << b(7, 0).xor_reduce() << endl;
+    cout << b(7, 0).nand_reduce() << endl;
+    cout << b(7, 0).nor_reduce() << endl;
+    cout << b(7, 0).xnor_reduce() << endl;
 
     // concatenation
     cout << endl;
-    cout << ( b( 7, 0 ), b( 15, 8 ) ).and_reduce() << endl;
-    cout << ( b( 7, 0 ), b( 15, 8 ) ).or_reduce() << endl;
-    cout << ( b( 7, 0 ), b( 15, 8 ) ).xor_reduce() << endl;
-    cout << ( b( 7, 0 ), b( 15, 8 ) ).nand_reduce() << endl;
-    cout << ( b( 7, 0 ), b( 15, 8 ) ).nor_reduce() << endl;
-    cout << ( b( 7, 0 ), b( 15, 8 ) ).xnor_reduce() << endl;
+    cout << (b(7, 0), b(15, 8)).and_reduce() << endl;
+    cout << (b(7, 0), b(15, 8)).or_reduce() << endl;
+    cout << (b(7, 0), b(15, 8)).xor_reduce() << endl;
+    cout << (b(7, 0), b(15, 8)).nand_reduce() << endl;
+    cout << (b(7, 0), b(15, 8)).nor_reduce() << endl;
+    cout << (b(7, 0), b(15, 8)).xnor_reduce() << endl;
 
     // 2) check the functionality of the reduce methods
 
@@ -114,12 +113,12 @@ sc_main( int, char*[] )
     cout << c3.and_reduce() << endl;
     cout << c3.xor_reduce() << endl;
 
-    sc_biguint<2> d2 = sc_dt::uint_type( -1 );
+    sc_biguint<2> d2 = sc_dt::uint_type(-1);
     cout << endl;
     cout << d2.and_reduce() << endl;
     cout << d2.xor_reduce() << endl;
 
-    sc_biguint<3> d3 = sc_dt::uint_type( -1 );
+    sc_biguint<3> d3 = sc_dt::uint_type(-1);
     cout << endl;
     cout << d3.and_reduce() << endl;
     cout << d3.xor_reduce() << endl;
@@ -127,12 +126,13 @@ sc_main( int, char*[] )
     sc_bigint<6> e;
     sc_biguint<6> f;
     cout << endl;
-    for( int i = 0; i >= -10; -- i ) {
+    for (int i = 0; i >= -10; --i)
+    {
         e = i;
         f = i;
         cout << e.xor_reduce() << endl;
         cout << f.xor_reduce() << endl;
     }
-    
+
     return 0;
 }

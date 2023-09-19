@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  datatypes.cpp -- 
+  datatypes.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-12-10
 
@@ -35,71 +35,71 @@
 
  *****************************************************************************/
 
-
 #include "datatypes.h"
 
-void datatypes::entry(){
+void datatypes::entry()
+{
 
-  sc_biguint<2>     tmp1;
-  sc_bigint<2>      tmp2;
-  sc_biguint<3>     tmp3;
-  sc_bigint<3>      tmp4;
-  sc_biguint<2>     tmp1r;
-  sc_bigint<2>      tmp2r;
-  sc_biguint<3>     tmp3r;
-  sc_bigint<3>      tmp4r;
+    sc_biguint<2> tmp1;
+    sc_bigint<2> tmp2;
+    sc_biguint<3> tmp3;
+    sc_bigint<3> tmp4;
+    sc_biguint<2> tmp1r;
+    sc_bigint<2> tmp2r;
+    sc_biguint<3> tmp3r;
+    sc_bigint<3> tmp4r;
 
-  // reset_loop
+    // reset_loop
     out_valid.write(false);
     out_ack.write(false);
     wait();
 
-  //
-  // main loop
-  //
+    //
+    // main loop
+    //
 
-  while(1) {
-    //input handshake
-    while(in_valid.read()==false) wait();
+    while (1)
+    {
+        // input handshake
+        while (in_valid.read() == false)
+            wait();
 
-    //reading the inputs
-    tmp1 = in_value1.read();
-    tmp2 = in_value2.read();
-    tmp3 = in_value3.read();
-    tmp4 = in_value4.read();
+        // reading the inputs
+        tmp1 = in_value1.read();
+        tmp2 = in_value2.read();
+        tmp3 = in_value3.read();
+        tmp4 = in_value4.read();
 
-    // input handshake
-    out_ack.write(true);   
+        // input handshake
+        out_ack.write(true);
 
-    //execute datatypes operations
-    // unsigned(2) <- signed(3)/unsigned(2)
-    tmp1r = tmp4 / tmp1;
-    // signed(2) <-  unsigned(2)/signed(3)
-    tmp2r = tmp1 / tmp4;
-    // unsigned(3) <- unsigned(3)/unsigned(2)
-    tmp3r = tmp3 / tmp1;
-    // signed(3) <- signed(3)/signed(2)
-    tmp4r = tmp4 / tmp2;
+        // execute datatypes operations
+        //  unsigned(2) <- signed(3)/unsigned(2)
+        tmp1r = tmp4 / tmp1;
+        // signed(2) <-  unsigned(2)/signed(3)
+        tmp2r = tmp1 / tmp4;
+        // unsigned(3) <- unsigned(3)/unsigned(2)
+        tmp3r = tmp3 / tmp1;
+        // signed(3) <- signed(3)/signed(2)
+        tmp4r = tmp4 / tmp2;
 
-    // write outputs
-    out_value1.write(tmp1r);
-    out_value2.write(tmp2r);
-    out_value3.write(tmp3r);
-    out_value4.write(tmp4r);
+        // write outputs
+        out_value1.write(tmp1r);
+        out_value2.write(tmp2r);
+        out_value3.write(tmp3r);
+        out_value4.write(tmp4r);
 
-    //output handshake
-    out_valid.write(true);
-    wait();
+        // output handshake
+        out_valid.write(true);
+        wait();
 
-    //input handshake
-    out_ack.write(false);
- 
-    //output handshake
-    out_valid.write(false);
-    wait();
-  }
+        // input handshake
+        out_ack.write(false);
+
+        // output handshake
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-
-

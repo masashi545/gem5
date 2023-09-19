@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star102573.cpp -- 
+  star102573.cpp --
 
   Original Author: Preeti Panda, Synopsys, Inc., 2000-08-09
 
@@ -38,7 +38,7 @@
 #include <systemc.h>
 #include "for_nest.h"
 
-#define max  5
+#define max 5
 #define max1 4
 #define max2 3
 #define max3 2
@@ -46,51 +46,59 @@
 void for_nest::entry()
 {
 
-  sc_signed tmp2(2);
-  sc_signed tmp4(4);
-  sc_signed tmp8(8);
-  sc_signed tmp6(6);
+    sc_signed tmp2(2);
+    sc_signed tmp4(4);
+    sc_signed tmp8(8);
+    sc_signed tmp6(6);
 
-  int i, j,  inp_tmp;
+    int i, j, inp_tmp;
 
-  result.write(0);
-  out_valid.write(false);
-  wait();
-
-  main_loop:while(1) {
-
-    while (in_valid.read()==false) wait();
-    out_valid.write(true);
+    result.write(0);
+    out_valid.write(false);
     wait();
+
+main_loop:
+    while (1)
+    {
+
+        while (in_valid.read() == false)
+            wait();
+        out_valid.write(true);
+        wait();
     /* unrolled loop inside rolled loop */
-    loop1:for (i=1; i<=max; i++)  {
-      tmp2    = in_value.read();
-      inp_tmp = tmp2.to_int() +  i ;
-      loop2:for (j=1; j<=max1; j++)
-	     inp_tmp = inp_tmp - tmp2.to_int() ;
-      result.write(inp_tmp);
-      wait();
-    };
-    out_valid.write(false);
-    wait();
-    out_valid.write(true);
-    wait();
+    loop1:
+        for (i = 1; i <= max; i++)
+        {
+            tmp2 = in_value.read();
+            inp_tmp = tmp2.to_int() + i;
+        loop2:
+            for (j = 1; j <= max1; j++)
+                inp_tmp = inp_tmp - tmp2.to_int();
+            result.write(inp_tmp);
+            wait();
+        };
+        out_valid.write(false);
+        wait();
+        out_valid.write(true);
+        wait();
 
-    inp_tmp = in_value.read();
-    wait();
+        inp_tmp = in_value.read();
+        wait();
     /* unrolled loop inside unrolled loop */
-    loop3:for (i=1; i<=max2; i++)  {
-      inp_tmp += i ;
-      loop4:for (j=1; j<=max3; j++) {
-	inp_tmp -= j ;
-      }
-    };
-    result.write(inp_tmp);
-    out_valid.write(false);
-    wait();
-    out_valid.write(true);
-    wait();
-
-  }
+    loop3:
+        for (i = 1; i <= max2; i++)
+        {
+            inp_tmp += i;
+        loop4:
+            for (j = 1; j <= max3; j++)
+            {
+                inp_tmp -= j;
+            }
+        };
+        result.write(inp_tmp);
+        out_valid.write(false);
+        wait();
+        out_valid.write(true);
+        wait();
+    }
 }
-

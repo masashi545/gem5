@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  Original Author: Bishnupriya Bhattacharya, Cadence Design Systems, 
+  Original Author: Bishnupriya Bhattacharya, Cadence Design Systems,
                    September 5, 2003
 
  *****************************************************************************/
@@ -46,44 +46,47 @@
 
 int function_method(double d)
 {
-  cout << endl << sc_time_stamp() << ", " 
-       << sc_get_current_process_handle().name() 
-       << ": function_method sees " << d << endl;
-  return int(d);
+    cout << endl
+         << sc_time_stamp() << ", "
+         << sc_get_current_process_handle().name()
+         << ": function_method sees " << d << endl;
+    return int(d);
 }
 
 class module1 : public sc_module
 {
 private:
-  sc_event& ev;
+    sc_event &ev;
+
 public:
+    SC_HAS_PROCESS(module1);
 
-  SC_HAS_PROCESS(module1);
+    module1(sc_module_name name, sc_event &event) : sc_module(name),
+                                                    ev(event)
+    {
+        SC_METHOD(static_method);
+    }
 
-  module1(sc_module_name name, sc_event& event) : sc_module(name), 
-    ev(event)
-  {
-    SC_METHOD(static_method);
-  }
-
-  void static_method() {
-    int r;
-    cout << endl << sc_time_stamp() << ": static_method, Before spawning function_method " << endl;
-    sc_spawn_options o1;
-    o1.spawn_method();
-    o1.dont_initialize();
-    o1.set_sensitivity(&ev);
-    sc_process_handle h4 = sc_spawn(&r, sc_bind(&function_method, 1.2345), "event_sensitive_method", &o1);
-    wait(h4.terminated_event());
-  }
+    void static_method()
+    {
+        int r;
+        cout << endl
+             << sc_time_stamp() << ": static_method, Before spawning function_method " << endl;
+        sc_spawn_options o1;
+        o1.spawn_method();
+        o1.dont_initialize();
+        o1.set_sensitivity(&ev);
+        sc_process_handle h4 = sc_spawn(&r, sc_bind(&function_method, 1.2345), "event_sensitive_method", &o1);
+        wait(h4.terminated_event());
+    }
 };
 
-int sc_main (int argc , char *argv[]) 
+int sc_main(int argc, char *argv[])
 {
-  sc_event event1;
-  event1.notify(55, SC_NS);
+    sc_event event1;
+    event1.notify(55, SC_NS);
 
-  module1 mod1("mod1", event1);
-  sc_start(100, SC_NS);
-  return 0;
+    module1 mod1("mod1", event1);
+    sc_start(100, SC_NS);
+    return 0;
 }

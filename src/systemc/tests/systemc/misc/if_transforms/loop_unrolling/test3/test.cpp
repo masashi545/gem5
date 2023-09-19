@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -45,29 +45,30 @@
 //	Date Created: 05 APR 99
 //
 
-
 #include "test.h"
- 
-void test::entry() 
+
+void test::entry()
 {
-  int i,j;
-  int a[10];
-   
+    int i, j;
+    int a[10];
 
-  do { wait(); } while  (cont1 == 0);
-  wait ();
+    do
+    {
+        wait();
+    } while (cont1 == 0);
+    wait();
 
-  for (j = 0; j < 2; j++) {
-      for (i = 0; i < 3; i++) {
-	  a[i] = 11;
-      }
-  }
- 
-  wait();
- 
-  o1 = 16;
+    for (j = 0; j < 2; j++)
+    {
+        for (i = 0; i < 3; i++)
+        {
+            a[i] = 11;
+        }
+    }
 
-  wait();
+    wait();
 
+    o1 = 16;
+
+    wait();
 }
- 

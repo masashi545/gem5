@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,21 +37,20 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-  // Given two signals:
-  sc_signal<sc_uint<4> >  input, new_input;
+    // Given two signals:
+    sc_signal<sc_uint<4>> input, new_input;
 
-  // I cannot do the following:
-  new_input.write(input);     // Fails g++
+    // I cannot do the following:
+    new_input.write(input); // Fails g++
 
-  // The others combinations work:
-  new_input = input;               // works
-  new_input.write(input.read());   // works
-  new_input = input.read();        // works
+    // The others combinations work:
+    new_input = input;             // works
+    new_input.write(input.read()); // works
+    new_input = input.read();      // works
 
-  // It would be more consistant if all 4 worked.
+    // It would be more consistant if all 4 worked.
 
-  return 0;
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -53,7 +53,7 @@ double bug()
 {
     sc_fxval_fast fast(2);
     sc_fxval slow(1);
-    fast  = slow;
+    fast = slow;
     fast += slow;
     fast -= slow;
     fast *= slow;
@@ -61,7 +61,7 @@ double bug()
     return fast.to_double();
 }
 
-int sc_main(int, char*[])
+int sc_main(int, char *[])
 {
     cout << bug() << endl;
     return 0;
@@ -78,4 +78,3 @@ sc_fxval_fast::operator-=(sc_fxval const &)       /var/tmp/cclXNLsO.o
 sc_fxval_fast::operator/=(sc_fxval const &)      /var/tmp/cclXNLsO.o
 sc_fxval_fast::operator*=(sc_fxval const &)       /var/tmp/cclXNLsO.o
 */
-

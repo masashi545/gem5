@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  timing.cpp -- 
+  timing.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,12 +37,12 @@
 
 #include "systemc.h"
 #include "rdy.h"
-#include "tb.h" 	/** Definition of testbench Structure **/
+#include "tb.h" /** Definition of testbench Structure **/
 
 int sc_main(int ac, char *av[])
 {
-  sc_clock clk( "CLK", 20, SC_NS, 0.5, 0, SC_NS); // Clock function
-  testbench tb1("TB1", clk);	// Testbench Instantiation
-  sc_start( 120, SC_NS );          // Simulation control
-  return 0;
+    sc_clock clk("CLK", 20, SC_NS, 0.5, 0, SC_NS); // Clock function
+    testbench tb1("TB1", clk);                     // Testbench Instantiation
+    sc_start(120, SC_NS);                          // Simulation control
+    return 0;
 }

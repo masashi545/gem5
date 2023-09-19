@@ -44,178 +44,176 @@
 
 SC_MODULE(phase_tracer)
 {
-  SC_HAS_PROCESS(phase_tracer);
-  phase_tracer( sc_module_name nm
-                  = sc_core::sc_gen_unique_name("phase_tracer") )
-    : cb_count(0), timed_count(), delta_count()
-  {
-    SC_METHOD(timed);
-    SC_METHOD(delta);
-      sensitive << ev;
-
-    old_mask = SC_STATUS_ANY;
-    cb_mask = register_simulation_phase_callback( SC_STATUS_ANY );
-    sc_assert( cb_mask == (old_mask & ~SC_ELABORATION & ~SC_RUNNING) );
-    old_mask = cb_mask;
-
-    cb_mask = unregister_simulation_phase_callback(SC_STOPPED);
-    sc_assert( cb_mask == (old_mask & ~SC_STOPPED) );
-    old_mask = cb_mask;
-
-    cb_mask = register_simulation_phase_callback( SC_UNITIALIZED );
-    sc_assert( cb_mask == old_mask );
-
-    cb_mask = unregister_simulation_phase_callback(SC_UNITIALIZED);
-    sc_assert( cb_mask == old_mask );
-
-    cb_mask = unregister_simulation_phase_callback(SC_RUNNING);
-    sc_assert( cb_mask == (old_mask & ~SC_END_OF_INITIALIZATION
-//                                  & ~SC_END_OF_EVALUATION
-                                    & ~SC_END_OF_UPDATE
-                                    & ~SC_BEFORE_TIMESTEP) );
-    old_mask = cb_mask;
-
-    cb_mask = unregister_simulation_phase_callback(SC_ELABORATION);
-    sc_assert( cb_mask == (old_mask & ~SC_BEFORE_END_OF_ELABORATION
-                                    & ~SC_END_OF_ELABORATION ) );
-    old_mask = cb_mask;
-
-    cb_mask = unregister_simulation_phase_callback( SC_STATUS_ANY );
-    sc_assert( cb_mask == SC_UNITIALIZED );
-    old_mask = cb_mask;
-
-    cb_mask = register_simulation_phase_callback( SC_RUNNING );
-    sc_assert( cb_mask == ( SC_END_OF_INITIALIZATION
-//                            | SC_END_OF_EVALUATION
-                            | SC_END_OF_UPDATE | SC_BEFORE_TIMESTEP ) );
-
-    cb_mask = register_simulation_phase_callback( SC_STATUS_ANY );
-    sc_assert( cb_mask == (SC_STATUS_ANY & ~SC_ELABORATION & ~SC_RUNNING) );
-  }
-
-  void timed()
-  {
-    std::cout
-      << sc_get_current_process_handle().name()
-      << ": " << sc_time_stamp()
-      << ": " << timed_count
-      << std::endl;
-    if( timed_count++ < 5 ) {
-      next_trigger( 100, SC_NS );
-    }
-    if( delta_count < 5 )
-      ev.notify( SC_ZERO_TIME );
-
-    if( timed_count>=6 )
-      sc_stop();
-  }
-  void delta()
-  {
-    std::cout
-      << sc_get_current_process_handle().name()
-      << ": " << sc_time_stamp()
-      << ": " << delta_count
-      << std::endl;
-    delta_count++;
-  }
-
-  virtual void simulation_phase_callback()
-  {
-    cb_count++;
-
-#   if VERBOSE
+    SC_HAS_PROCESS(phase_tracer);
+    phase_tracer(sc_module_name nm = sc_core::sc_gen_unique_name("phase_tracer"))
+        : cb_count(0), timed_count(), delta_count()
     {
-      std::string ttp;
-      if( !sc_pending_activity() ) {
-        ttp = "MAX";
-      } else {
-        ttp = sc_time_to_pending_activity().to_string();
-      }
-      std::cout << name()
-                << ": phase callback "
-                << sc_get_status()
-                << ": " << sc_time_stamp()
-                << " -> pending activity: " << ttp
-                << std::endl;
-    }
-#   endif
-    sc_assert( cb_mask & sc_get_status() );
+        SC_METHOD(timed);
+        SC_METHOD(delta);
+        sensitive << ev;
 
-    switch( sc_get_status() )
+        old_mask = SC_STATUS_ANY;
+        cb_mask = register_simulation_phase_callback(SC_STATUS_ANY);
+        sc_assert(cb_mask == (old_mask & ~SC_ELABORATION & ~SC_RUNNING));
+        old_mask = cb_mask;
+
+        cb_mask = unregister_simulation_phase_callback(SC_STOPPED);
+        sc_assert(cb_mask == (old_mask & ~SC_STOPPED));
+        old_mask = cb_mask;
+
+        cb_mask = register_simulation_phase_callback(SC_UNITIALIZED);
+        sc_assert(cb_mask == old_mask);
+
+        cb_mask = unregister_simulation_phase_callback(SC_UNITIALIZED);
+        sc_assert(cb_mask == old_mask);
+
+        cb_mask = unregister_simulation_phase_callback(SC_RUNNING);
+        sc_assert(cb_mask == (old_mask & ~SC_END_OF_INITIALIZATION
+                              //                                  & ~SC_END_OF_EVALUATION
+                              & ~SC_END_OF_UPDATE & ~SC_BEFORE_TIMESTEP));
+        old_mask = cb_mask;
+
+        cb_mask = unregister_simulation_phase_callback(SC_ELABORATION);
+        sc_assert(cb_mask == (old_mask & ~SC_BEFORE_END_OF_ELABORATION & ~SC_END_OF_ELABORATION));
+        old_mask = cb_mask;
+
+        cb_mask = unregister_simulation_phase_callback(SC_STATUS_ANY);
+        sc_assert(cb_mask == SC_UNITIALIZED);
+        old_mask = cb_mask;
+
+        cb_mask = register_simulation_phase_callback(SC_RUNNING);
+        sc_assert(cb_mask == (SC_END_OF_INITIALIZATION
+                              //                            | SC_END_OF_EVALUATION
+                              | SC_END_OF_UPDATE | SC_BEFORE_TIMESTEP));
+
+        cb_mask = register_simulation_phase_callback(SC_STATUS_ANY);
+        sc_assert(cb_mask == (SC_STATUS_ANY & ~SC_ELABORATION & ~SC_RUNNING));
+    }
+
+    void timed()
     {
-    case SC_END_OF_UPDATE:
-    case SC_BEFORE_TIMESTEP:
-      if( timed_count == 3 )
-        ev.cancel();
-      if( delta_count == 2 )
-        ev.notify(SC_ZERO_TIME);
-      if( timed_count == 2 )
-        ev.notify( 1, SC_NS );
-      break;
-    default:
-      // do nothing
-      break;
+        std::cout
+            << sc_get_current_process_handle().name()
+            << ": " << sc_time_stamp()
+            << ": " << timed_count
+            << std::endl;
+        if (timed_count++ < 5)
+        {
+            next_trigger(100, SC_NS);
+        }
+        if (delta_count < 5)
+            ev.notify(SC_ZERO_TIME);
+
+        if (timed_count >= 6)
+            sc_stop();
     }
-  }
+    void delta()
+    {
+        std::cout
+            << sc_get_current_process_handle().name()
+            << ": " << sc_time_stamp()
+            << ": " << delta_count
+            << std::endl;
+        delta_count++;
+    }
 
-  ~phase_tracer()
-      { print_static_phase_stats( "[destructor]" ); }
+    virtual void simulation_phase_callback()
+    {
+        cb_count++;
 
-  void print_static_phase_stats( const char* phase )
-  {
 #if VERBOSE
-      std::cout << name()
-                << ": " << phase << ": "
-                << cb_count << " callbacks called."
-                << std::endl;
+        {
+            std::string ttp;
+            if (!sc_pending_activity())
+            {
+                ttp = "MAX";
+            }
+            else
+            {
+                ttp = sc_time_to_pending_activity().to_string();
+            }
+            std::cout << name()
+                      << ": phase callback "
+                      << sc_get_status()
+                      << ": " << sc_time_stamp()
+                      << " -> pending activity: " << ttp
+                      << std::endl;
+        }
 #endif
-  }
+        sc_assert(cb_mask & sc_get_status());
+
+        switch (sc_get_status())
+        {
+        case SC_END_OF_UPDATE:
+        case SC_BEFORE_TIMESTEP:
+            if (timed_count == 3)
+                ev.cancel();
+            if (delta_count == 2)
+                ev.notify(SC_ZERO_TIME);
+            if (timed_count == 2)
+                ev.notify(1, SC_NS);
+            break;
+        default:
+            // do nothing
+            break;
+        }
+    }
+
+    ~phase_tracer()
+    {
+        print_static_phase_stats("[destructor]");
+    }
+
+    void print_static_phase_stats(const char *phase)
+    {
+#if VERBOSE
+        std::cout << name()
+                  << ": " << phase << ": "
+                  << cb_count << " callbacks called."
+                  << std::endl;
+#endif
+    }
 
 private:
+    virtual void before_end_of_elaboration()
+    {
+        sc_assert(sc_get_status() == SC_BEFORE_END_OF_ELABORATION);
+        print_static_phase_stats("before_end_of_elaboration");
+    }
 
-  virtual void before_end_of_elaboration()
-  {
-    sc_assert( sc_get_status() == SC_BEFORE_END_OF_ELABORATION );
-    print_static_phase_stats( "before_end_of_elaboration" );
-  }
+    virtual void end_of_elaboration()
+    {
+        sc_assert(sc_get_status() == SC_END_OF_ELABORATION);
+        print_static_phase_stats("end_of_elaboration");
+    }
 
-  virtual void end_of_elaboration()
-  {
-    sc_assert( sc_get_status() == SC_END_OF_ELABORATION );
-    print_static_phase_stats( "end_of_elaboration" );
-  }
+    virtual void start_of_simulation()
+    {
+        sc_assert(sc_get_status() == SC_START_OF_SIMULATION);
+        print_static_phase_stats("start_of_simulation");
 
-  virtual void start_of_simulation()
-  {
-    sc_assert( sc_get_status() == SC_START_OF_SIMULATION );
-    print_static_phase_stats( "start_of_simulation" );
+        // ignored - issues warning
+        register_simulation_phase_callback(SC_ELABORATION);
+    }
 
-    // ignored - issues warning
-    register_simulation_phase_callback( SC_ELABORATION );
-  }
-
-  virtual void end_of_simulation()
-  {
-    sc_assert( sc_get_status() == SC_END_OF_SIMULATION );
-    print_static_phase_stats( "end_of_simulation" );
-  }
-
-
+    virtual void end_of_simulation()
+    {
+        sc_assert(sc_get_status() == SC_END_OF_SIMULATION);
+        print_static_phase_stats("end_of_simulation");
+    }
 
 private:
-  phase_cb_mask cb_mask, old_mask;
-  sc_dt::uint64 cb_count, timed_count, delta_count;
-  sc_event ev;
+    phase_cb_mask cb_mask, old_mask;
+    sc_dt::uint64 cb_count, timed_count, delta_count;
+    sc_event ev;
 };
 
-
-int sc_main(int, char*[])
+int sc_main(int, char *[])
 {
-  // don't run without callbacks enabled
-  sc_report_handler::set_actions( "simulation phase callbacks not enabled"
-                                , SC_DEFAULT_ERROR_ACTIONS );
+    // don't run without callbacks enabled
+    sc_report_handler::set_actions("simulation phase callbacks not enabled", SC_DEFAULT_ERROR_ACTIONS);
 
-  phase_tracer pt;
-  sc_start();
-  return 0;
+    phase_tracer pt;
+    sc_start();
+    return 0;
 }

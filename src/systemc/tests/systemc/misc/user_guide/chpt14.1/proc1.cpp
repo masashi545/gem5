@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  proc1.cpp -- 
+  proc1.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,28 +42,31 @@
 
 void proc1::entry()
 {
-  int i = 10;
+    int i = 10;
 
-  data_ready.write(false);
-  wait();
-
-  while(true) {
-    cout << endl << "Proc1: Initiating Transfer" << endl;
-    data_ready.write(true);
-    data.write(i++);
-    wait();
-    cout << "Proc1: Data Ready has value = " << data_ready.read() 
-	 << " at time " << sc_time_stamp() << endl;
-    cout << "Proc1: Data Ack has value = " << data_ack.read() 
-	 << " at same time" << endl;
-    do { wait(); } while (data_ack != true);
-    cout << "Proc1: Data Ack Received at time " << sc_time_stamp() << 
-      endl;
     data_ready.write(false);
     wait();
-    cout << "Proc1: Data Ready has value = " << data_ready.read() 
-	 << " at time " << sc_time_stamp() << endl;
-    cout << "Proc1: Transfer complete" << endl;
-  }
-} // end of entry function
 
+    while (true)
+    {
+        cout << endl
+             << "Proc1: Initiating Transfer" << endl;
+        data_ready.write(true);
+        data.write(i++);
+        wait();
+        cout << "Proc1: Data Ready has value = " << data_ready.read()
+             << " at time " << sc_time_stamp() << endl;
+        cout << "Proc1: Data Ack has value = " << data_ack.read()
+             << " at same time" << endl;
+        do
+        {
+            wait();
+        } while (data_ack != true);
+        cout << "Proc1: Data Ack Received at time " << sc_time_stamp() << endl;
+        data_ready.write(false);
+        wait();
+        cout << "Proc1: Data Ready has value = " << data_ready.read()
+             << " at time " << sc_time_stamp() << endl;
+        cout << "Proc1: Transfer complete" << endl;
+    }
+} // end of entry function

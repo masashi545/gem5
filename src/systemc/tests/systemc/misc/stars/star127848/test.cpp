@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,27 +37,26 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_bv<8> foo = "11001100";
     cout << foo << endl;
-    sc_bv<5> a = foo.range( 4, 0 );
-    sc_bv<5> b = foo.range( 0, 4 );
+    sc_bv<5> a = foo.range(4, 0);
+    sc_bv<5> b = foo.range(0, 4);
     cout << a << endl;
     cout << b << endl;
 
     sc_bv<8> bar = foo;
-    foo.range( 0, 6 ) = foo.range( 1, 7 );
+    foo.range(0, 6) = foo.range(1, 7);
     cout << foo << endl;
     foo = bar;
-    foo.range( 6, 0 ) = foo.range( 7, 1 );
+    foo.range(6, 0) = foo.range(7, 1);
     cout << foo << endl;
     foo = bar;
-    foo.range( 0, 6 ) = foo.range( 7, 1 );
+    foo.range(0, 6) = foo.range(7, 1);
     cout << foo << endl;
     foo = bar;
-    foo.range( 6, 0 ) = foo.range( 1, 7 );
+    foo.range(6, 0) = foo.range(1, 7);
     cout << foo << endl;
 
     return 0;

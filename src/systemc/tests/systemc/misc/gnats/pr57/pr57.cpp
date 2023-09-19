@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr57.cpp -- 
+  pr57.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,27 +37,26 @@
 
 #include "systemc.h"
 
-SC_MODULE( pr57 )
+SC_MODULE(pr57)
 {
-    SC_HAS_PROCESS( pr57 );
+    SC_HAS_PROCESS(pr57);
 
     sc_in_clk clk;
 
-    const sc_signal<bool>& a;
-          sc_signal<bool>& b;
+    const sc_signal<bool> &a;
+    sc_signal<bool> &b;
 
     bool c;
     bool d;
 
-    pr57( sc_module_name NAME,
-          sc_clock& CLK,
-          const sc_signal<bool>& A,
-                sc_signal<bool>& B )
-        : 
-          a(A), b(B)
+    pr57(sc_module_name NAME,
+         sc_clock & CLK,
+         const sc_signal<bool> &A,
+         sc_signal<bool> &B)
+        : a(A), b(B)
     {
-      clk(CLK);
-	  SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
     void entry();
     bool pres1(bool x, bool y);
@@ -65,8 +64,7 @@ SC_MODULE( pr57 )
     void pres3(bool z);
 };
 
-bool
-pr57::pres1(bool x, bool y)
+bool pr57::pres1(bool x, bool y)
 {
     bool u = x | c;
     bool v = y & d;
@@ -76,33 +74,30 @@ pr57::pres1(bool x, bool y)
     return u ^ v;
 }
 
-bool
-pr57::pres2(bool x)
+bool pr57::pres2(bool x)
 {
     bool u = x & c & d;
     d = x ^ u;
     return u;
 }
 
-void
-pr57::pres3(bool z)
+void pr57::pres3(bool z)
 {
     c = z;
 }
 
-void
-pr57::entry()
+void pr57::entry()
 {
     c = a;
-    d = ! a.read();
+    d = !a.read();
     b = pres1(1, 0);
     wait();
-    c = ! a.read();
+    c = !a.read();
     d = a;
     b = pres1(0, 1);
     wait();
     c = a;
-    d = ! a.read();
+    d = !a.read();
     b = pres2(0);
     wait();
     pres3(!a.read());
@@ -111,8 +106,7 @@ pr57::entry()
     wait();
 }
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     return 0;
 }

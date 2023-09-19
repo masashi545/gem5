@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -43,17 +43,16 @@
 
 int sc_main(int ac, char *av[])
 {
-  signal_std_logic bus;
-  sc_signal<bool> control;
-  sc_signal<bool> out;
+    signal_std_logic bus;
+    sc_signal<bool> control;
+    sc_signal<bool> out;
 
-  sc_clock clock("CLK", 10.0, SC_NS, 0.5, 0.0, SC_NS);
+    sc_clock clock("CLK", 10.0, SC_NS, 0.5, 0.0, SC_NS);
 
-  driver D("Driver", clock, bus, control, out);
-  ts_buf B("Buffer", out, control, bus);
-  display DISP("BusDisplay", bus);
+    driver D("Driver", clock, bus, control, out);
+    ts_buf B("Buffer", out, control, bus);
+    display DISP("BusDisplay", bus);
 
-  sc_start(200, SC_NS);
-  return 0;
+    sc_start(200, SC_NS);
+    return 0;
 }
-

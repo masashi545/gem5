@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  bsps1.cpp -- 
+  bsps1.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,8 +37,7 @@
 
 #include "systemc.h"
 
-int
-sc_main(int ac, char* av[])
+int sc_main(int ac, char *av[])
 {
     sc_int<32> x;
 
@@ -49,25 +48,25 @@ sc_main(int ac, char* av[])
     x[4] = 0;
     x[5] = 1;
 
-    sc_assert( x == 38 );
+    sc_assert(x == 38);
     cout << x << endl;
 
     x[5] = 0;
     x[31] = 1;
 
-#if !defined( _MSC_VER )
+#if !defined(_MSC_VER)
     sc_assert((uint64)x == 0xffffffff80000006ULL);
 #else
     sc_assert((uint64)x == 0xffffffff80000006ui64);
 #endif
     cout << x << endl;
 
-    x.range(31,5) = 10;
+    x.range(31, 5) = 10;
     sc_assert(x == 326);
     cout << x << endl;
 
     x = 0;
-    x.range(21,7) = 9;
+    x.range(21, 7) = 9;
     sc_assert(x == 1152);
     cout << x << endl;
 

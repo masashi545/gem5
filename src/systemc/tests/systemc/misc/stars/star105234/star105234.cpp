@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star105234.cpp -- 
+  star105234.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,15 +39,15 @@
 
 #include "systemc.h"
 
-int sc_main(int, char**) 
+int sc_main(int, char **)
 {
-  
-  sc_bv<3> b;
-  
-  b = "101";
-  int x = b.to_int();
-  
-  sc_assert(x==-3);
 
-  return(0);
+    sc_bv<3> b;
+
+    b = "101";
+    int x = b.to_int();
+
+    sc_assert(x == -3);
+
+    return (0);
 }

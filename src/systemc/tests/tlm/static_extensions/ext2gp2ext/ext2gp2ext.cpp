@@ -24,22 +24,21 @@
 #include "SimpleLTTarget_ext.h"
 #include "extension_adaptors.h"
 
-
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  SimpleLTInitiator_ext initiator("initiator1", 10, 0x0);
-  adapt_ext2gp<32>       bridge1("bridge1");
-  SimpleBusLT<1,1>       bus("bus");
-  adapt_gp2ext<32>       bridge2("bridge2");
-  SimpleLTTarget_ext     target("target1");
+    SimpleLTInitiator_ext initiator("initiator1", 10, 0x0);
+    adapt_ext2gp<32> bridge1("bridge1");
+    SimpleBusLT<1, 1> bus("bus");
+    adapt_gp2ext<32> bridge2("bridge2");
+    SimpleLTTarget_ext target("target1");
 
-  initiator.socket(bridge1.target_socket);
-  bridge1.initiator_socket(bus.target_socket[0]);
-  bus.initiator_socket[0](bridge2.target_socket);
-  bridge2.initiator_socket(target.socket);
+    initiator.socket(bridge1.target_socket);
+    bridge1.initiator_socket(bus.target_socket[0]);
+    bus.initiator_socket[0](bridge2.target_socket);
+    bridge2.initiator_socket(target.socket);
 
-  sc_core::sc_start();
-  sc_core::sc_stop();
+    sc_core::sc_start();
+    sc_core::sc_stop();
 
-  return 0;
+    return 0;
 }

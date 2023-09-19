@@ -29,42 +29,45 @@
 
 #include "sysc/communication/sc_event_finder.h"
 
-namespace sc_core {
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_event_finder
-//
-//  Event finder base class.
-// ----------------------------------------------------------------------------
-
-// error reporting
-
-void
-sc_event_finder::report_error( const char* id, const char* add_msg ) const
+namespace sc_core
 {
-    char msg[BUFSIZ];
-    if( add_msg != 0 ) {
-	std::sprintf( msg, "%s: port '%s' (%s)",
-		 add_msg, m_port.name(), m_port.kind() );
-    } else {
-	std::sprintf( msg, "port '%s' (%s)", m_port.name(), m_port.kind() );
+
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_event_finder
+    //
+    //  Event finder base class.
+    // ----------------------------------------------------------------------------
+
+    // error reporting
+
+    void
+    sc_event_finder::report_error(const char *id, const char *add_msg) const
+    {
+        char msg[BUFSIZ];
+        if (add_msg != 0)
+        {
+            std::sprintf(msg, "%s: port '%s' (%s)",
+                         add_msg, m_port.name(), m_port.kind());
+        }
+        else
+        {
+            std::sprintf(msg, "port '%s' (%s)", m_port.name(), m_port.kind());
+        }
+        SC_REPORT_ERROR(id, msg);
     }
-    SC_REPORT_ERROR( id, msg );
-}
 
+    // constructor
 
-// constructor
+    sc_event_finder::sc_event_finder(const sc_port_base &port_)
+        : m_port(port_)
+    {
+    }
 
-sc_event_finder::sc_event_finder( const sc_port_base& port_ )
-: m_port( port_ )
-{
-}
+    // destructor (does nothing)
 
-
-// destructor (does nothing)
-
-sc_event_finder::~sc_event_finder()
-{}
+    sc_event_finder::~sc_event_finder()
+    {
+    }
 
 } // namespace sc_core
 

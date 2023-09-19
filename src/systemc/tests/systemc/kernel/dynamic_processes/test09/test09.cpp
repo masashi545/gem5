@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test09.cpp -- Test for hierarchical reset, try/catch and individual kill 
+  test09.cpp -- Test for hierarchical reset, try/catch and individual kill
                 processes
 
   Original Author: Andy Goodrich
@@ -52,7 +52,6 @@
 //  Andy Goodrich: first inclusion of test for expanded process support.
 //
 
-
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 #include "systemc.h"
 
@@ -60,7 +59,7 @@ SC_MODULE(DUT)
 {
     SC_CTOR(DUT)
     {
-        SC_CTHREAD(stimulus,m_clk.pos());
+        SC_CTHREAD(stimulus, m_clk.pos());
         reset_signal_is(m_reset, true);
         SC_THREAD(grand_parent);
         sensitive << m_clk.pos();
@@ -69,36 +68,38 @@ SC_MODULE(DUT)
     void child()
     {
         sc_process_handle my_handle = sc_get_current_process_handle();
-        cout << sc_time_stamp() << " " << my_handle.name() 
+        cout << sc_time_stamp() << " " << my_handle.name()
              << " initialization" << endl;
-        try {
+        try
+        {
             for (;;)
             {
                 wait();
             }
-        } 
-        catch(sc_core::sc_unwind_exception& ex)
+        }
+        catch (sc_core::sc_unwind_exception &ex)
         {
-	    if ( !ex.is_reset() )
-	    {
-		cout << sc_time_stamp() << " " << my_handle.name() 
-		     << " got kill" << endl;
-	    }
-	    throw ex;
+            if (!ex.is_reset())
+            {
+                cout << sc_time_stamp() << " " << my_handle.name()
+                     << " got kill" << endl;
+            }
+            throw ex;
         }
     }
 
     void grand_parent()
     {
-        static bool       initialize = true;
-        cout << sc_time_stamp() << " " << "dut.grand_parent initialization" 
+        static bool initialize = true;
+        cout << sc_time_stamp() << " "
+             << "dut.grand_parent initialization"
              << endl;
         cout << endl;
-        if ( initialize )
+        if (initialize)
         {
             m_grand_parent_handle = sc_get_current_process_handle();
-            sc_spawn( sc_bind(&DUT::parent1, this), "parent1" );
-            sc_spawn( sc_bind(&DUT::parent2, this), "parent2" );
+            sc_spawn(sc_bind(&DUT::parent1, this), "parent1");
+            sc_spawn(sc_bind(&DUT::parent2, this), "parent2");
             initialize = false;
         }
 
@@ -115,13 +116,13 @@ SC_MODULE(DUT)
         sc_process_handle m_child2;
         sc_process_handle m_child3;
         sc_process_handle my_handle = sc_get_current_process_handle();
-        cout << sc_time_stamp() << " " << my_handle.name() 
+        cout << sc_time_stamp() << " " << my_handle.name()
              << " initialization" << endl;
-        if ( initialize )
+        if (initialize)
         {
-            m_child1 = sc_spawn( sc_bind(&DUT::child, this), "child1" );
-            m_child2 = sc_spawn( sc_bind(&DUT::child, this), "child2" );
-            m_child3 = sc_spawn( sc_bind(&DUT::child, this), "child3" );
+            m_child1 = sc_spawn(sc_bind(&DUT::child, this), "child1");
+            m_child2 = sc_spawn(sc_bind(&DUT::child, this), "child2");
+            m_child3 = sc_spawn(sc_bind(&DUT::child, this), "child3");
             initialize = false;
         }
 
@@ -142,28 +143,28 @@ SC_MODULE(DUT)
             try
             {
                 my_handle = sc_get_current_process_handle();
-                cout << sc_time_stamp() << " " << my_handle.name() 
+                cout << sc_time_stamp() << " " << my_handle.name()
                      << " initialization" << endl;
-                m_child1 = sc_spawn( sc_bind(&DUT::child, this), "child1" );
-                m_child2 = sc_spawn( sc_bind(&DUT::child, this), "child2" );
-                m_child3 = sc_spawn( sc_bind(&DUT::child, this), "child3" );
+                m_child1 = sc_spawn(sc_bind(&DUT::child, this), "child1");
+                m_child2 = sc_spawn(sc_bind(&DUT::child, this), "child2");
+                m_child3 = sc_spawn(sc_bind(&DUT::child, this), "child3");
 
                 for (;;)
                 {
                     wait();
                 }
-            } 
-            catch ( sc_core::sc_unwind_exception& ex )
+            }
+            catch (sc_core::sc_unwind_exception &ex)
             {
-		if ( ex.is_reset() )
-		{
-		    cout << sc_time_stamp() << " " << my_handle.name() 
-			 << " removing children" << endl;
-		    m_child1.kill();
-		    m_child2.kill();
-		    m_child3.kill();
-		}
-		throw ex;
+                if (ex.is_reset())
+                {
+                    cout << sc_time_stamp() << " " << my_handle.name()
+                         << " removing children" << endl;
+                    m_child1.kill();
+                    m_child2.kill();
+                    m_child3.kill();
+                }
+                throw ex;
             }
         }
     }
@@ -176,20 +177,20 @@ SC_MODULE(DUT)
             wait();
             wait();
             wait();
-	    cout << sc_time_stamp() << " stimulus issuing reset" << endl;
+            cout << sc_time_stamp() << " stimulus issuing reset" << endl;
             m_grand_parent_handle.reset(SC_INCLUDE_DESCENDANTS);
         }
     }
 
-    sc_in<bool>       m_clk;
+    sc_in<bool> m_clk;
     sc_process_handle m_grand_parent_handle;
-    sc_in<bool>       m_reset;
+    sc_in<bool> m_reset;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-    sc_clock        clock;
-    DUT             dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
     sc_signal<bool> reset;
 
     dut.m_clk(clock);

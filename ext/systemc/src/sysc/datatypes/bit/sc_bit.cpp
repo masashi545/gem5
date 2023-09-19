@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 // $Log: sc_bit.cpp,v $
 // Revision 1.1.1.1  2006/12/15 20:20:04  acg
 // SystemC 2.3
@@ -63,76 +62,71 @@
 
 #include <cstdio>
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_bit
-//
-//  Bit class.
-//  Note: VSIA compatibility indicated.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_bit
+    //
+    //  Bit class.
+    //  Note: VSIA compatibility indicated.
+    // ----------------------------------------------------------------------------
 
-// support methods
+    // support methods
 
-void
-sc_bit::invalid_value( char c )
-{
-    char msg[BUFSIZ];
-    std::sprintf( msg, "sc_bit( '%c' )", c );
-    SC_REPORT_ERROR( sc_core::SC_ID_VALUE_NOT_VALID_, msg );
-}
-
-void
-sc_bit::invalid_value( int i )
-{
-    char msg[BUFSIZ];
-    std::sprintf( msg, "sc_bit( %d )", i );
-    SC_REPORT_ERROR( sc_core::SC_ID_VALUE_NOT_VALID_, msg );
-}
-
-
-// constructors
-
-sc_bit::sc_bit( const sc_logic& a )  // non-VSIA
-    : m_val( a.to_bool() )
-{
-   sc_deprecated_sc_bit();
-}
-
-
-// assignment operators
-
-sc_bit&
-sc_bit::operator = ( const sc_logic& b )  // non-VSIA
-{
-    return ( *this = sc_bit( b ) );
-}
-
-
-// other methods
-
-void
-sc_bit::scan( ::std::istream& is )
-{
-    bool b;
-    is >> b;
-    *this = b;
-}
-
-void sc_deprecated_sc_bit()
-{
-    static bool warn_sc_bit_deprecated=true;
-    if ( warn_sc_bit_deprecated )
+    void
+    sc_bit::invalid_value(char c)
     {
-        warn_sc_bit_deprecated=false;
-	SC_REPORT_INFO(sc_core::SC_ID_IEEE_1666_DEPRECATION_,
-	    "sc_bit is deprecated, use bool instead");
+        char msg[BUFSIZ];
+        std::sprintf(msg, "sc_bit( '%c' )", c);
+        SC_REPORT_ERROR(sc_core::SC_ID_VALUE_NOT_VALID_, msg);
     }
-}
+
+    void
+    sc_bit::invalid_value(int i)
+    {
+        char msg[BUFSIZ];
+        std::sprintf(msg, "sc_bit( %d )", i);
+        SC_REPORT_ERROR(sc_core::SC_ID_VALUE_NOT_VALID_, msg);
+    }
+
+    // constructors
+
+    sc_bit::sc_bit(const sc_logic &a) // non-VSIA
+        : m_val(a.to_bool())
+    {
+        sc_deprecated_sc_bit();
+    }
+
+    // assignment operators
+
+    sc_bit &
+    sc_bit::operator=(const sc_logic &b) // non-VSIA
+    {
+        return (*this = sc_bit(b));
+    }
+
+    // other methods
+
+    void
+    sc_bit::scan(::std::istream &is)
+    {
+        bool b;
+        is >> b;
+        *this = b;
+    }
+
+    void sc_deprecated_sc_bit()
+    {
+        static bool warn_sc_bit_deprecated = true;
+        if (warn_sc_bit_deprecated)
+        {
+            warn_sc_bit_deprecated = false;
+            SC_REPORT_INFO(sc_core::SC_ID_IEEE_1666_DEPRECATION_,
+                           "sc_bit is deprecated, use bool instead");
+        }
+    }
 
 } // namespace sc_dt
-
 
 // Taf!

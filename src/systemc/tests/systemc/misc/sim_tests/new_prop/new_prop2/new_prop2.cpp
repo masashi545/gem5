@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  new_prop2.cpp -- 
+  new_prop2.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,24 +37,58 @@
 
 #include "systemc.h"
 
-static int (*print_func)(const char*, ...);
+static int (*print_func)(const char *, ...);
 
-struct new_prop : sc_module {
+struct new_prop : sc_module
+{
     sc_in<bool> i[16];
 
-    void my_print(const char*);
+    void my_print(const char *);
 
     void async0() { my_print("async0"); }
     void async1() { my_print("async1"); }
     void async2() { my_print("async2"); }
     void async3() { my_print("async3"); }
 
-    void aproc0() { wait(); while (1) { my_print("aproc0"); wait(); } }
-    void aproc1() { wait(); while (1) { my_print("aproc1"); wait(); } }
-    void aproc2() { wait(); while (1) { my_print("aproc2"); wait(); } }
-    void aproc3() { wait(); while (1) { my_print("aproc3"); wait(); } }
+    void aproc0()
+    {
+        wait();
+        while (1)
+        {
+            my_print("aproc0");
+            wait();
+        }
+    }
+    void aproc1()
+    {
+        wait();
+        while (1)
+        {
+            my_print("aproc1");
+            wait();
+        }
+    }
+    void aproc2()
+    {
+        wait();
+        while (1)
+        {
+            my_print("aproc2");
+            wait();
+        }
+    }
+    void aproc3()
+    {
+        wait();
+        while (1)
+        {
+            my_print("aproc3");
+            wait();
+        }
+    }
 
-    SC_CTOR(new_prop) {
+    SC_CTOR(new_prop)
+    {
         SC_METHOD(async0);
         sensitive << i[4].neg();
         sensitive << i[12].neg();
@@ -73,7 +107,7 @@ struct new_prop : sc_module {
         sensitive << i[6].neg();
         sensitive << i[13].pos();
         sensitive << i[15].pos();
-        
+
         SC_METHOD(async3);
         sensitive << i[3].pos();
         sensitive << i[5].neg();
@@ -106,39 +140,42 @@ struct new_prop : sc_module {
     }
 };
 
-void
-new_prop::my_print(const char* p)
+void new_prop::my_print(const char *p)
 {
     (*print_func)("%s executed on:\n", p);
-    for (int j = 0; j < 16; ++j) {
-        if (i[j].posedge()) {
+    for (int j = 0; j < 16; ++j)
+    {
+        if (i[j].posedge())
+        {
             (*print_func)("\tposedge i[%d]\n", j);
         }
-        if (i[j].negedge()) {
+        if (i[j].negedge())
+        {
             (*print_func)("\tnegedge i[%d]\n", j);
         }
     }
 }
 
 static int
-dont_print(const char* fmt, ...)
+dont_print(const char *fmt, ...)
 {
     return 0;
 }
 
-int
-sc_main(int,char**)
+int sc_main(int, char **)
 {
     // sc_clock i[16];
     sc_signal<bool> i[16];
 
     new_prop np("np");
 
-    for( int j = 0; j < 16; ++ j ) {
-        np.i[j]( i[j] );
+    for (int j = 0; j < 16; ++j)
+    {
+        np.i[j](i[j]);
     }
 
-    for (int j = 0; j < 16; ++j) {
+    for (int j = 0; j < 16; ++j)
+    {
         i[j] = 0;
     }
 
@@ -147,14 +184,15 @@ sc_main(int,char**)
 
     print_func = &printf;
 
-    for (int k = 0; k < 16; ++k) {
-        i[k] = ! i[k].read();
+    for (int k = 0; k < 16; ++k)
+    {
+        i[k] = !i[k].read();
         sc_start(1, SC_NS);
-        i[k] = ! i[k].read();
+        i[k] = !i[k].read();
         sc_start(1, SC_NS);
     }
 
-    fflush( stdout );
+    fflush(stdout);
 
     return 0;
 }

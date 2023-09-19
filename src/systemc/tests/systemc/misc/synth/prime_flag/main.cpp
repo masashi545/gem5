@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,9 +35,9 @@
 
  *****************************************************************************/
 
-                /***************************************/
-                /* Main Filename: 	main.cc        */
-                /***************************************/
+/***************************************/
+/* Main Filename: 	main.cc        */
+/***************************************/
 
 #include "reset.h"
 #include "display.h"
@@ -46,22 +46,22 @@
 int sc_main(int ac, char *av[])
 {
 
-// Signal Instantiation
-  sc_signal<bool>         reset		("reset");
-  sc_signal<bool>         prime_ready	("prime_ready");
-  signal_bool_vector      prime		("prime");
+    // Signal Instantiation
+    sc_signal<bool> reset("reset");
+    sc_signal<bool> prime_ready("prime_ready");
+    signal_bool_vector prime("prime");
 
-// Clock Instantiation
-  sc_clock 	clk ("CLK", 6, SC_NS, 0.5, 10, SC_NS, false);	// 167 Mhz
+    // Clock Instantiation
+    sc_clock clk("CLK", 6, SC_NS, 0.5, 10, SC_NS, false); // 167 Mhz
 
-// Process Instantiation
-  prime_numgen	D1 ("D1", clk, reset, prime_ready, prime);
+    // Process Instantiation
+    prime_numgen D1("D1", clk, reset, prime_ready, prime);
 
-  resetp	T1 ("T1", clk, reset);
- 
-  displayp	T2 ("T2", clk, prime_ready, prime);
- 
-// Simulation Run Control
-  sc_start();
-  return 0;
+    resetp T1("T1", clk, reset);
+
+    displayp T2("T2", clk, prime_ready, prime);
+
+    // Simulation Run Control
+    sc_start();
+    return 0;
 }

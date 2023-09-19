@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  a2901.cpp -- 
+  a2901.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,7 +38,7 @@
 #include "a2901.h"
 #include "a2901_test.h"
 
-SC_MODULE( twosome )
+SC_MODULE(twosome)
 {
     // signals
     sig4 Y;
@@ -53,27 +53,27 @@ SC_MODULE( twosome )
     a2901_test TB;
 
     // constructor
-    twosome( sc_module_name,
-             const sc_clock& CLK_ )
-    : SLICE( "a2901",
+    twosome(sc_module_name,
+            const sc_clock &CLK_)
+        : SLICE("a2901",
+                CLK_,
+                I, Aadd, Badd, D, RAM0, RAM3, Q0, Q3, C0, OEbar,
+                Y, t_RAM0, t_RAM3, t_Q0, t_Q3, C4, Gbar, Pbar, OVR, F3, F30),
+          TB("a2901_test",
              CLK_,
-             I, Aadd, Badd, D, RAM0, RAM3, Q0, Q3, C0, OEbar,
-             Y, t_RAM0, t_RAM3, t_Q0, t_Q3, C4, Gbar, Pbar, OVR, F3, F30 ),
-      TB( "a2901_test",
-          CLK_,
-          Y, t_RAM0, t_RAM3, t_Q0, t_Q3, C4, Gbar, Pbar, OVR, F3, F30,
-          I, Aadd, Badd, D, RAM0, RAM3, Q0, Q3, C0, OEbar )
-    {}
+             Y, t_RAM0, t_RAM3, t_Q0, t_Q3, C4, Gbar, Pbar, OVR, F3, F30,
+             I, Aadd, Badd, D, RAM0, RAM3, Q0, Q3, C0, OEbar)
+    {
+    }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_clock clk;
 
-    twosome AA( "AA", clk );
+    twosome AA("AA", clk);
 
-    sc_start( 410000, SC_NS );
+    sc_start(410000, SC_NS);
 
     cout << sc_time_stamp() << endl;
 

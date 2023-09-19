@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  out_of_bounds.cpp -- 
+  out_of_bounds.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,40 +40,54 @@
 //----------------------------------------------------------
 #include "systemc.h"
 
-template<class X>
+template <class X>
 void test(int W)
 {
-  X x(W);
-  try  {    x.range(W+1,0); }
-  catch(const sc_report& s)
-  {
-    cout<<s.what()<<"\n";
-  }
-  try  {    x.range(0,W+1); }
-  catch(const sc_report& s)
-  {
-    cout<<s.what()<<"\n";
-  }
-  try  {    x.range(W-1,-1); }
-  catch(const sc_report& s)
-  {
-    cout<<s.what()<<"\n";
-  }
-  try  {    x.range(-1,W-1); }
-  catch(const sc_report& s)
-  {
-    cout<<s.what()<<"\n";
-  }
-  catch(...)
-    { cout<<"couldn''t catch anything\n";}
+    X x(W);
+    try
+    {
+        x.range(W + 1, 0);
+    }
+    catch (const sc_report &s)
+    {
+        cout << s.what() << "\n";
+    }
+    try
+    {
+        x.range(0, W + 1);
+    }
+    catch (const sc_report &s)
+    {
+        cout << s.what() << "\n";
+    }
+    try
+    {
+        x.range(W - 1, -1);
+    }
+    catch (const sc_report &s)
+    {
+        cout << s.what() << "\n";
+    }
+    try
+    {
+        x.range(-1, W - 1);
+    }
+    catch (const sc_report &s)
+    {
+        cout << s.what() << "\n";
+    }
+    catch (...)
+    {
+        cout << "couldn''t catch anything\n";
+    }
 }
 
-int sc_main(int, char**)
+int sc_main(int, char **)
 {
-  const unsigned N = 2000;
+    const unsigned N = 2000;
 
-  test<sc_bv<N> >(N);
-  test<sc_lv<N> >(N);
+    test<sc_bv<N>>(N);
+    test<sc_lv<N>>(N);
 
-  return 0;
+    return 0;
 }

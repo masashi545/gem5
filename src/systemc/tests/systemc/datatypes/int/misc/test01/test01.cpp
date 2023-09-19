@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-03-24
 
@@ -40,8 +40,7 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_bigint<4> a = 1;
     sc_biguint<4> b = 2;
@@ -76,19 +75,19 @@ sc_main( int, char*[] )
         cout << f << endl;
 
         cout << "sc_int_subref = sc_signed" << endl;
-        g( 7, 4 ) = a;
+        g(7, 4) = a;
         cout << g << endl;
 
         cout << "sc_int_subref = sc_unsigned" << endl;
-        g( 7, 4 ) = b;
+        g(7, 4) = b;
         cout << g << endl;
 
         cout << "sc_int_subref = sc_bv_base" << endl;
-        g( 7, 4 ) = c;
+        g(7, 4) = c;
         cout << g << endl;
 
         cout << "sc_int_subref = sc_lv_base" << endl;
-        g( 7, 4 ) = d;
+        g(7, 4) = d;
         cout << g << endl;
     }
 
@@ -120,19 +119,19 @@ sc_main( int, char*[] )
         cout << f << endl;
 
         cout << "sc_uint_subref = sc_signed" << endl;
-        g( 7, 4 ) = a;
+        g(7, 4) = a;
         cout << g << endl;
 
         cout << "sc_uint_subref = sc_unsigned" << endl;
-        g( 7, 4 ) = b;
+        g(7, 4) = b;
         cout << g << endl;
 
         cout << "sc_uint_subref = sc_bv_base" << endl;
-        g( 7, 4 ) = c;
+        g(7, 4) = c;
         cout << g << endl;
 
         cout << "sc_uint_subref = sc_lv_base" << endl;
-        g( 7, 4 ) = d;
+        g(7, 4) = d;
         cout << g << endl;
     }
 

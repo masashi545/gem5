@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-30
 
@@ -35,66 +35,66 @@
 
  *****************************************************************************/
 
-
 #include "stimulus.h"
 #include "display.h"
 #include "not_1.h"
 
-int sc_main (int argc , char *argv[]) {
-  sc_clock        clock;
-  sc_signal<bool> reset;
-  sc_signal<int>              stimulus_line1;
-  sc_signal<unsigned int>     stimulus_line2;
-  sc_signal_bool_vector       stimulus_line3;
-  sc_signal_bool_vector       stimulus_line4;
-  sc_signal_bool_vector       stimulus_line5;
-  sc_signal<bool>             input_valid;
-  sc_signal<bool>             output_valid;
-  sc_signal<int>              result_line1;
-  sc_signal<unsigned int>     result_line2;
-  sc_signal_bool_vector       result_line3;
-  sc_signal_bool_vector       result_line4;
-  sc_signal_bool_vector       result_line5;
+int sc_main(int argc, char *argv[])
+{
+    sc_clock clock;
+    sc_signal<bool> reset;
+    sc_signal<int> stimulus_line1;
+    sc_signal<unsigned int> stimulus_line2;
+    sc_signal_bool_vector stimulus_line3;
+    sc_signal_bool_vector stimulus_line4;
+    sc_signal_bool_vector stimulus_line5;
+    sc_signal<bool> input_valid;
+    sc_signal<bool> output_valid;
+    sc_signal<int> result_line1;
+    sc_signal<unsigned int> result_line2;
+    sc_signal_bool_vector result_line3;
+    sc_signal_bool_vector result_line4;
+    sc_signal_bool_vector result_line5;
 
-  output_valid = 0;
+    output_valid = 0;
 
-  stimulus stimulus1("stimulus_block",
-                      clock,
-		      reset,
-                      stimulus_line1,
-                      stimulus_line2,
-                      stimulus_line3,
-                      stimulus_line4,
-                      stimulus_line5,
-		      input_valid);
-
-  not_1   not1    ( "process_body",
-                       clock, 
-		       reset,
+    stimulus stimulus1("stimulus_block",
+                       clock,
+                       reset,
                        stimulus_line1,
                        stimulus_line2,
                        stimulus_line3,
                        stimulus_line4,
                        stimulus_line5,
-		       input_valid,
-                       result_line1, 
-                       result_line2, 
-                       result_line3, 
-                       result_line4, 
-                       result_line5, 
-		       output_valid);
+                       input_valid);
 
-  display  display1 ( "display",
-                       clock,
-		       result_line1,
-		       result_line2,
-		       result_line3,
-		       result_line4,
-		       result_line5,
-		       output_valid);
+    not_1 not1("process_body",
+               clock,
+               reset,
+               stimulus_line1,
+               stimulus_line2,
+               stimulus_line3,
+               stimulus_line4,
+               stimulus_line5,
+               input_valid,
+               result_line1,
+               result_line2,
+               result_line3,
+               result_line4,
+               result_line5,
+               output_valid);
 
-  sc_start();
-  return 0;
+    display display1("display",
+                     clock,
+                     result_line1,
+                     result_line2,
+                     result_line3,
+                     result_line4,
+                     result_line5,
+                     output_valid);
+
+    sc_start();
+    return 0;
 }
 
 // EOF

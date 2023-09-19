@@ -17,14 +17,14 @@
 
  *****************************************************************************/
 
-// overkill_bug.cpp -- test for 
+// overkill_bug.cpp -- test for
 //
 //  Original Author: John Aynsley, Doulus
 //
 // MODIFICATION LOG - modifiers, enter your name, affiliation, date and
 //
 
-// 
+//
 
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 
@@ -34,55 +34,55 @@ using namespace sc_core;
 using std::cout;
 using std::endl;
 
-struct Top: sc_module
+struct Top : sc_module
 {
-  Top(sc_module_name _name)
-  {
-    SC_THREAD(target);
-      target_handle = sc_get_current_process_handle();
-    f0 = 0;
-  }
-  
-  struct bomb
-  {
-    sc_process_handle h;
-    
-    bomb(sc_process_handle _h)
+    Top(sc_module_name _name)
     {
-      h = _h;
+        SC_THREAD(target);
+        target_handle = sc_get_current_process_handle();
+        f0 = 0;
     }
-    
-    ~bomb()
+
+    struct bomb
     {
-      h.kill();  // Aborts !!!!!!
+        sc_process_handle h;
+
+        bomb(sc_process_handle _h)
+        {
+            h = _h;
+        }
+
+        ~bomb()
+        {
+            h.kill(); // Aborts !!!!!!
+        }
+    };
+
+    sc_process_handle target_handle;
+    int f0;
+
+    void target()
+    {
+        bomb local_obj(target_handle);
+
+        wait(10, SC_NS);
+
+        f0 = 1;
+        target_handle.kill();
     }
-  };
 
-  sc_process_handle target_handle;
-  int f0;
-  
-  void target()
-  {
-    bomb local_obj(target_handle);
-
-    wait(10, SC_NS);
-    
-    f0 = 1;
-    target_handle.kill();
-  }
-  
-  SC_HAS_PROCESS(Top);
+    SC_HAS_PROCESS(Top);
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  Top top("top");
-  
-  sc_start();
-  
-  sc_assert( top.f0 );
+    Top top("top");
 
-  cout << endl << "Success" << endl;
-  return 0;
+    sc_start();
+
+    sc_assert(top.f0);
+
+    cout << endl
+         << "Success" << endl;
+    return 0;
 }
-  

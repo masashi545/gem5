@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -41,70 +41,72 @@
 
 #include "systemc.h"
 
-#define WRITE(a) \
-{ \
-    cout << (a).kind() << endl; \
-    const sc_object* obj = &(a); \
-    cout << obj->kind() << endl; \
-}
+#define WRITE(a)                     \
+    {                                \
+        cout << (a).kind() << endl;  \
+        const sc_object *obj = &(a); \
+        cout << obj->kind() << endl; \
+    }
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_in_clk clk;
 
     void method_action()
-    {}
+    {
+    }
 
     void thread_action()
-    {}
+    {
+    }
 
     void cthread_action()
-    {}
-
-    SC_CTOR( mod_a )
     {
-        SC_METHOD( method_action );
-        WRITE( *sc_get_current_process_handle().get_process_object() );
-        SC_THREAD( thread_action );
-        WRITE( *sc_get_current_process_handle().get_process_object() );
-        SC_CTHREAD( cthread_action, clk.pos() );
-        WRITE( *sc_get_current_process_handle().get_process_object() );
+    }
+
+    SC_CTOR(mod_a)
+    {
+        SC_METHOD(method_action);
+        WRITE(*sc_get_current_process_handle().get_process_object());
+        SC_THREAD(thread_action);
+        WRITE(*sc_get_current_process_handle().get_process_object());
+        SC_CTHREAD(cthread_action, clk.pos());
+        WRITE(*sc_get_current_process_handle().get_process_object());
     }
 };
 
-extern void foo( const sc_signal<int>& );
+extern void foo(const sc_signal<int> &);
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    mod_a a( "a" );
-    WRITE( a );
+    mod_a a("a");
+    WRITE(a);
 
     sc_clock clk;
-    WRITE( clk );
+    WRITE(clk);
 
     sc_fifo<int> fifo;
-    WRITE( fifo );
+    WRITE(fifo);
 
     sc_mutex mutex;
-    WRITE( mutex );
+    WRITE(mutex);
 
     sc_signal<int> signal;
-    WRITE( signal );
+    WRITE(signal);
 
     sc_signal<bool> signal_bool;
-    WRITE( signal_bool );
+    WRITE(signal_bool);
 
     sc_signal<sc_logic> signal_logic;
-    WRITE( signal_logic );
+    WRITE(signal_logic);
 
     sc_signal_resolved signal_resolved;
-    WRITE( signal_resolved );
+    WRITE(signal_resolved);
 
     sc_signal_rv<8> signal_rv;
-    WRITE( signal_rv );
+    WRITE(signal_rv);
 
-    foo( signal );
+    foo(signal);
 
     return 0;
 }

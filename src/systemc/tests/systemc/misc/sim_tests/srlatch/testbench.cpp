@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  testbench.cpp -- 
+  testbench.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,27 +42,26 @@
 
 void testbench::entry()
 {
-  char buf[BUFSIZ];
-  s.write(true);
-  r.write(false);
-  wait();
-  sprintf(buf, "SR=%x%x QQ'=%x%x", true, false, q.read(), qp.read());
-  cout << buf << endl;
-  s.write(false);
-  r.write(true);
-  wait();
-  sprintf(buf, "SR=%x%x QQ'=%x%x", false, true, q.read(), qp.read());
-  cout << buf << endl;
-  s.write(false);
-  r.write(false);
-  wait();
-  sprintf(buf, "SR=%x%x QQ'=%x%x", false, false, q.read(), qp.read());
-  cout << buf << endl;
-  s.write(true);
-  r.write(true);
-  wait();
-  sprintf(buf, "SR=%x%x QQ'=%x%x", true, true, q.read(), qp.read());
-  cout << buf << endl;
-  sc_stop();
+    char buf[BUFSIZ];
+    s.write(true);
+    r.write(false);
+    wait();
+    sprintf(buf, "SR=%x%x QQ'=%x%x", true, false, q.read(), qp.read());
+    cout << buf << endl;
+    s.write(false);
+    r.write(true);
+    wait();
+    sprintf(buf, "SR=%x%x QQ'=%x%x", false, true, q.read(), qp.read());
+    cout << buf << endl;
+    s.write(false);
+    r.write(false);
+    wait();
+    sprintf(buf, "SR=%x%x QQ'=%x%x", false, false, q.read(), qp.read());
+    cout << buf << endl;
+    s.write(true);
+    r.write(true);
+    wait();
+    sprintf(buf, "SR=%x%x QQ'=%x%x", true, true, q.read(), qp.read());
+    cout << buf << endl;
+    sc_stop();
 } // end of entry function
-

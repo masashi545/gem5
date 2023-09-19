@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  gcd.cpp -- 
+  gcd.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,49 +37,48 @@
 
 #include "systemc.h"
 
-SC_MODULE( gcd_cc )
+SC_MODULE(gcd_cc)
 {
-    SC_HAS_PROCESS( gcd_cc );
+    SC_HAS_PROCESS(gcd_cc);
 
     sc_in_clk clk;
 
-    const sc_signal<bool>& reset;
-    const sc_signal<unsigned>& a;
-    const sc_signal<unsigned>& b;
-          sc_signal<unsigned>& c;
-          sc_signal<bool>&     ready;
+    const sc_signal<bool> &reset;
+    const sc_signal<unsigned> &a;
+    const sc_signal<unsigned> &b;
+    sc_signal<unsigned> &c;
+    sc_signal<bool> &ready;
 
-    gcd_cc( sc_module_name NAME,
-            sc_clock& CLK,
-            const sc_signal<bool>& RESET,
-            const sc_signal<unsigned>& A,
-            const sc_signal<unsigned>& B,
-            sc_signal<unsigned>& C,
-            sc_signal<bool>&     READY )
-        : 
-          reset(RESET),
+    gcd_cc(sc_module_name NAME,
+           sc_clock & CLK,
+           const sc_signal<bool> &RESET,
+           const sc_signal<unsigned> &A,
+           const sc_signal<unsigned> &B,
+           sc_signal<unsigned> &C,
+           sc_signal<bool> &READY)
+        : reset(RESET),
           a(A),
           b(B),
           c(C),
           ready(READY)
     {
-        clk( CLK );
-		SC_CTHREAD( entry, clk.pos() );
-        reset_signal_is(reset,true);
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
+        reset_signal_is(reset, true);
     }
 
     void entry();
 };
 
-void
-gcd_cc::entry()
+void gcd_cc::entry()
 {
     unsigned tmp_a;
-    wait();         // Note that this wait() is required, otherwise,
-                    // the reset is wrong!  This is a problem with BC,
-                    // not our frontend.
+    wait(); // Note that this wait() is required, otherwise,
+            // the reset is wrong!  This is a problem with BC,
+            // not our frontend.
 
-    while (true) {
+    while (true)
+    {
         unsigned tmp_b;
 
         c = tmp_a;
@@ -91,13 +90,15 @@ gcd_cc::entry()
         ready = false;
         wait();
 
-        while (tmp_b != 0) {
+        while (tmp_b != 0)
+        {
 
             unsigned tmp_c = tmp_a;
             tmp_a = tmp_b;
             wait();
 
-            while (tmp_c >= tmp_b) {
+            while (tmp_c >= tmp_b)
+            {
                 tmp_c = tmp_c - tmp_b;
                 wait();
             }
@@ -108,7 +109,7 @@ gcd_cc::entry()
     }
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

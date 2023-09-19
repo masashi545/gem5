@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test13.cpp -- 
+  test13.cpp --
 
   Original Author: Ucar Aziz, Synopsys, Inc., 2002-02-15
                    Martin Janssen, Synopsys, Inc., 2002-02-15
@@ -40,50 +40,46 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_event e1;
     sc_event e2;
- 
-    void write( const char* msg )
+
+    void write(const char *msg)
     {
-        cout <<"simulation time" << ":" << sc_time_stamp()
+        cout << "simulation time"
+             << ":" << sc_time_stamp()
              << " " << msg << endl;
-     
     }
 
     void sender()
     {
-      write( "sender - e2" );
-      e2.notify(10, SC_NS );
-      next_trigger();
+        write("sender - e2");
+        e2.notify(10, SC_NS);
+        next_trigger();
     }
-
 
     void receiver()
     {
         next_trigger();
-	write( "receiver - e1" );
-        e1.notify(SC_ZERO_TIME );
+        write("receiver - e1");
+        e1.notify(SC_ZERO_TIME);
     }
- 
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
-        SC_METHOD( sender );
+        SC_METHOD(sender);
         sensitive << e1;
-        SC_METHOD( receiver );
+        SC_METHOD(receiver);
         sensitive << e2;
     }
 };
 
-
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    mod_a a( "a" );
-    cout<<"sender notifies e2 after 10 ns, receiver e1 at zero time" << endl;
-    sc_start(50,SC_NS);
+    mod_a a("a");
+    cout << "sender notifies e2 after 10 ns, receiver e1 at zero time" << endl;
+    sc_start(50, SC_NS);
 
     return 0;
 }

@@ -36,10 +36,9 @@
 
  *****************************************************************************/
 
-
 #include "systemc.h"
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
     sc_bigint<20> w;
     sc_biguint<20> x;
@@ -47,30 +46,30 @@ int sc_main(int argc, char* argv[])
 
     w = 1;
     x = 1;
-    y = (sc_bigint<21>)(sc_uint<1>(1),~w);
+    y = (sc_bigint<21>)(sc_uint<1>(1), ~w);
     cout << "sc_signed 1 " << hex << y << endl;
-    y = (sc_bigint<21>)(sc_uint<1>(1),~x);
+    y = (sc_bigint<21>)(sc_uint<1>(1), ~x);
     cout << "sc_unsigned 1 " << hex << y << endl;
 
     w = -1;
     x = -1;
-    y = (sc_bigint<21>)(sc_uint<1>(1),~w);
+    y = (sc_bigint<21>)(sc_uint<1>(1), ~w);
     cout << "sc_signed -1 " << hex << y << endl;
-    y = (sc_bigint<21>)(sc_uint<1>(1),~x);
+    y = (sc_bigint<21>)(sc_uint<1>(1), ~x);
     cout << "sc_unsigned -1 " << hex << y << endl;
 
     w = 0x80000;
     x = 0x80000;
-    y = (sc_bigint<21>)(sc_uint<1>(1),~w);
+    y = (sc_bigint<21>)(sc_uint<1>(1), ~w);
     cout << "sc_signed 0x800000 " << hex << y << endl;
-    y = (sc_bigint<21>)(sc_uint<1>(1),~x);
+    y = (sc_bigint<21>)(sc_uint<1>(1), ~x);
     cout << "sc_unsigned 0x800000 " << hex << y << endl;
 
     w = 0;
     x = 0;
-    y = (sc_bigint<21>)(sc_uint<1>(1),~w);
+    y = (sc_bigint<21>)(sc_uint<1>(1), ~w);
     cout << "sc_signed 0 " << hex << y << endl;
-    y = (sc_bigint<21>)(sc_uint<1>(1),~x);
+    y = (sc_bigint<21>)(sc_uint<1>(1), ~x);
     cout << "sc_unsigned 0 " << hex << y << endl;
 
     cout << "Program completed" << endl;

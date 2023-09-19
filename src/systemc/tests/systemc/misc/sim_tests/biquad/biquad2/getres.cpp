@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  getres.cpp -- 
+  getres.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,11 +42,12 @@
 
 void getres::entry()
 {
-  while (true) {
-    pop.write(true);
-    wait();
-    char buf[BUFSIZ];
-    sprintf( buf, "Result = %f", result.read() );
-    cout << buf << endl;
-  }
+    while (true)
+    {
+        pop.write(true);
+        wait();
+        char buf[BUFSIZ];
+        sprintf(buf, "Result = %f", result.read());
+        cout << buf << endl;
+    }
 } // end of entry function

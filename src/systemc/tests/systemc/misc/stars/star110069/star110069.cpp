@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star110069.cpp -- 
+  star110069.cpp --
 
   Original Author: Stan Liao, Synopsys, Inc., 2000-09-19
 
@@ -37,44 +37,48 @@
 
 #include <systemc.h>
 #include "mem0.h"
- 
-void mem0::entry(){
 
+void mem0::entry()
+{
 
-  unsigned int tmp1;
-  unsigned int tmp2;
-int test[16];
-  // reset_loop
-  if (reset.read() == true) {
-    out_valid.write(false);
-    wait();
-  } else wait();
+    unsigned int tmp1;
+    unsigned int tmp2;
+    int test[16];
+    // reset_loop
+    if (reset.read() == true)
+    {
+        out_valid.write(false);
+        wait();
+    }
+    else
+        wait();
 
-  //
-  // main loop
-  //
-  //
-  while(1) {
-    while(in_valid.read()==false) wait();
-    wait();
+    //
+    // main loop
+    //
+    //
+    while (1)
+    {
+        while (in_valid.read() == false)
+            wait();
+        wait();
 
-    //reading the inputs
-    tmp1 = in_value1.read().to_uint();
-    tmp2 = in_value2.read().to_uint();
+        // reading the inputs
+        tmp1 = in_value1.read().to_uint();
+        tmp2 = in_value2.read().to_uint();
 
-    wait();
-    wait();
-    tmp2 = memory[tmp1];
-    cout << "memory content " << tmp2 << endl;
-    // write outputs
-    out_value1.write( sc_bv<8>( tmp1 ) );
-    out_value2.write( sc_bv<8>( tmp2 ) );
-    out_valid.write(true);
-    wait();
-    out_valid.write(false);
-    wait();
-  }
+        wait();
+        wait();
+        tmp2 = memory[tmp1];
+        cout << "memory content " << tmp2 << endl;
+        // write outputs
+        out_value1.write(sc_bv<8>(tmp1));
+        out_value2.write(sc_bv<8>(tmp2));
+        out_valid.write(true);
+        wait();
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-
