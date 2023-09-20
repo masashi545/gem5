@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test3.cpp -- 
+  test3.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,70 +42,72 @@
 
 #include "systemc.h"
 
-SC_MODULE( asyncproc )
+SC_MODULE(asyncproc)
 {
-  SC_HAS_PROCESS( asyncproc );
+    SC_HAS_PROCESS(asyncproc);
 
-  sc_in<bool> clock;
+    sc_in<bool> clock;
 
-  asyncproc(sc_module_name NAME,
-	    sc_signal_in_if<bool>& CLOCK)
-  {
-    clock(CLOCK);
-    SC_THREAD( entry );
-    sensitive << clock.pos();
-  }
-
-  void entry()
-  {
-    wait();
-    while (true) {
-      if (clock.posedge()) {
-	cout << "AsyncProc: Posedge\n";
-      }
-      else {
-	cout << "AsyncProc: ERROR" << endl;
-      }
-      wait();
+    asyncproc(sc_module_name NAME,
+              sc_signal_in_if<bool> & CLOCK)
+    {
+        clock(CLOCK);
+        SC_THREAD(entry);
+        sensitive << clock.pos();
     }
-  }
+
+    void entry()
+    {
+        wait();
+        while (true)
+        {
+            if (clock.posedge())
+            {
+                cout << "AsyncProc: Posedge\n";
+            }
+            else
+            {
+                cout << "AsyncProc: ERROR" << endl;
+            }
+            wait();
+        }
+    }
 };
 
-SC_MODULE( asyncblock )
+SC_MODULE(asyncblock)
 {
-  SC_HAS_PROCESS( asyncblock );
+    SC_HAS_PROCESS(asyncblock);
 
-  sc_in<bool> clock;
+    sc_in<bool> clock;
 
-  asyncblock(sc_module_name NAME,
-	     sc_signal_in_if<bool>& CLOCK)
-  {
-    clock(CLOCK);
-    SC_METHOD( entry );
-    sensitive << clock.neg();
-  }
-
-  void entry()
-  {
-    if (clock.posedge()) {
-      cout << "AsyncBlock: ERROR\n";
+    asyncblock(sc_module_name NAME,
+               sc_signal_in_if<bool> & CLOCK)
+    {
+        clock(CLOCK);
+        SC_METHOD(entry);
+        sensitive << clock.neg();
     }
-    else {
-      cout << "AsyncBlock: Negedge" << endl;
+
+    void entry()
+    {
+        if (clock.posedge())
+        {
+            cout << "AsyncBlock: ERROR\n";
+        }
+        else
+        {
+            cout << "AsyncBlock: Negedge" << endl;
+        }
     }
-  }
 };
-    
 
-int
-sc_main(int ac, char *av[])
+int sc_main(int ac, char *av[])
 {
-  sc_clock clock("Clock", 20, SC_NS, 0.5);
+    sc_clock clock("Clock", 20, SC_NS, 0.5);
 
-  asyncproc P2("P2", clock);
-  asyncblock P3("P3", clock);
+    asyncproc P2("P2", clock);
+    asyncblock P3("P3", clock);
 
-  sc_start(160, SC_NS);
-  return 0;
-
+    sc_start(160, SC_NS);
+    return 0;
 }

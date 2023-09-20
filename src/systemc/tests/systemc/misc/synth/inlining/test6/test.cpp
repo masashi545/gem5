@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,46 +35,44 @@
 
  *****************************************************************************/
 
-
 //
 //      Verifies function inlining
 //
 //      Author: PRP
 //      Date Created: 26 Feb 99
 //
- 
+
 #include "systemc.h"
 #include "test.h"
 
-void test::entry() 
+void test::entry()
 {
-  int i,j,h, temp;
- 
-  wait ();
-  j = i1.read();
-  for (i = 0; i < 4; i = i + 1)
-  {  // Default: no unrolling
-    j = j + 1;
-    wait();
-  }
-  wait ();
-  temp = 4+j;
-  modify (o1, temp); 
-  h = (i1 > i2) ? i3 : i4;
-  o2 = h;
-  wait ();
-  i= 9;
-  noModify (i);
-  wait();
-}
- 
+    int i, j, h, temp;
 
-void test::modify (sc_signal<int>& i, int& j)
-{
-  i = i1 + j;
+    wait();
+    j = i1.read();
+    for (i = 0; i < 4; i = i + 1)
+    { // Default: no unrolling
+        j = j + 1;
+        wait();
+    }
+    wait();
+    temp = 4 + j;
+    modify(o1, temp);
+    h = (i1 > i2) ? i3 : i4;
+    o2 = h;
+    wait();
+    i = 9;
+    noModify(i);
+    wait();
 }
- 
-void test::noModify (int i)
+
+void test::modify(sc_signal<int> &i, int &j)
 {
-  o3 = i;
+    i = i1 + j;
+}
+
+void test::noModify(int i)
+{
+    o3 = i;
 }

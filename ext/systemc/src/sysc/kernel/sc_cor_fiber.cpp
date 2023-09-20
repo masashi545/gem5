@@ -29,160 +29,156 @@
 #if defined(_WIN32) || defined(WIN32) || defined(WIN64)
 
 #ifndef SC_INCLUDE_WINDOWS_H
-#  define SC_INCLUDE_WINDOWS_H // include Windows.h, if needed
+#define SC_INCLUDE_WINDOWS_H // include Windows.h, if needed
 #endif
 
 #include "sysc/kernel/sc_cor_fiber.h"
 #include "sysc/kernel/sc_simcontext.h"
 #if defined(__GNUC__) && __USING_SJLJ_EXCEPTIONS__
-#   if (__GNUC__ > 3) || ((__GNUC__ == 3) && (__GNUC_MINOR__ > 2))
-#      include <unwind.h>
-#   else
-       extern "C" void _Unwind_SjLj_Register (struct SjLj_Function_Context *);
-       extern "C" void _Unwind_SjLj_Unregister (struct SjLj_Function_Context *);
-#   endif
+#if (__GNUC__ > 3) || ((__GNUC__ == 3) && (__GNUC_MINOR__ > 2))
+#include <unwind.h>
+#else
+extern "C" void _Unwind_SjLj_Register(struct SjLj_Function_Context *);
+extern "C" void _Unwind_SjLj_Unregister(struct SjLj_Function_Context *);
+#endif
 #endif
 
-namespace sc_core {
+namespace sc_core
+{
 
-// ----------------------------------------------------------------------------
-//  File static variables.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  File static variables.
+    // ----------------------------------------------------------------------------
 
-// main coroutine
+    // main coroutine
 
-static sc_cor_fiber main_cor;
+    static sc_cor_fiber main_cor;
 #if defined(__GNUC__) && __USING_SJLJ_EXCEPTIONS__
-// current coroutine
-static sc_cor_fiber* curr_cor;
+    // current coroutine
+    static sc_cor_fiber *curr_cor;
 #endif
 
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_cor_fiber
+    //
+    //  Coroutine class implemented with Windows fibers.
+    // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_cor_fiber
-//
-//  Coroutine class implemented with Windows fibers.
-// ----------------------------------------------------------------------------
+    // destructor
 
-// destructor
-
-sc_cor_fiber::~sc_cor_fiber()
-{
-    if( m_fiber != 0 ) {
-      PVOID cur_fiber = GetCurrentFiber();
-      if (m_fiber != cur_fiber)
-         DeleteFiber( m_fiber );
-    }
-}
-
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_cor_pkg_fiber
-//
-//  Coroutine package class implemented with QuickThreads.
-// ----------------------------------------------------------------------------
-
-int sc_cor_pkg_fiber::instance_count = 0;
-
-
-// constructor
-
-sc_cor_pkg_fiber::sc_cor_pkg_fiber( sc_simcontext* simc )
-: sc_cor_pkg( simc )
-{
-    if( ++ instance_count == 1 ) {
-        // initialize the main coroutine
-        assert( main_cor.m_fiber == 0 );
-        main_cor.m_fiber = ConvertThreadToFiber( 0 );
-
-        if( !main_cor.m_fiber && GetLastError() == ERROR_ALREADY_FIBER ) {
-            // conversion of current thread to fiber has failed, because
-            // someone else already converted the main thread to a fiber
-            // -> store current fiber
-            main_cor.m_fiber = GetCurrentFiber();
+    sc_cor_fiber::~sc_cor_fiber()
+    {
+        if (m_fiber != 0)
+        {
+            PVOID cur_fiber = GetCurrentFiber();
+            if (m_fiber != cur_fiber)
+                DeleteFiber(m_fiber);
         }
-        assert( main_cor.m_fiber != 0 );
-
-#       if defined(__GNUC__) && __USING_SJLJ_EXCEPTIONS__
-            // initialize the current coroutine
-            assert( curr_cor == 0 );
-            curr_cor = &main_cor;
-#       endif
     }
-}
 
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_cor_pkg_fiber
+    //
+    //  Coroutine package class implemented with QuickThreads.
+    // ----------------------------------------------------------------------------
 
-// destructor
+    int sc_cor_pkg_fiber::instance_count = 0;
 
-sc_cor_pkg_fiber::~sc_cor_pkg_fiber()
-{
-    if( -- instance_count == 0 ) {
-	// cleanup the main coroutine
-	main_cor.m_fiber = 0;
-#       if defined(__GNUC__) && __USING_SJLJ_EXCEPTIONS__
+    // constructor
+
+    sc_cor_pkg_fiber::sc_cor_pkg_fiber(sc_simcontext *simc)
+        : sc_cor_pkg(simc)
+    {
+        if (++instance_count == 1)
+        {
+            // initialize the main coroutine
+            assert(main_cor.m_fiber == 0);
+            main_cor.m_fiber = ConvertThreadToFiber(0);
+
+            if (!main_cor.m_fiber && GetLastError() == ERROR_ALREADY_FIBER)
+            {
+                // conversion of current thread to fiber has failed, because
+                // someone else already converted the main thread to a fiber
+                // -> store current fiber
+                main_cor.m_fiber = GetCurrentFiber();
+            }
+            assert(main_cor.m_fiber != 0);
+
+#if defined(__GNUC__) && __USING_SJLJ_EXCEPTIONS__
+            // initialize the current coroutine
+            assert(curr_cor == 0);
+            curr_cor = &main_cor;
+#endif
+        }
+    }
+
+    // destructor
+
+    sc_cor_pkg_fiber::~sc_cor_pkg_fiber()
+    {
+        if (--instance_count == 0)
+        {
+            // cleanup the main coroutine
+            main_cor.m_fiber = 0;
+#if defined(__GNUC__) && __USING_SJLJ_EXCEPTIONS__
             // cleanup the current coroutine
             curr_cor = 0;
-#       endif
+#endif
+        }
     }
-}
 
+    // create a new coroutine
 
-// create a new coroutine
+    sc_cor *
+    sc_cor_pkg_fiber::create(std::size_t stack_size, sc_cor_fn *fn, void *arg)
+    {
+        sc_cor_fiber *cor = new sc_cor_fiber;
+        cor->m_pkg = this;
+        cor->m_stack_size = stack_size;
+        cor->m_fiber = CreateFiberEx(cor->m_stack_size / 2, cor->m_stack_size, 0,
+                                     (LPFIBER_START_ROUTINE)fn, arg);
+        return cor;
+    }
 
-sc_cor*
-sc_cor_pkg_fiber::create( std::size_t stack_size, sc_cor_fn* fn, void* arg )
-{
-    sc_cor_fiber* cor = new sc_cor_fiber;
-    cor->m_pkg = this;
-    cor->m_stack_size = stack_size;
-    cor->m_fiber = CreateFiberEx( cor->m_stack_size / 2, cor->m_stack_size, 0,
-			        (LPFIBER_START_ROUTINE) fn, arg );
-    return cor;
-}
+    // yield to the next coroutine
 
-
-// yield to the next coroutine
-
-void
-sc_cor_pkg_fiber::yield( sc_cor* next_cor )
-{
-    sc_cor_fiber* new_cor = SCAST<sc_cor_fiber*>( next_cor );
-#   if defined(__GNUC__) && __USING_SJLJ_EXCEPTIONS__
+    void
+    sc_cor_pkg_fiber::yield(sc_cor *next_cor)
+    {
+        sc_cor_fiber *new_cor = SCAST<sc_cor_fiber *>(next_cor);
+#if defined(__GNUC__) && __USING_SJLJ_EXCEPTIONS__
         // Switch SJLJ exception handling function contexts
         _Unwind_SjLj_Register(&curr_cor->m_eh);
         _Unwind_SjLj_Unregister(&new_cor->m_eh);
         curr_cor = new_cor;
-#   endif
-    SwitchToFiber( new_cor->m_fiber );
-}
+#endif
+        SwitchToFiber(new_cor->m_fiber);
+    }
 
+    // abort the current coroutine (and resume the next coroutine)
 
-// abort the current coroutine (and resume the next coroutine)
-
-void
-sc_cor_pkg_fiber::abort( sc_cor* next_cor )
-{
-    sc_cor_fiber* new_cor = SCAST<sc_cor_fiber*>( next_cor );
-#   if defined(__GNUC__) && __USING_SJLJ_EXCEPTIONS__
+    void
+    sc_cor_pkg_fiber::abort(sc_cor *next_cor)
+    {
+        sc_cor_fiber *new_cor = SCAST<sc_cor_fiber *>(next_cor);
+#if defined(__GNUC__) && __USING_SJLJ_EXCEPTIONS__
         // Switch SJLJ exception handling function contexts
         _Unwind_SjLj_Register(&curr_cor->m_eh);
         _Unwind_SjLj_Unregister(&new_cor->m_eh);
         curr_cor = new_cor;
-#   endif
-    SwitchToFiber( new_cor->m_fiber );
-}
+#endif
+        SwitchToFiber(new_cor->m_fiber);
+    }
 
+    // get the main coroutine
 
-// get the main coroutine
-
-sc_cor*
-sc_cor_pkg_fiber::get_main()
-{
-    return &main_cor;
-}
+    sc_cor *
+    sc_cor_pkg_fiber::get_main()
+    {
+        return &main_cor;
+    }
 
 } // namespace sc_core
-
 
 // $Log: sc_cor_fiber.cpp,v $
 // Revision 1.9  2011/09/08 16:12:45  acg

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,17 +39,16 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_clock clk( "clk" );
+    sc_clock clk("clk");
 
-    sc_trace_file* tf = sc_create_vcd_trace_file( "foobar" );
-    sc_trace( tf, clk, "clock" );
-    sc_trace_delta_cycles( tf, true );
+    sc_trace_file *tf = sc_create_vcd_trace_file("foobar");
+    sc_trace(tf, clk, "clock");
+    sc_trace_delta_cycles(tf, true);
 
-    sc_start( 100, SC_NS );
-    sc_close_vcd_trace_file( tf );
+    sc_start(100, SC_NS);
+    sc_close_vcd_trace_file(tf);
 
     return 0;
 }

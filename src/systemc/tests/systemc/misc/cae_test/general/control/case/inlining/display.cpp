@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  display.cpp -- 
+  display.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-30
 
@@ -35,24 +35,26 @@
 
  *****************************************************************************/
 
-
 #include "display.h"
 
-void display::entry(){
+void display::entry()
+{
     int i = 0;
-    
+
     wait(2);
-    while(1) {
-	//  Reading Data, and Counter i,j is counted up.
-	while (in_valid.read()==false) wait();
-	cout << "Display : " << in_data1.read() << " "
-	     << in_data2.read() << " "
-	     << " at " << sc_time_stamp() << endl;
-	i++;
-	if(i == 24) 	    sc_stop();
+    while (1)
+    {
+        //  Reading Data, and Counter i,j is counted up.
+        while (in_valid.read() == false)
+            wait();
+        cout << "Display : " << in_data1.read() << " "
+             << in_data2.read() << " "
+             << " at " << sc_time_stamp() << endl;
+        i++;
+        if (i == 24)
+            sc_stop();
         wait();
     }
 }
-
 
 // EOF

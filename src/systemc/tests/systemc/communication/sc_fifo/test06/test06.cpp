@@ -35,19 +35,19 @@
 
  *****************************************************************************/
 
-// test of multiple interfaces for an sc_fifo 
+// test of multiple interfaces for an sc_fifo
 
 #include "systemc.h"
 
-#define W_INFO(msg,iface) \
+#define W_INFO(msg, iface)                             \
     cout << sc_time_stamp() << "," << sc_delta_count() \
          << ": writer" << iface << ": " << msg << endl;
 
-#define R_INFO(msg,iface) \
+#define R_INFO(msg, iface)                             \
     cout << sc_time_stamp() << "," << sc_delta_count() \
          << ": reader" << iface << ": " << msg << endl;
 
-SC_MODULE( writer )
+SC_MODULE(writer)
 {
     // port(s)
     sc_fifo_out<int> out;
@@ -56,26 +56,28 @@ SC_MODULE( writer )
     void main_action()
     {
         int val = 0;
-        while( true ) {
-            wait( 10, SC_NS ); // wait for 10 ns
-            for ( int iface=0; iface < 3; iface++ )
+        while (true)
+        {
+            wait(10, SC_NS); // wait for 10 ns
+            for (int iface = 0; iface < 3; iface++)
             {
-                W_INFO( "blocking write", iface );
-                for( int i = 0; i < 20; i ++ ) {
-                    out[iface]->write( val ++ ); // blocking write
+                W_INFO("blocking write", iface);
+                for (int i = 0; i < 20; i++)
+                {
+                    out[iface]->write(val++); // blocking write
                 }
             }
         }
     }
 
-    SC_CTOR( writer )
+    SC_CTOR(writer)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
         sensitive << out.data_read();
     }
 };
 
-SC_MODULE( reader )
+SC_MODULE(reader)
 {
     // port(s)
     sc_fifo_in<int> in;
@@ -85,58 +87,61 @@ SC_MODULE( reader )
     {
         int iface;
         int val;
-        while( true ) {
-            wait( 10, SC_NS ); // wait for 10 ns
-            for ( iface=0; iface < 3; iface++ )
+        while (true)
+        {
+            wait(10, SC_NS); // wait for 10 ns
+            for (iface = 0; iface < 3; iface++)
             {
-                R_INFO( "blocking read 1", iface );
-                for( int i = 0; i < 15; i ++ ) {
-                    in[iface]->read( val ); // blocking read
-                    R_INFO( val, iface );
+                R_INFO("blocking read 1", iface);
+                for (int i = 0; i < 15; i++)
+                {
+                    in[iface]->read(val); // blocking read
+                    R_INFO(val, iface);
                 }
             }
-            wait( 10, SC_NS );
-            R_INFO( in.num_available() << " available samples", iface );
-            R_INFO( "blocking read 2", iface );
-            for ( iface=0; iface < 3; iface++ )
+            wait(10, SC_NS);
+            R_INFO(in.num_available() << " available samples", iface);
+            R_INFO("blocking read 2", iface);
+            for (iface = 0; iface < 3; iface++)
             {
-                for( int i = 0; i < 15; i ++ ) {
+                for (int i = 0; i < 15; i++)
+                {
                     val = in[iface]->read(); // blocking read
-                    R_INFO( val, iface );
+                    R_INFO(val, iface);
                 }
             }
         }
     }
 
-    SC_CTOR( reader )
+    SC_CTOR(reader)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
         sensitive << in.data_written();
     }
 };
 
-int sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     // sc_clock c;
 
     // declare channel(s)
-    sc_fifo<int> fifo( 10 );
-    sc_fifo<int> fifo1( 10 );
-    sc_fifo<int> fifo2( 10 );
+    sc_fifo<int> fifo(10);
+    sc_fifo<int> fifo1(10);
+    sc_fifo<int> fifo2(10);
 
     // instantiate block(s) and connect to channel(s)
-    writer w( "writer" );
-    reader r( "reader" );
+    writer w("writer");
+    reader r("reader");
 
-    w.out( fifo );
-    w.out( fifo1 );
-    w.out( fifo2 );
-    r.in( fifo );
-    r.in( fifo1 );
-    r.in( fifo2 );
+    w.out(fifo);
+    w.out(fifo1);
+    w.out(fifo2);
+    r.in(fifo);
+    r.in(fifo1);
+    r.in(fifo2);
 
     // run the simulation
-    sc_start( 100, SC_NS );
+    sc_start(100, SC_NS);
 
     return 0;
 }

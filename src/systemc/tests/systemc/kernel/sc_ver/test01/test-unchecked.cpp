@@ -27,7 +27,7 @@
 *****************************************************************************/
 
 #ifdef SC_DEFAULT_WRITER_POLICY
-# undef SC_DEFAULT_WRITER_POLICY
+#undef SC_DEFAULT_WRITER_POLICY
 #endif
 #define SC_DEFAULT_WRITER_POLICY SC_MANY_WRITERS
 #include <systemc>

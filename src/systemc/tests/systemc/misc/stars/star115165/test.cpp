@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,35 +37,35 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_in_clk clk;
 
     void main_action()
     {
-        while( true ) {
+        while (true)
+        {
             cout << sc_time_stamp() << endl;
             // wait( 1 ); // fine
-            wait( 0 );
+            wait(0);
         }
     }
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
-        SC_CTHREAD( main_action, clk.pos() );
+        SC_CTHREAD(main_action, clk.pos());
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_clock clk;
 
-    mod_a a( "a" );
+    mod_a a("a");
 
-    a.clk( clk );
+    a.clk(clk);
 
-    sc_start( 20, SC_NS );
+    sc_start(20, SC_NS);
 
     return 0;
 }

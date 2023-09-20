@@ -19,13 +19,13 @@
 
 /*****************************************************************************
 
-  stack_alignment.cpp -- This example shows the crash of an fxsave instruction 
-                         in the sc_thread stack environment, but not in the 
-                         original linux process stack, which is correctly 
+  stack_alignment.cpp -- This example shows the crash of an fxsave instruction
+                         in the sc_thread stack environment, but not in the
+                         original linux process stack, which is correctly
                          aligned on first function.
-                         
-  Please note that this test probably runs OK on a faulty implementation in 
-  64-bit in general (depending on your libc implementation), but will crash 
+
+  Please note that this test probably runs OK on a faulty implementation in
+  64-bit in general (depending on your libc implementation), but will crash
   for sure in 32-bit.
 
   Original Author: Eric Paire, STMicroelectronics
@@ -65,65 +65,66 @@
  */
 
 #if defined(__x86_64__)
-#  define FXSAVE "fxsaveq"
+#define FXSAVE "fxsaveq"
 #else
-#  define FXSAVE "fxsave"
+#define FXSAVE "fxsave"
 #endif
 
 #if defined(__GNUC__)
-#  define ALIGNED_ARRAY( Type, Name, Size, Align ) \
-	  Type Name[Size] __attribute__((aligned(Align)))
+#define ALIGNED_ARRAY(Type, Name, Size, Align) \
+    Type Name[Size] __attribute__((aligned(Align)))
 #elif defined(_MSC_VER)
-#  define ALIGNED_ARRAY( Type, Name, Size, Align ) \
-      __declspec(align(Align)) Type Name[Size]
+#define ALIGNED_ARRAY(Type, Name, Size, Align) \
+    __declspec(align(Align)) Type Name[Size]
 #endif
 
-#if defined(__GNUC__) && ( defined(__x86_64__) || defined(__i386__) )
-#  define ASM( Assembly ) __asm__ __volatile__( Assembly )
+#if defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
+#define ASM(Assembly) __asm__ __volatile__(Assembly)
 #else
-#  define ASM( Assembly ) /* not implemented */
+#define ASM(Assembly) /* not implemented */
 #endif
 
 // Class
-SC_MODULE(C)
-{ 
-public:
-    SC_CTOR(C) {
-        SC_THREAD(run);
-    }
-    void run(void) 
-    { 
-        ALIGNED_ARRAY( char, fpxregs64, 512+15, 16 );
+SC_MODULE(C){
+    public :
+        SC_CTOR(C){
+            SC_THREAD(run);
+}
+void run(void)
+{
+    ALIGNED_ARRAY(char, fpxregs64, 512 + 15, 16);
 
-        cout << "Inside C::run() " << endl; 
+    cout << "Inside C::run() " << endl;
 
-        // manually enforce alignment (volatile to avoid optmizations)
-        char * volatile myfpxregs = fpxregs64;
-        while ((uintptr_t)myfpxregs & 0xF)
-            myfpxregs++;
+    // manually enforce alignment (volatile to avoid optmizations)
+    char *volatile myfpxregs = fpxregs64;
+    while ((uintptr_t)myfpxregs & 0xF)
+        myfpxregs++;
 
-        // the "real" requirement: enforced alignment works
-        sc_assert( !((uintptr_t)fpxregs64 & 0xF) );
-        sc_assert( !((uintptr_t)myfpxregs & 0xF) );
-        sc_assert( myfpxregs == fpxregs64 );
+    // the "real" requirement: enforced alignment works
+    sc_assert(!((uintptr_t)fpxregs64 & 0xF));
+    sc_assert(!((uintptr_t)myfpxregs & 0xF));
+    sc_assert(myfpxregs == fpxregs64);
 
-        // test assembly on supported platforms
-        ASM( FXSAVE " (%0)" :: "r"(myfpxregs) );
-        cout << "Between C::run() " << endl; 
-        ASM( FXSAVE " %0" : "=m"(fpxregs64) );
+    // test assembly on supported platforms
+    ASM(FXSAVE " (%0)" ::"r"(myfpxregs));
+    cout << "Between C::run() " << endl;
+    ASM(FXSAVE " %0" : "=m"(fpxregs64));
 
-        cout << "Out of C::run() " << endl; 
-    }
-};
+    cout << "Out of C::run() " << endl;
+}
+}
+;
 
-int sc_main(int , char** ) {
-  C the_C("C");
+int sc_main(int, char **)
+{
+    C the_C("C");
 
-  ALIGNED_ARRAY( char, fpxregs64, 512, 16 );
+    ALIGNED_ARRAY(char, fpxregs64, 512, 16);
 
-  cout << "Inside sc_main() " << endl; 
-  ASM( FXSAVE " %0" : "=m"(fpxregs64) );
-  sc_start(1, SC_NS);
-  cout << "Out of sc_main() " << endl; 
-  return 0;
+    cout << "Inside sc_main() " << endl;
+    ASM(FXSAVE " %0" : "=m"(fpxregs64));
+    sc_start(1, SC_NS);
+    cout << "Out of sc_main() " << endl;
+    return 0;
 }

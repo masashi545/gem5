@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test06.cpp -- 
+  test06.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,8 +42,7 @@
 #define WRITE(a) \
     cout << a << endl
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     bool b;
 
@@ -56,65 +55,64 @@ sc_main( int, char*[] )
     // sc_uint_base
 
     b = false;
-    ui4 = concat( ui3, b );
-    WRITE( ui4 );
-    ui4 = concat( b, ui3 );
-    WRITE( ui4 );
+    ui4 = concat(ui3, b);
+    WRITE(ui4);
+    ui4 = concat(b, ui3);
+    WRITE(ui4);
 
     b = true;
-    ui4 = concat( ui3, b );
-    WRITE( ui4 );
-    ui4 = concat( b, ui3 );
-    WRITE( ui4 );
+    ui4 = concat(ui3, b);
+    WRITE(ui4);
+    ui4 = concat(b, ui3);
+    WRITE(ui4);
 
     // sc_uint_bitref
 
     cout << endl;
 
     b = false;
-    ui2 = concat( ui3[0], b );
-    WRITE( ui2 );
-    ui2 = concat( b, ui3[0] );
-    WRITE( ui2 );
+    ui2 = concat(ui3[0], b);
+    WRITE(ui2);
+    ui2 = concat(b, ui3[0]);
+    WRITE(ui2);
 
     b = true;
-    ui2 = concat( ui3[0], b );
-    WRITE( ui2 );
-    ui2 = concat( b, ui3[0] );
-    WRITE( ui2 );
+    ui2 = concat(ui3[0], b);
+    WRITE(ui2);
+    ui2 = concat(b, ui3[0]);
+    WRITE(ui2);
 
     // sc_uint_subref
 
     cout << endl;
 
     b = false;
-    ui2 = concat( ui3.range( 0, 0 ), b );
-    WRITE( ui2 );
-    ui2 = concat( b, ui3.range( 0, 0 ) );
-    WRITE( ui2 );
+    ui2 = concat(ui3.range(0, 0), b);
+    WRITE(ui2);
+    ui2 = concat(b, ui3.range(0, 0));
+    WRITE(ui2);
 
     b = true;
-    ui2 = concat( ui3.range( 0, 0 ), b );
-    WRITE( ui2 );
-    ui2 = concat( b, ui3.range( 0, 0 ) );
-    WRITE( ui2 );
+    ui2 = concat(ui3.range(0, 0), b);
+    WRITE(ui2);
+    ui2 = concat(b, ui3.range(0, 0));
+    WRITE(ui2);
 
     // sc_uint_concat
 
     cout << endl;
 
     b = false;
-    ui4 = concat( concat( ui3.range( 2, 1 ), ui3[0] ), b );
-    WRITE( ui4 );
-    ui4 = concat( b, concat( ui3.range( 2, 1 ), ui3[0] ) );
-    WRITE( ui4 );
+    ui4 = concat(concat(ui3.range(2, 1), ui3[0]), b);
+    WRITE(ui4);
+    ui4 = concat(b, concat(ui3.range(2, 1), ui3[0]));
+    WRITE(ui4);
 
     b = true;
-    ui4 = concat( concat( ui3.range( 2, 1 ), ui3[0] ), b );
-    WRITE( ui4 );
-    ui4 = concat( b, concat( ui3.range( 2, 1 ), ui3[0] ) );
-    WRITE( ui4 );
-
+    ui4 = concat(concat(ui3.range(2, 1), ui3[0]), b);
+    WRITE(ui4);
+    ui4 = concat(b, concat(ui3.range(2, 1), ui3[0]));
+    WRITE(ui4);
 
     // )))  sc_int  (((
 
@@ -127,64 +125,64 @@ sc_main( int, char*[] )
     cout << endl;
 
     b = false;
-    i4 = concat( i3, b );
-    WRITE( i4 );
-    i4 = concat( b, i3 );
-    WRITE( i4 );
+    i4 = concat(i3, b);
+    WRITE(i4);
+    i4 = concat(b, i3);
+    WRITE(i4);
 
     b = true;
-    i4 = concat( i3, b );
-    WRITE( i4 );
-    i4 = concat( b, i3 );
-    WRITE( i4 );
+    i4 = concat(i3, b);
+    WRITE(i4);
+    i4 = concat(b, i3);
+    WRITE(i4);
 
     // sc_int_bitref
 
     cout << endl;
 
     b = false;
-    i2 = concat( i3[0], b );
-    WRITE( i2 );
-    i2 = concat( b, i3[0] );
-    WRITE( i2 );
+    i2 = concat(i3[0], b);
+    WRITE(i2);
+    i2 = concat(b, i3[0]);
+    WRITE(i2);
 
     b = true;
-    i2 = concat( i3[0], b );
-    WRITE( i2 );
-    i2 = concat( b, i3[0] );
-    WRITE( i2 );
+    i2 = concat(i3[0], b);
+    WRITE(i2);
+    i2 = concat(b, i3[0]);
+    WRITE(i2);
 
     // sc_int_subref
 
     cout << endl;
 
     b = false;
-    i2 = concat( i3.range( 0, 0 ), b );
-    WRITE( i2 );
-    i2 = concat( b, i3.range( 0, 0 ) );
-    WRITE( i2 );
+    i2 = concat(i3.range(0, 0), b);
+    WRITE(i2);
+    i2 = concat(b, i3.range(0, 0));
+    WRITE(i2);
 
     b = true;
-    i2 = concat( i3.range( 0, 0 ), b );
-    WRITE( i2 );
-    i2 = concat( b, i3.range( 0, 0 ) );
-    WRITE( i2 );
+    i2 = concat(i3.range(0, 0), b);
+    WRITE(i2);
+    i2 = concat(b, i3.range(0, 0));
+    WRITE(i2);
 
     // sc_int_concat
 
     cout << endl;
 
     b = false;
-    i4 = concat( concat( i3.range( 2, 1 ), i3[0] ), b );
-    WRITE( i4 );
-    i4 = concat( b, concat( i3.range( 2, 1 ), i3[0] ) );
-    WRITE( i4 );
+    i4 = concat(concat(i3.range(2, 1), i3[0]), b);
+    WRITE(i4);
+    i4 = concat(b, concat(i3.range(2, 1), i3[0]));
+    WRITE(i4);
 
     b = true;
-    i4 = concat( concat( i3.range( 2, 1 ), i3[0] ), b );
-    WRITE( i4 );
-    i4 = concat( b, concat( i3.range( 2, 1 ), i3[0] ) );
-    WRITE( i4 );
+    i4 = concat(concat(i3.range(2, 1), i3[0]), b);
+    WRITE(i4);
+    i4 = concat(b, concat(i3.range(2, 1), i3[0]));
+    WRITE(i4);
 
     return 0;
 }

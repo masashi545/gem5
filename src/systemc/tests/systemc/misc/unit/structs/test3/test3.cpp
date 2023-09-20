@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test3.cpp -- 
+  test3.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,41 +38,43 @@
 #include <systemc.h>
 #include "arraytypes.h"
 
-void arraytypes::entry(){
+void arraytypes::entry()
+{
 
-  char    tmp1_uns_lv[4][4];
-  arr_struct1  a;
-  arr_struct2  tmp2_uns_lv;
+    char tmp1_uns_lv[4][4];
+    arr_struct1 a;
+    arr_struct2 tmp2_uns_lv;
 
-  // reset_loop
-  out_valid.write(sc_bit(0));
-
-  wait();
-  while (true) { 
-  while(in_valid.read() == "0") wait();
-    wait();
-    a = in_value1.read();
-     for (int i = 0; i < 4; i++) {
-       for (int j = 0; j < 4; j++) {
-	 tmp1_uns_lv[i][j] = a.a[i][j];
-       }
-     }
-
-     for (int i = 0; i < 4; i++) 
-       for (int j = 0; j < 4; j++) 
-	 tmp2_uns_lv.b[i][j] = tmp1_uns_lv[j][i];
-     out_value1.write (tmp2_uns_lv);
+    // reset_loop
+    out_valid.write(sc_bit(0));
 
     wait();
+    while (true)
+    {
+        while (in_valid.read() == "0")
+            wait();
+        wait();
+        a = in_value1.read();
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                tmp1_uns_lv[i][j] = a.a[i][j];
+            }
+        }
 
-    out_valid.write( sc_bit(1));
-    wait(); 
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                tmp2_uns_lv.b[i][j] = tmp1_uns_lv[j][i];
+        out_value1.write(tmp2_uns_lv);
 
+        wait();
 
-    out_valid.write( sc_bit(0));
-    wait();
+        out_valid.write(sc_bit(1));
+        wait();
 
-}
+        out_valid.write(sc_bit(0));
+        wait();
+    }
 }
 // EOF
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  biquad.cpp -- 
+  biquad.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,22 +42,27 @@
 
 void biquad::entry()
 {
-  float Acc; // Accumulator
-  float sample; // Input sample
+    float Acc;    // Accumulator
+    float sample; // Input sample
 
-  if (reset.read() == true) {
-    Del[0] = Del[1] = Del[2] = Del[3] = 0.0;
-    out.write(0.0);
-  }
-  else {
-    sample = in.read();
-    Acc = Cte[0] * sample;
-    for (int i = 0; i < 4; i++) {
-      Acc += Cte[i+1] * Del[i];
+    if (reset.read() == true)
+    {
+        Del[0] = Del[1] = Del[2] = Del[3] = 0.0;
+        out.write(0.0);
     }
-    Del[1] = Del[0]; Del[0] = sample;
-    Del[3] = Del[2]; Del[2] = Acc;
-    out.write(Acc);
-  }
-  
+    else
+    {
+        sample = in.read();
+        Acc = Cte[0] * sample;
+        for (int i = 0; i < 4; i++)
+        {
+            Acc += Cte[i + 1] * Del[i];
+        }
+        Del[1] = Del[0];
+        Del[0] = sample;
+        Del[3] = Del[2];
+        Del[2] = Acc;
+        out.write(Acc);
+    }
+
 } // end of entry function

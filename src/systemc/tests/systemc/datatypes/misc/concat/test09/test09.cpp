@@ -37,11 +37,11 @@
 
 #include "systemc.h"
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
     sc_uint<4> a, b;
-    (a,b) = "0x9";
-    cout << a << " " << b << endl;   // prints 0 1 instead of 15 9
+    (a, b) = "0x9";
+    cout << a << " " << b << endl; // prints 0 1 instead of 15 9
 
     cout << "Program completed" << endl;
     return 0;

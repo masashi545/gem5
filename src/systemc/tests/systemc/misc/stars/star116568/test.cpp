@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,61 +37,64 @@
 
 #include <systemc.h>
 
+SC_MODULE(xyz)
+{
 
-SC_MODULE(xyz) {
-  
-    sc_in<sc_int<8> > A;
-    sc_out<sc_lv<8> > X;
+    sc_in<sc_int<8>> A;
+    sc_out<sc_lv<8>> X;
 
-    void convert(const sc_lv<8>& I, sc_int<8>& O) {
-	O=I;
+    void convert(const sc_lv<8> &I, sc_int<8> &O)
+    {
+        O = I;
     }
 
-    void convert2(const sc_int<8>& I, sc_lv<8>& O) {
-	O=I;
+    void convert2(const sc_int<8> &I, sc_lv<8> &O)
+    {
+        O = I;
     }
 
-    void entry() {
-	sc_int<8> tmp;
-	sc_lv<8> tmp2;
+    void entry()
+    {
+        sc_int<8> tmp;
+        sc_lv<8> tmp2;
 
-	convert(sc_lv<8>(A.read()),tmp);
-	convert2(tmp,tmp2);
-	X.write(tmp2);
+        convert(sc_lv<8>(A.read()), tmp);
+        convert2(tmp, tmp2);
+        X.write(tmp2);
     }
 
-    SC_CTOR(xyz) {
-	SC_METHOD(entry);
-	sensitive << A;
+    SC_CTOR(xyz)
+    {
+        SC_METHOD(entry);
+        sensitive << A;
     }
 };
 
-
-#define NS * 1e-9
+#define NS *1e-9
 
 int sc_main(int ac, char *av[])
 {
-  //Signals
-  sc_signal<sc_int<8> > A;
-  sc_signal<sc_lv<8> > X;
+    // Signals
+    sc_signal<sc_int<8>> A;
+    sc_signal<sc_lv<8>> X;
 
-  xyz UUT("UUT");
-  UUT.A(A);
-  UUT.X(X);
+    xyz UUT("UUT");
+    UUT.A(A);
+    UUT.X(X);
 
-  sc_start(0, SC_NS);
+    sc_start(0, SC_NS);
 
-  A.write(1);
-  sc_start( 10, SC_NS );
-  cout << X.read() << endl;
+    A.write(1);
+    sc_start(10, SC_NS);
+    cout << X.read() << endl;
 
-  A.write(2);
-  sc_start( 10, SC_NS );
-  cout << X.read() << endl;
+    A.write(2);
+    sc_start(10, SC_NS);
+    cout << X.read() << endl;
 
-  A.write(3);
-  sc_start( 10, SC_NS );
-  cout << X.read() << endl;
+    A.write(3);
+    sc_start(10, SC_NS);
+    cout << X.read() << endl;
 
-  return 0;
+    return 0;
 }

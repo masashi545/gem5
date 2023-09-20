@@ -49,9 +49,9 @@ SC_MODULE(DUT)
 {
     SC_CTOR(DUT)
     {
-	SC_METHOD(killer);
+        SC_METHOD(killer);
         sensitive << m_clk.pos();
-        SC_CTHREAD(stimulus,m_clk.pos());
+        SC_CTHREAD(stimulus, m_clk.pos());
         SC_THREAD(thread0);
         sensitive << m_clk.pos();
         m_thread0 = sc_get_current_process_handle();
@@ -61,78 +61,81 @@ SC_MODULE(DUT)
         SC_THREAD(thread2);
         sensitive << m_clk.pos();
         m_thread2 = sc_get_current_process_handle();
-	m_kill = false;
+        m_kill = false;
     }
 
     void killer()
     {
-        if ( m_kill )
-	{
-	    cout << sc_time_stamp() << " killer: killing thread0 " << endl;
-	    m_thread0.kill();
-	    cout << sc_time_stamp() << " killer: after killing thread0" << endl;
-	    m_thread2.kill();
-	    cout << sc_time_stamp() << " killer: after killing thread2" << endl;
-	}
-   } 
+        if (m_kill)
+        {
+            cout << sc_time_stamp() << " killer: killing thread0 " << endl;
+            m_thread0.kill();
+            cout << sc_time_stamp() << " killer: after killing thread0" << endl;
+            m_thread2.kill();
+            cout << sc_time_stamp() << " killer: after killing thread2" << endl;
+        }
+    }
 
     void thread0()
     {
         cout << sc_time_stamp() << " thread 0: initialization" << endl;
-        try {
+        try
+        {
             for (;;)
             {
                 wait();
             }
-        } 
-        catch(sc_core::sc_unwind_exception& ex)
+        }
+        catch (sc_core::sc_unwind_exception &ex)
         {
-	    if ( !ex.is_reset() )
-	    {
-		cout << sc_time_stamp() << " thread0: received kill" << endl;
-		m_thread1.kill();
-		cout << sc_time_stamp() << " thread0: after killing thread1"
-		     << endl;
-	    }
-	    throw ex;
+            if (!ex.is_reset())
+            {
+                cout << sc_time_stamp() << " thread0: received kill" << endl;
+                m_thread1.kill();
+                cout << sc_time_stamp() << " thread0: after killing thread1"
+                     << endl;
+            }
+            throw ex;
         }
     }
 
     void thread1()
     {
         cout << sc_time_stamp() << " thread 1: initialization" << endl;
-        try {
+        try
+        {
             for (;;)
             {
                 wait();
             }
-        } 
-        catch(sc_core::sc_unwind_exception& ex)
+        }
+        catch (sc_core::sc_unwind_exception &ex)
         {
-	    if ( !ex.is_reset() )
-	    {
-		cout << sc_time_stamp() << " thread1: received kill" << endl;
-	    }
-	    throw ex;
+            if (!ex.is_reset())
+            {
+                cout << sc_time_stamp() << " thread1: received kill" << endl;
+            }
+            throw ex;
         }
     }
 
     void thread2()
     {
         cout << sc_time_stamp() << " thread 2: initialization" << endl;
-        try {
+        try
+        {
             for (;;)
             {
                 wait();
             }
-        } 
-        catch(sc_core::sc_unwind_exception& ex)
+        }
+        catch (sc_core::sc_unwind_exception &ex)
         {
-	    if ( !ex.is_reset() )
-	    {
-		cout << sc_time_stamp() << " thread2: received kill" << endl;
-	    }
-	    throw ex;
+            if (!ex.is_reset())
+            {
+                cout << sc_time_stamp() << " thread2: received kill" << endl;
+            }
+            throw ex;
         }
     }
 
@@ -144,27 +147,27 @@ SC_MODULE(DUT)
             wait();
             wait();
             wait();
-	    cout << sc_time_stamp() << " stimulus setting kill" << endl;
-	    m_kill = true;
+            cout << sc_time_stamp() << " stimulus setting kill" << endl;
+            m_kill = true;
             wait();
-	    m_kill = false;
+            m_kill = false;
             wait();
             wait();
-	    sc_stop();
+            sc_stop();
         }
     }
 
-    sc_in<bool>       m_clk;
-    bool              m_kill;
+    sc_in<bool> m_clk;
+    bool m_kill;
     sc_process_handle m_thread0;
     sc_process_handle m_thread1;
     sc_process_handle m_thread2;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-    sc_clock        clock;
-    DUT             dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
 
     dut.m_clk(clock);
 

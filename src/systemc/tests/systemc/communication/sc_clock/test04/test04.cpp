@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test04.cpp -- 
+  test04.cpp --
 
   Original Author: Ucar Aziz, Synopsys, Inc., 2002-02-15
                    Martin Janssen, Synopsys, Inc., 2002-02-15
@@ -40,23 +40,21 @@
 
 #include "systemc.h"
 
-
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_time t1( 8, SC_NS );
-    sc_time t2( 2, SC_NS );
-    
-    sc_clock c1( "c1", t1, 0.1, t2 );
+    sc_time t1(8, SC_NS);
+    sc_time t2(2, SC_NS);
+
+    sc_clock c1("c1", t1, 0.1, t2);
     sc_start(t1);
-    cout << "current time is: ";  
+    cout << "current time is: ";
     cout << c1.time_stamp();
-    cout << endl;    
+    cout << endl;
 
     sc_start(t2);
-    cout << "now, the current time is: ";  
+    cout << "now, the current time is: ";
     cout << c1.time_stamp();
-    cout << endl;    
+    cout << endl;
 
     return 0;
 }

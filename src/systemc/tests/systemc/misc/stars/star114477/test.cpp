@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -43,29 +43,30 @@
 
 int sc_main(int ac, char *av[])
 {
-  // Signals
-  sc_signal<bool>        clk;
-  sc_signal<sc_bv<9> >  out_a0, out_a1;
-  sc_signal<int>         count;
+    // Signals
+    sc_signal<bool> clk;
+    sc_signal<sc_bv<9>> out_a0, out_a1;
+    sc_signal<int> count;
 
-  fun c_block("fun_block");
-  c_block.clk(clk);
-  c_block.count(count);
-  c_block.out_a0(out_a0);
-  c_block.out_a1(out_a1);
+    fun c_block("fun_block");
+    c_block.clk(clk);
+    c_block.count(count);
+    c_block.out_a0(out_a0);
+    c_block.out_a1(out_a1);
 
-  sc_start(0, SC_NS);
+    sc_start(0, SC_NS);
 
-  count = 0;
+    count = 0;
 
-  for(int i = 0; i < 10; i++){
-      clk.write(1);
-      sc_start( 5, SC_NS );
-      clk.write(0);
-      sc_start( 5, SC_NS );      
-      count = count + 1;
-      cout << "constants " << out_a0 << "\t" << out_a1 << endl;
-  }
- 
-  return 0;
+    for (int i = 0; i < 10; i++)
+    {
+        clk.write(1);
+        sc_start(5, SC_NS);
+        clk.write(0);
+        sc_start(5, SC_NS);
+        count = count + 1;
+        cout << "constants " << out_a0 << "\t" << out_a1 << endl;
+    }
+
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -61,42 +61,41 @@
 
 SC_MODULE(Test)
 {
-  sc_in_clk clk;
-  sc_in<sc_uint<16> > in;
+    sc_in_clk clk;
+    sc_in<sc_uint<16>> in;
 
-  void meth()
-  {
-    unsigned int a;
+    void meth()
+    {
+        unsigned int a;
 
-    a = in.read();
-    cout << "a = " << a << endl;
+        a = in.read();
+        cout << "a = " << a << endl;
 
-  }  // meth()
+    } // meth()
 
-  SC_CTOR(Test)
-  {
-    SC_METHOD(meth);
-    sensitive << clk.pos();
+    SC_CTOR(Test)
+    {
+        SC_METHOD(meth);
+        sensitive << clk.pos();
 
-  }  // SC_CTOR(Test)
+    } // SC_CTOR(Test)
 
-};  // SC_MODULE(Test)
-
+}; // SC_MODULE(Test)
 
 int sc_main(int argc, char *argv[])
 {
-  // Declare the clock
-  sc_clock clk("clk", 50, SC_NS, 0.5, 0, SC_NS, false);
+    // Declare the clock
+    sc_clock clk("clk", 50, SC_NS, 0.5, 0, SC_NS, false);
 
-  sc_signal<sc_uint<16> > in;
+    sc_signal<sc_uint<16>> in;
 
-  Test test("test");
-  test.clk(clk);
-  test.in(in);
+    Test test("test");
+    test.clk(clk);
+    test.in(in);
 
-  in.write(10);  // Initialize "in" with "10"
-  sc_start(75, SC_NS);  // Run for 1-1/2 clock cycles
-  
-  return 0;
+    in.write(10);        // Initialize "in" with "10"
+    sc_start(75, SC_NS); // Run for 1-1/2 clock cycles
 
-}  // sc_main()
+    return 0;
+
+} // sc_main()

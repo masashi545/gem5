@@ -17,14 +17,14 @@
 
  *****************************************************************************/
 
-// living_dead_bug.cpp -- test for 
+// living_dead_bug.cpp -- test for
 //
 //  Original Author: John Aynsley, Doulus
 //
 // MODIFICATION LOG - modifiers, enter your name, affiliation, date and
 //
 
-// 
+//
 
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 
@@ -34,55 +34,55 @@ using namespace sc_core;
 using std::cout;
 using std::endl;
 
-struct Top: sc_module
+struct Top : sc_module
 {
-  Top(sc_module_name _name)
-  {
-    SC_THREAD(control);
-    
-    SC_THREAD(target);
-      dont_initialize();
-      target_handle = sc_get_current_process_handle();
-
-    f0 = f1 = 0;
-  }
-  
-  sc_process_handle target_handle;
-  int f0, f1;
-  
-  void control()
-  {
-    // create another (orphaned) instance of "target"
+    Top(sc_module_name _name)
     {
-      sc_spawn_options opt;
-      opt.dont_initialize();
-      sc_spawn( sc_bind( &Top::target, this ), "dyn_target", &opt );
+        SC_THREAD(control);
+
+        SC_THREAD(target);
+        dont_initialize();
+        target_handle = sc_get_current_process_handle();
+
+        f0 = f1 = 0;
     }
 
-    wait(10, SC_NS);
-    f0 = 1;
-    target_handle.kill();
-    f1 = 1;
-  }
+    sc_process_handle target_handle;
+    int f0, f1;
 
-  void target()
-  {
-    sc_assert( false );  // FAILS!!!!!!
-  }
-  
-  SC_HAS_PROCESS(Top);
+    void control()
+    {
+        // create another (orphaned) instance of "target"
+        {
+            sc_spawn_options opt;
+            opt.dont_initialize();
+            sc_spawn(sc_bind(&Top::target, this), "dyn_target", &opt);
+        }
+
+        wait(10, SC_NS);
+        f0 = 1;
+        target_handle.kill();
+        f1 = 1;
+    }
+
+    void target()
+    {
+        sc_assert(false); // FAILS!!!!!!
+    }
+
+    SC_HAS_PROCESS(Top);
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  Top top("top");
-  
-  sc_start();
+    Top top("top");
 
-  sc_assert( top.f0 ); 
-  sc_assert( top.f1 ); 
-  
-  cout << endl << "Success" << endl;
-  return 0;
+    sc_start();
+
+    sc_assert(top.f0);
+    sc_assert(top.f1);
+
+    cout << endl
+         << "Success" << endl;
+    return 0;
 }
-  

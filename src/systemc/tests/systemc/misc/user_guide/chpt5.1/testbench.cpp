@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  testbench.cpp -- 
+  testbench.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,13 +42,13 @@
 
 void testbench::entry()
 {
-  int num = 2;
+    int num = 2;
 
-  while (true) {
-    number.write(num++);
-    wait();
-    cout << "Result = " << resulta.read() << " and " << resultm.read()
-         << endl;
-  }
+    while (true)
+    {
+        number.write(num++);
+        wait();
+        cout << "Result = " << resulta.read() << " and " << resultm.read()
+             << endl;
+    }
 } // end of entry function
-

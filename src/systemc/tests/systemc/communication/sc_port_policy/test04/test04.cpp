@@ -35,7 +35,7 @@
 
  *****************************************************************************/
 
-#include <systemc.h> 
+#include <systemc.h>
 
 #define ALL_ERROR // Force error on all bound port.
 // #define BIND_NONE // Bind port with zero or more bound.
@@ -56,45 +56,45 @@ SC_MODULE(TB)
             cout << "    all[0] = " << m_all[0]->read() << endl;
             cout << "    all[1] = " << m_all[1]->read() << endl;
             cout << "    one    = " << m_one->read() << endl;
-#           if defined(BIND_NONE)
-                cout << "    none   = " << m_none->read() << endl;
-#           endif
+#if defined(BIND_NONE)
+            cout << "    none   = " << m_none->read() << endl;
+#endif
         }
     }
-    sc_port<sc_signal_in_if<bool>,2,SC_ALL_BOUND>          m_all;
-    sc_in<bool>                                            m_clk;
-    sc_port<sc_signal_in_if<bool>,2,SC_ZERO_OR_MORE_BOUND> m_none;
-    sc_port<sc_signal_in_if<bool>,2,SC_ONE_OR_MORE_BOUND>  m_one;
+    sc_port<sc_signal_in_if<bool>, 2, SC_ALL_BOUND> m_all;
+    sc_in<bool> m_clk;
+    sc_port<sc_signal_in_if<bool>, 2, SC_ZERO_OR_MORE_BOUND> m_none;
+    sc_port<sc_signal_in_if<bool>, 2, SC_ONE_OR_MORE_BOUND> m_one;
 };
 
-int sc_main (int argc , char *argv[]) { 
-   sc_clock        clock;
-   sc_signal<bool> sig1;
-   sc_signal<bool> sig2;
+int sc_main(int argc, char *argv[])
+{
+    sc_clock clock;
+    sc_signal<bool> sig1;
+    sc_signal<bool> sig2;
 
-   TB       tb("tb"); 
+    TB tb("tb");
 
-   tb.m_clk(clock);
+    tb.m_clk(clock);
 
-#  if !defined(ONE_ERROR)
-       tb.m_one(sig1);
-#  endif
-#  if defined(BIND_NONE)
-       tb.m_none(sig2);
-#  endif
-   tb.m_all(sig1);
-#  if !defined(ALL_ERROR)
-       tb.m_all(sig2);
-#  endif
+#if !defined(ONE_ERROR)
+    tb.m_one(sig1);
+#endif
+#if defined(BIND_NONE)
+    tb.m_none(sig2);
+#endif
+    tb.m_all(sig1);
+#if !defined(ALL_ERROR)
+    tb.m_all(sig2);
+#endif
 
-   sc_start(1, SC_NS); 
-   sig1 = true;
-   sc_start(1, SC_NS); 
-   sig2 = true;
-   sc_start(1, SC_NS); 
-   sig1 = false;
-   sig2 = false;
-   sc_start(1, SC_NS); 
-   return 0; 
-} 
-
+    sc_start(1, SC_NS);
+    sig1 = true;
+    sc_start(1, SC_NS);
+    sig2 = true;
+    sc_start(1, SC_NS);
+    sig1 = false;
+    sig2 = false;
+    sc_start(1, SC_NS);
+    return 0;
+}

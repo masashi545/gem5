@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  xor_1.cpp -- 
+  xor_1.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-30
 
@@ -35,80 +35,84 @@
 
  *****************************************************************************/
 
-
 #include "xor_1.h"
 
-void xor_1::entry(){
+void xor_1::entry()
+{
 
-  signed int      tmp1;
-  unsigned int    tmp2;
-  sc_lv<8>        tmp3;
-  sc_lv<8>        tmp3_tmp;
-  sc_bigint<8>    tmp4;
-  sc_biguint<8>   tmp5;
+    signed int tmp1;
+    unsigned int tmp2;
+    sc_lv<8> tmp3;
+    sc_lv<8> tmp3_tmp;
+    sc_bigint<8> tmp4;
+    sc_biguint<8> tmp5;
 
-  // reset_loop
-  if (reset.read() == true) {
-    out_valid.write(false);
-    wait();
-  } else wait();
+    // reset_loop
+    if (reset.read() == true)
+    {
+        out_valid.write(false);
+        wait();
+    }
+    else
+        wait();
 
-  //
-  // main loop
-  //
-  //
-  while(1) {
-    while(in_valid.read()==false) wait();
-    wait();
+    //
+    // main loop
+    //
+    //
+    while (1)
+    {
+        while (in_valid.read() == false)
+            wait();
+        wait();
 
-    //reading the inputs
-    tmp1 = in_value1.read();
-    tmp2 = in_value2.read();
-    tmp3 = in_value3.read();
-    tmp4 = in_value4.read();
-    tmp5 = in_value5.read();
+        // reading the inputs
+        tmp1 = in_value1.read();
+        tmp2 = in_value2.read();
+        tmp3 = in_value3.read();
+        tmp4 = in_value4.read();
+        tmp5 = in_value5.read();
 
-    //execute simple operations
-    tmp3_tmp = 0x0f;
-    tmp1 = tmp1 ^ 0x0f ^ 0x12;
-    tmp2 = tmp2 ^ 0x0f ^ 0x13 ;
-    tmp3 = tmp3 ^ tmp3_tmp;
-    tmp4 = tmp4 ^ 0x0f ^ 0x14 ;
-    tmp5 = tmp5 ^ 0x0f ^ 0x15 ;
-    wait();
+        // execute simple operations
+        tmp3_tmp = 0x0f;
+        tmp1 = tmp1 ^ 0x0f ^ 0x12;
+        tmp2 = tmp2 ^ 0x0f ^ 0x13;
+        tmp3 = tmp3 ^ tmp3_tmp;
+        tmp4 = tmp4 ^ 0x0f ^ 0x14;
+        tmp5 = tmp5 ^ 0x0f ^ 0x15;
+        wait();
 
-    // write outputs
-    out_value1.write(tmp1);
-    out_value2.write(tmp2);
-    out_value3.write(tmp3);
-    out_value4.write(tmp4);
-    out_value5.write(tmp5);
-    out_valid.write(true);
-    wait();
-    out_valid.write(false);
-    wait();
+        // write outputs
+        out_value1.write(tmp1);
+        out_value2.write(tmp2);
+        out_value3.write(tmp3);
+        out_value4.write(tmp4);
+        out_value5.write(tmp5);
+        out_valid.write(true);
+        wait();
+        out_valid.write(false);
+        wait();
 
-    //execute simple operations
-    tmp3_tmp = 0x03;
-    tmp1 ^= 0x03;
-    tmp2 ^= 0x03;
-    tmp3 ^= tmp3_tmp;
-    tmp4 ^= 0x03;
-    tmp5 ^= 0x03;
-    wait();
+        // execute simple operations
+        tmp3_tmp = 0x03;
+        tmp1 ^= 0x03;
+        tmp2 ^= 0x03;
+        tmp3 ^= tmp3_tmp;
+        tmp4 ^= 0x03;
+        tmp5 ^= 0x03;
+        wait();
 
-    // write outputs
-    out_value1.write(tmp1);
-    out_value2.write(tmp2);
-    out_value3.write(tmp3);
-    out_value4.write(tmp4);
-    out_value5.write(tmp5);
-    out_valid.write(true);
-    wait();
-    out_valid.write(false);
-    wait();
-  }
+        // write outputs
+        out_value1.write(tmp1);
+        out_value2.write(tmp2);
+        out_value3.write(tmp3);
+        out_value4.write(tmp4);
+        out_value5.write(tmp5);
+        out_valid.write(true);
+        wait();
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-

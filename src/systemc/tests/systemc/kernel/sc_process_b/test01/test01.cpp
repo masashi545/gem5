@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-03-22
                    Ucar Aziz, Synopsys, Inc.
@@ -40,26 +40,24 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a){
+    void main_action(){
+        cout << "main action ";
+cout << sc_get_current_process_b()->kind() << endl;
+}
+
+SC_CTOR(mod_a)
 {
-    void main_action()
-    {
-	cout << "main action ";
-	cout << sc_get_current_process_b()->kind() << endl;
-    }
+    SC_METHOD(main_action);
+}
+}
+;
 
-    SC_CTOR( mod_a )
-    {
-	SC_METHOD( main_action );
-    }
-};
-
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    mod_a a( "a" );
+    mod_a a("a");
 
-    sc_start( 5, SC_NS );   
+    sc_start(5, SC_NS);
 
     return 0;
 }

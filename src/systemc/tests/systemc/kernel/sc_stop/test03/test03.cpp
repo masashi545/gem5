@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test03.cpp -- 
+  test03.cpp --
 
   Original Author: Andy Goodrich, Forte Design Systems
 
@@ -30,8 +30,8 @@
   MODIFICATION LOG - modifiers, enter your name, affiliation, date and
   changes you are making here.
 
-      Name, Affiliation, Date: 
-  Description of Modification: 
+      Name, Affiliation, Date:
+  Description of Modification:
 
  *****************************************************************************/
 
@@ -39,37 +39,35 @@
 
 SC_MODULE(X)
 {
-	SC_CTOR(X)
-	{
-		cout << "Creating able..." << endl;
-		SC_THREAD(able);
-		sensitive << immediate_event;
-		cout << "Creating baker..." << endl;
-		SC_THREAD(baker);
-	}
+    SC_CTOR(X)
+    {
+        cout << "Creating able..." << endl;
+        SC_THREAD(able);
+        sensitive << immediate_event;
+        cout << "Creating baker..." << endl;
+        SC_THREAD(baker);
+    }
 
-	void able()
-	{
-		wait();
-		cout << "able: " << sc_time_stamp() << endl;
-	}
-	void baker()
-	{
-		cout << "baker: " << sc_time_stamp()
-			 << ": issuing sc_stop()" <<  endl;
-		sc_stop();
-		immediate_event.notify();
-	}
-	sc_event immediate_event;
+    void able()
+    {
+        wait();
+        cout << "able: " << sc_time_stamp() << endl;
+    }
+    void baker()
+    {
+        cout << "baker: " << sc_time_stamp()
+             << ": issuing sc_stop()" << endl;
+        sc_stop();
+        immediate_event.notify();
+    }
+    sc_event immediate_event;
 };
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-	X        x("x");
+    X x("x");
 
-	//sc_set_stop_mode(SC_STOP_IMMEDIATE);
-	sc_start(100, SC_NS);
-	return 0;
+    // sc_set_stop_mode(SC_STOP_IMMEDIATE);
+    sc_start(100, SC_NS);
+    return 0;
 }
-
-

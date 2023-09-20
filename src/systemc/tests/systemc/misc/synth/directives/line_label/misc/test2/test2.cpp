@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test2.cpp -- 
+  test2.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,19 +37,19 @@
 
 #include "systemc.h"
 #include "interface.h"
- 
-void t::entry() 
-{
-  int i;
-      
-  o3 = i1 + i2;
-  o3 = i1 + i2;
-  o3 = i1 + i2;
 
-  wait();
+void t::entry()
+{
+    int i;
+
+    o3 = i1 + i2;
+    o3 = i1 + i2;
+    o3 = i1 + i2;
+
+    wait();
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

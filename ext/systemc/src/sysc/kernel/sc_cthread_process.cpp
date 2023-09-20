@@ -22,7 +22,7 @@
   sc_cthread_process.cpp -- Clocked thread implementation.
 
   Original Author: Andy Goodrich, Forte Design Systems, 4 August 2005
-               
+
 
  CHANGE LOG APPEARS AT THE END OF THE FILE
  *****************************************************************************/
@@ -30,43 +30,42 @@
 #include "sysc/kernel/sc_cthread_process.h"
 #include "sysc/kernel/sc_simcontext_int.h"
 
-namespace sc_core {
-
-//------------------------------------------------------------------------------
-//"sc_cthread_process::dont_initialize"
-//
-// This virtual method sets the initialization switch for this object instance.
-//------------------------------------------------------------------------------
-void sc_cthread_process::dont_initialize( bool /* dont */ )
+namespace sc_core
 {
-    SC_REPORT_WARNING( SC_ID_DONT_INITIALIZE_, 0 );
-}
 
-//------------------------------------------------------------------------------
-//"sc_cthread_process::sc_cthread_process"
-//
-// This is the object instance constructor for this class.
-//------------------------------------------------------------------------------
-sc_cthread_process::sc_cthread_process( const char* name_p, 
-    bool free_host, SC_ENTRY_FUNC method_p, 
-    sc_process_host* host_p, const sc_spawn_options* opt_p 
-):
-    sc_thread_process(name_p, free_host, method_p, host_p, opt_p)
-{
-    m_dont_init = true;
-    m_process_kind = SC_CTHREAD_PROC_;
-}
+    //------------------------------------------------------------------------------
+    //"sc_cthread_process::dont_initialize"
+    //
+    // This virtual method sets the initialization switch for this object instance.
+    //------------------------------------------------------------------------------
+    void sc_cthread_process::dont_initialize(bool /* dont */)
+    {
+        SC_REPORT_WARNING(SC_ID_DONT_INITIALIZE_, 0);
+    }
 
-//------------------------------------------------------------------------------
-//"sc_cthread_process::~sc_cthread_process"
-//
-// This is the object instance constructor for this class.
-//------------------------------------------------------------------------------
-sc_cthread_process::~sc_cthread_process()
-{
-}
+    //------------------------------------------------------------------------------
+    //"sc_cthread_process::sc_cthread_process"
+    //
+    // This is the object instance constructor for this class.
+    //------------------------------------------------------------------------------
+    sc_cthread_process::sc_cthread_process(const char *name_p,
+                                           bool free_host, SC_ENTRY_FUNC method_p,
+                                           sc_process_host *host_p, const sc_spawn_options *opt_p) : sc_thread_process(name_p, free_host, method_p, host_p, opt_p)
+    {
+        m_dont_init = true;
+        m_process_kind = SC_CTHREAD_PROC_;
+    }
 
-} // namespace sc_core 
+    //------------------------------------------------------------------------------
+    //"sc_cthread_process::~sc_cthread_process"
+    //
+    // This is the object instance constructor for this class.
+    //------------------------------------------------------------------------------
+    sc_cthread_process::~sc_cthread_process()
+    {
+    }
+
+} // namespace sc_core
 
 // $Log: sc_cthread_process.cpp,v $
 // Revision 1.11  2011/08/26 20:46:09  acg

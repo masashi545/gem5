@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  monitor.cpp -- 
+  monitor.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,11 +39,11 @@
 
 void monitor::entry()
 {
-  int n=0;
-  
-  while(1) {
-    printf("%x", tx.read());
-    wait();
-  }
-} // end of entry function
+    int n = 0;
 
+    while (1)
+    {
+        printf("%x", tx.read());
+        wait();
+    }
+} // end of entry function

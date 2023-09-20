@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test07.cpp -- 
+  test07.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-03-22
 
@@ -39,15 +39,13 @@
 
 #include "systemc.h"
 
-SC_MODULE( my_mod )
-{
-    my_mod( const char* nm ) : sc_module( nm ) {}
+SC_MODULE(my_mod){
+    my_mod(const char *nm) : sc_module(nm){}
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    my_mod m( "m" );
+    my_mod m("m");
 
     sc_start();
 

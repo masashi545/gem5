@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star107468.cpp -- 
+  star107468.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,19 +35,19 @@
 
  *****************************************************************************/
 
-// When I assign a sc_logic with value 'X' to sc_bit 
+// When I assign a sc_logic with value 'X' to sc_bit
 // the error message is not very helpful. Especially it
-// does not mention where this wrongful assignment 
+// does not mention where this wrongful assignment
 // happened. At least we should mention the variable
 // name.
 
 #include "systemc.h"
 
-int sc_main(int, char**)
+int sc_main(int, char **)
 {
-  sc_logic x('X');
-  sc_bit a;
-  a = x.to_bool();
+    sc_logic x('X');
+    sc_bit a;
+    a = x.to_bool();
 
-  return 0;
+    return 0;
 }

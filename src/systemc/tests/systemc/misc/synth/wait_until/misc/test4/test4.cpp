@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test4.cpp -- 
+  test4.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,21 +36,28 @@
  *****************************************************************************/
 
 #include "test.h"
- 
-void t::entry() 
+
+void t::entry()
 {
-  wait();
-  if (i1 == 1) {
-    while (i1 == 1) {
-      do { wait(); } while (cont1 == 1);
-    }
-  } else {
     wait();
-  }
-  wait();
+    if (i1 == 1)
+    {
+        while (i1 == 1)
+        {
+            do
+            {
+                wait();
+            } while (cont1 == 1);
+        }
+    }
+    else
+    {
+        wait();
+    }
+    wait();
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

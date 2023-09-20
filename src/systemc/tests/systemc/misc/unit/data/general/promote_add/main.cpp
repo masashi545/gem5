@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,44 +35,43 @@
 
  *****************************************************************************/
 
-                /******************************************/
-                /* Main Filename:       main.cc           */
-                /******************************************/
-                /*                                        */
-                /* 7-bit bool = 6-bit bool + 6-bit bool   */
-                /*                                        */
-		/*	Max addition is 63 + 63	          */
-                /*                                        */
-		/* This example explicitly promotes all   */
-		/* variables in the addition to the size  */
-		/* of the largest variable (7-bits).      */
-                /*                                        */
-		/* This matches Verilog semantics.	  */
-                /*                                        */
-                /******************************************/
+/******************************************/
+/* Main Filename:       main.cc           */
+/******************************************/
+/*                                        */
+/* 7-bit bool = 6-bit bool + 6-bit bool   */
+/*                                        */
+/*	Max addition is 63 + 63	          */
+/*                                        */
+/* This example explicitly promotes all   */
+/* variables in the addition to the size  */
+/* of the largest variable (7-bits).      */
+/*                                        */
+/* This matches Verilog semantics.	  */
+/*                                        */
+/******************************************/
 
- 
-#include "datawidth.h" 	
-#include "stimgen.h" 	
+#include "datawidth.h"
+#include "stimgen.h"
 
 int sc_main(int ac, char *av[])
 {
 
-// Signal Instantiation
-  sc_signal_bool_vector6   	  in1 		("in1");
-  sc_signal_bool_vector6   	  in2		("in2");
-  sc_signal_bool_vector7   	  result 	("result");   
-  sc_signal<bool> 	  ready 	("ready");     
+    // Signal Instantiation
+    sc_signal_bool_vector6 in1("in1");
+    sc_signal_bool_vector6 in2("in2");
+    sc_signal_bool_vector7 result("result");
+    sc_signal<bool> ready("ready");
 
-// Clock Instantiation
-  sc_clock clk( "clock", 10, SC_NS, 0.5, 0, SC_NS); 
+    // Clock Instantiation
+    sc_clock clk("clock", 10, SC_NS, 0.5, 0, SC_NS);
 
-// Process Instantiation
-  datawidth	D1 ("D1", clk, in1, in2, ready, result);
+    // Process Instantiation
+    datawidth D1("D1", clk, in1, in2, ready, result);
 
-  stimgen	T1 ("T1", clk, result, in1, in2, ready);
+    stimgen T1("T1", clk, result, in1, in2, ready);
 
-// Simulation Run Control
-  sc_start(); 
-  return 0;
+    // Simulation Run Control
+    sc_start();
+    return 0;
 }

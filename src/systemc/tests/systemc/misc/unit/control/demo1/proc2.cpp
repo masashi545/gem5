@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  proc2.cpp -- 
+  proc2.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -43,18 +43,24 @@
 
 void proc2::entry()
 {
-  data_ack.write(false);
-  wait();
-  cout << "Ack \t = False" << endl;
-  
-  while (true) {
-    do { wait(); } while (data_ready != true);
-    data_ack.write(true);
-    cout << "Ready \t = True" << endl;
-
-    do { wait(); } while (data_ready != false);
     data_ack.write(false);
-    cout << "Ready \t = False" << endl;
-  }
-} // end of entry function
+    wait();
+    cout << "Ack \t = False" << endl;
 
+    while (true)
+    {
+        do
+        {
+            wait();
+        } while (data_ready != true);
+        data_ack.write(true);
+        cout << "Ready \t = True" << endl;
+
+        do
+        {
+            wait();
+        } while (data_ready != false);
+        data_ack.write(false);
+        cout << "Ready \t = False" << endl;
+    }
+} // end of entry function

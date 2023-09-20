@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  monitor.cpp -- 
+  monitor.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,20 +37,16 @@
 
 #include "systemc.h"
 #include "monitor.h"
- 
-void monitor::entry() 
+
+void monitor::entry()
 {
-  int cycleNo = 0;
+    int cycleNo = 0;
 
-  while (true) {
-    cout << "[Cycle No: " << cycleNo << "]" <<
-      " i1 = " << i1 <<
-      " o1 = " << o1 <<
-      " o2 = " << o2 <<
-      " cont1 = " << cont1 <<
-      endl;
-    cycleNo++;
-    wait();
-  }
+    while (true)
+    {
+        cout << "[Cycle No: " << cycleNo << "]"
+             << " i1 = " << i1 << " o1 = " << o1 << " o2 = " << o2 << " cont1 = " << cont1 << endl;
+        cycleNo++;
+        wait();
+    }
 }
-

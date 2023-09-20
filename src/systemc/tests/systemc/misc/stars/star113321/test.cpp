@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -44,7 +44,7 @@ class sc_bv like here:
 
 #include "systemc.h"
 
-int sc_main(int argc, char* arg[]) 
+int sc_main(int argc, char *arg[])
 {
     sc_bv<10> a = "01111111";
     sc_bv<10> b = "11110000";
@@ -59,10 +59,9 @@ It does work fine with g++.
 But SC5.0 gives this compile error:
 
   CC -pto  -g -I. -I/view/ccss_ulli/vobs/abc/src/scenic/scenery/include -I.   -I/view/ccss_ulli/vobs/abc/src/scenic/scenery/include -c str.cc
-  "str.cc", line 7: Error: Cannot use const   sc_bv_ns::sc_bitwise_and<sc_bv_ns::sc_bv_base,sc_bv_ns::sc_bv_base> 
+  "str.cc", line 7: Error: Cannot use const   sc_bv_ns::sc_bitwise_and<sc_bv_ns::sc_bv_base,sc_bv_ns::sc_bv_base>
   to initialize sc_bv_ns::sc_bv<10>.
 
 
 I used SystemC 1.0.1 on a Solaris 5.5.1 machines with SC5.0
 */
-

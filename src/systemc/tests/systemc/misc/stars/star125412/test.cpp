@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -53,35 +53,35 @@ and below that I've provided a proposed fix for the bug.
 
 class top : public sc_module
 {
-   public:
-     SC_HAS_PROCESS(top);
+public:
+    SC_HAS_PROCESS(top);
 
-     top(sc_module_name name) : sc_module(name)
-     {
-         SC_THREAD(main);
-     }
+    top(sc_module_name name) : sc_module(name)
+    {
+        SC_THREAD(main);
+    }
 
-     void main()
-     {
-         sc_event e;
+    void main()
+    {
+        sc_event e;
 
-         // comment out the following line to see bug go away
+        // comment out the following line to see bug go away
 
-         e.notify(55, SC_NS);
+        e.notify(55, SC_NS);
 
-         for (int i = 0; i < 10; i++)
-         {
-           wait(10, SC_NS);
-           cout << "main thread at time " << sc_time_stamp() << endl;
-         }
-     }
+        for (int i = 0; i < 10; i++)
+        {
+            wait(10, SC_NS);
+            cout << "main thread at time " << sc_time_stamp() << endl;
+        }
+    }
 };
 
-int sc_main (int argc , char *argv[])
+int sc_main(int argc, char *argv[])
 {
-   top top1("Top1");
-   sc_start();
-   return 0;
+    top top1("Top1");
+    sc_start();
+    return 0;
 }
 
 /*

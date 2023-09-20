@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,53 +38,73 @@
 #include "test.h"
 
 /* From Test Case 57.sc */
-void test::entry() 
+void test::entry()
 {
-  while (true) {
+    while (true)
+    {
 
-  do { wait(); } while  (cont1 != 1);
-  wait ();
-  o1 = 9;
- 
-  switch (i5) {
-  case 1: 
-        if (i2 > 4) {
+        do
+        {
+            wait();
+        } while (cont1 != 1);
+        wait();
+        o1 = 9;
+
+        switch (i5)
+        {
+        case 1:
+            if (i2 > 4)
+            {
                 o2 = 80;
-                do { wait(); } while  (cont2 != 1);
-        } else {
+                do
+                {
+                    wait();
+                } while (cont2 != 1);
+            }
+            else
+            {
                 o2 = 81;
                 wait();
-        }
-        break;
-  case 2: 
-        o2 = 9; 
-        if (i4 == 5) {
-                wait(); wait(); break;
-        }
-        else 
-                wait(); 
-        break;
-  case 3: 
-        o2 = 10;
-        wait();
-        while (i3 < 5) {
+            }
+            break;
+        case 2:
+            o2 = 9;
+            if (i4 == 5)
+            {
+                wait();
+                wait();
+                break;
+            }
+            else
+                wait();
+            break;
+        case 3:
+            o2 = 10;
+            wait();
+            while (i3 < 5)
+            {
                 wait();
                 o3 = i4 + 1;
-                if (i4 > 7) break;
+                if (i4 > 7)
+                    break;
                 wait();
+            }
+            wait();
+            break;
+        default:
+            o2 = 11;
+            wait();
+            break;
         }
-        wait ();
-        break;
-   default: o2 = 11; wait(); break;
-  }
-  if (i3 == 3) {
-        o1 = 4;
-        wait();
-  } else {
-        o1 = 5;
-        wait();
-  }
-
-  }
+        if (i3 == 3)
+        {
+            o1 = 4;
+            wait();
+        }
+        else
+        {
+            o1 = 5;
+            wait();
+        }
+    }
 }
-

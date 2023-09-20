@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -41,12 +41,11 @@
 #include "systemc.h"
 
 template <class T>
-void
-test_constructors( T const & val = T() )
+void test_constructors(T const &val = T())
 {
     sc_signal<T> sig1;
-    sc_signal<T> sig2( "sig2" );
-    sc_signal<T> sig3( "sig3", val );
+    sc_signal<T> sig2("sig2");
+    sc_signal<T> sig3("sig3", val);
 
     cout << sig1.name() << " = " << sig1.read() << endl;
     cout << sig2.name() << " = " << sig2.read() << endl;
@@ -54,16 +53,15 @@ test_constructors( T const & val = T() )
     cout << endl;
 }
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    test_constructors( 42 );
+    test_constructors(42);
 
     // bool specialization
-    test_constructors( true );
+    test_constructors(true);
 
     // sc_logic specialization
-    test_constructors( SC_LOGIC_0 );
+    test_constructors(SC_LOGIC_0);
 
     return 0;
 }

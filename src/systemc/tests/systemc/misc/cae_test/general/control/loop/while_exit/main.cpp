@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-30
 
@@ -35,48 +35,43 @@
 
  *****************************************************************************/
 
-
 #include "while_exit.h"
 #include "stimulus.h"
 #include "display.h"
 
-int sc_main (int argc , char *argv[]) {
-  sc_clock        	clock;
-  sc_signal<bool>       reset;
-  sc_signal<bool>       out_valid;
-  sc_signal<bool>       in_valid;
-  sc_signal<int>        result;
-  sc_signal<int>        in_value;
+int sc_main(int argc, char *argv[])
+{
+    sc_clock clock;
+    sc_signal<bool> reset;
+    sc_signal<bool> out_valid;
+    sc_signal<bool> in_valid;
+    sc_signal<int> result;
+    sc_signal<int> in_value;
 
+    while_exit while_exit1(
+        "process_body",
+        clock,
+        reset,
+        in_valid,
+        in_value,
+        out_valid,
+        result);
 
-  while_exit   while_exit1 ( 
-		"process_body",
-		clock, 
-		reset,
-		in_valid, 
-		in_value, 
-		out_valid,
-		result
-		);
+    stimulus stimulus1(
+        "stimulus",
+        clock,
+        reset,
+        in_value,
+        in_valid);
 
-  stimulus  stimulus1  (
-			"stimulus",
-			clock,
-			reset,
-			in_value, 
-			in_valid
-			);
+    display display1(
+        "display",
+        clock,
+        result,
+        out_valid);
 
-  display  display1  (
-		      "display",
-		      clock,
-		      result,
-		      out_valid
-		      );
-
-
-  sc_start();
-  return 0;
+    sc_start();
+    return 0;
 }
 
 // EOF

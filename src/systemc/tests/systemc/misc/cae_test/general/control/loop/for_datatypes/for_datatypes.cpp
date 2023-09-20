@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  for_datatypes.cpp -- 
+  for_datatypes.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-29
 
@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 #include "for_datatypes.h"
 
 #define max 10
@@ -43,57 +42,63 @@
 void for_datatypes::entry()
 {
 
-  int  i;
-  sc_signed   counter_signed(8);
-  sc_unsigned counter_unsigned(8);
+    int i;
+    sc_signed counter_signed(8);
+    sc_unsigned counter_unsigned(8);
 
-  // reset_loop
-  if (reset.read()==true) {
-    result.write(0);
-    out_valid.write(false);
-    wait();
-  } else wait(); 
+    // reset_loop
+    if (reset.read() == true)
+    {
+        result.write(0);
+        out_valid.write(false);
+        wait();
+    }
+    else
+        wait();
 
-  //----------
-  // main loop
-  //----------
-  while(1) {
+    //----------
+    // main loop
+    //----------
+    while (1)
+    {
 
-    //read inputs
-    while (in_valid.read()==false) wait();
+        // read inputs
+        while (in_valid.read() == false)
+            wait();
 
-    //execution of for loop with integer counter
-    out_valid.write(true);
-    wait();
-    for (i=1; i<=max; i++) {
-      result.write(in_value.read());
-      wait();
-    };
-    out_valid.write(false);
-    wait(4);
+        // execution of for loop with integer counter
+        out_valid.write(true);
+        wait();
+        for (i = 1; i <= max; i++)
+        {
+            result.write(in_value.read());
+            wait();
+        };
+        out_valid.write(false);
+        wait(4);
 
-    //execution of for loop with signed counter
-    out_valid.write(true);
-    wait();
-    for (counter_signed=1; counter_signed.to_int()<=max; counter_signed++) {
-      result.write(in_value.read());
-      wait();
-    };
-    out_valid.write(false);
-    wait(4);
+        // execution of for loop with signed counter
+        out_valid.write(true);
+        wait();
+        for (counter_signed = 1; counter_signed.to_int() <= max; counter_signed++)
+        {
+            result.write(in_value.read());
+            wait();
+        };
+        out_valid.write(false);
+        wait(4);
 
-    //execution of for loop with unsinged counter
-    out_valid.write(true);
-    wait();
-    for (counter_unsigned=1; counter_unsigned.to_uint()<=max; counter_unsigned++) {
-      result.write(in_value.read());
-      wait();
-    };
-    out_valid.write(false);
-    wait();
-
-  }
+        // execution of for loop with unsinged counter
+        out_valid.write(true);
+        wait();
+        for (counter_unsigned = 1; counter_unsigned.to_uint() <= max; counter_unsigned++)
+        {
+            result.write(in_value.read());
+            wait();
+        };
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-

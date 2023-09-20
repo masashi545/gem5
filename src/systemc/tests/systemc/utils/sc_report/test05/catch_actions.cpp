@@ -27,47 +27,53 @@
 
 #include <systemc>
 
-using std::cout;
-using std::endl;
 using sc_core::sc_actions;
 using sc_core::SC_DISPLAY;
 using sc_core::SC_ERROR;
 using sc_core::SC_LOG;
-using sc_core::SC_THROW;
 using sc_core::sc_report;
 using sc_core::sc_report_handler;
+using sc_core::SC_THROW;
+using std::cout;
+using std::endl;
 
-/* anonymous */ namespace {
-bool last_report_thrown = false;
-void custom_handler(const sc_report& rep, const sc_actions& actions)
+/* anonymous */ namespace
 {
-    if ( actions & SC_DISPLAY ) {
-        cout << endl
-             // if last_report_thrown is set, we're in a catch action
-             << (last_report_thrown ? "[caught] " : "[normal] ")
-             << sc_core::sc_report_compose_message(rep)
-             << endl;
-    }
-
-    // only log errors from catch actions
-    if (rep.get_severity() == SC_ERROR) {
-        if (actions & SC_LOG) {
-            sc_assert( !(actions & SC_THROW) );
-        } else {
-            sc_assert( actions & SC_THROW );
+    bool last_report_thrown = false;
+    void custom_handler(const sc_report &rep, const sc_actions &actions)
+    {
+        if (actions & SC_DISPLAY)
+        {
+            cout << endl
+                 // if last_report_thrown is set, we're in a catch action
+                 << (last_report_thrown ? "[caught] " : "[normal] ")
+                 << sc_core::sc_report_compose_message(rep)
+                 << endl;
         }
-    }
 
-    // cache SC_THROW state of current report
-    last_report_thrown = (actions & SC_THROW);
+        // only log errors from catch actions
+        if (rep.get_severity() == SC_ERROR)
+        {
+            if (actions & SC_LOG)
+            {
+                sc_assert(!(actions & SC_THROW));
+            }
+            else
+            {
+                sc_assert(actions & SC_THROW);
+            }
+        }
 
-    // delegate other actions to default handler
-    sc_report_handler::default_handler(rep, actions & ~SC_DISPLAY);
+        // cache SC_THROW state of current report
+        last_report_thrown = (actions & SC_THROW);
 
-} /* custom_handler */
+        // delegate other actions to default handler
+        sc_report_handler::default_handler(rep, actions & ~SC_DISPLAY);
+
+    } /* custom_handler */
 } /* anonymous namespace */
 
-int sc_main(int,char*[])
+int sc_main(int, char *[])
 {
     // extended report logging, currently not checked in verify.pl
     sc_report_handler::set_log_file_name("catch_actions.ext.log");
@@ -82,8 +88,7 @@ int sc_main(int,char*[])
     sc_assert(sc_report_handler::get_catch_actions() == (SC_DISPLAY | SC_LOG));
 
     SC_REPORT_INFO("catch_actions", "only log errors from catch actions");
-    act = sc_report_handler::set_actions
-      (SC_ERROR, (sc_core::SC_DEFAULT_ERROR_ACTIONS & ~SC_LOG));
+    act = sc_report_handler::set_actions(SC_ERROR, (sc_core::SC_DEFAULT_ERROR_ACTIONS & ~SC_LOG));
 
     // real test
     SC_REPORT_ERROR("catch_actions", "throwing an exception");

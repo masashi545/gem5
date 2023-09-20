@@ -18,11 +18,11 @@
  *****************************************************************************/
 
 /*****************************************************************************
- 
+
   dist.cpp -- Implementation of the odometers.
- 
+
   Original Author: Ali Dasdan, Synopsys, Inc.
- 
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -54,45 +54,45 @@
 bool dist_mod::prev_reset;
 
 // Compute the total and partial distances travelled.
-void
-dist_mod::get_dist_proc()
+void dist_mod::get_dist_proc()
 {
-  wait();
+    wait();
 
-  double tmp_total = 0;
-  double tmp_partial = 0;
+    double tmp_total = 0;
+    double tmp_partial = 0;
 
-  while (true) {
+    while (true)
+    {
 
-    // More than one pulse is needed for a distance increment.  This
-    // function collects NUM_PULSES_FOR_DIST_INCR pulses for that
-    // purpose.
-    AWAIT(NUM_PULSES_FOR_DIST_INCR);
+        // More than one pulse is needed for a distance increment.  This
+        // function collects NUM_PULSES_FOR_DIST_INCR pulses for that
+        // purpose.
+        AWAIT(NUM_PULSES_FOR_DIST_INCR);
 
-    if (start) {
-      
-      // Increment the distances:
-      tmp_total += DIST_INCR;
-      
-      // This is to simulate reset.event():
-      if (prev_reset != (bool) reset)
-        tmp_partial = 0.0;  // If reset.event(), reset the partial distance.
-      else
-        tmp_partial += DIST_INCR;
+        if (start)
+        {
 
-      prev_reset = reset;
+            // Increment the distances:
+            tmp_total += DIST_INCR;
 
+            // This is to simulate reset.event():
+            if (prev_reset != (bool)reset)
+                tmp_partial = 0.0; // If reset.event(), reset the partial distance.
+            else
+                tmp_partial += DIST_INCR;
+
+            prev_reset = reset;
+        }
+        else
+        {
+            prev_reset = false;
+            tmp_total = 0.0;
+            tmp_partial = 0.0;
+        }
+
+        total = tmp_total;
+        partial = tmp_partial;
     }
-    else {
-      prev_reset = false;
-      tmp_total = 0.0;
-      tmp_partial = 0.0;
-    }
-
-    total = tmp_total;
-    partial = tmp_partial;
-
-  }
 }
 
 // End of file

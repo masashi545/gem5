@@ -22,7 +22,7 @@
   sc_thread_process.cpp -- Thread process implementation
 
   Original Author: Andy Goodrich, Forte Design Systems, 4 August 2005
-               
+
  CHANGE LOG AT THE END OF THE FILE
  *****************************************************************************/
 
@@ -43,667 +43,667 @@
 //     P    = pointer to process message is for, or NULL in which case the
 //            message will not print.
 #if 0
-#   define DEBUG_NAME ""
-#   define DEBUG_MSG(NAME,P,MSG) \
-    { \
-        if ( P && ( (strlen(NAME)==0) || !strcmp(NAME,P->name())) ) \
-          std::cout << "**** " << sc_time_stamp() << " ("  \
-	            << sc_get_current_process_name() << "): " << MSG \
-		    << " - " << P->name() << std::endl; \
+#define DEBUG_NAME ""
+#define DEBUG_MSG(NAME, P, MSG)                                        \
+    {                                                                  \
+        if (P && ((strlen(NAME) == 0) || !strcmp(NAME, P->name())))    \
+            std::cout << "**** " << sc_time_stamp() << " ("            \
+                      << sc_get_current_process_name() << "): " << MSG \
+                      << " - " << P->name() << std::endl;              \
     }
 #else
-#   define DEBUG_MSG(NAME,P,MSG) 
+#define DEBUG_MSG(NAME, P, MSG)
 #endif
-
 
 //------------------------------------------------------------------------------
 // user-defined default stack-size
 //------------------------------------------------------------------------------
 #if defined(SC_OVERRIDE_DEFAULT_STACK_SIZE)
-#   define SC_DEFAULT_STACK_SIZE_ SC_OVERRIDE_DEFAULT_STACK_SIZE
+#define SC_DEFAULT_STACK_SIZE_ SC_OVERRIDE_DEFAULT_STACK_SIZE
 
 //------------------------------------------------------------------------------
 // architecture-specific default stack sizes
 //------------------------------------------------------------------------------
 #elif !defined(SC_USE_PTHREADS) && (defined(__CYGWIN32__) || defined(__CYGWIN32))
-#   define SC_DEFAULT_STACK_SIZE_ 0x50000
+#define SC_DEFAULT_STACK_SIZE_ 0x50000
 
 #elif defined(SC_LONG_64) || defined(__x86_64__) || defined(__LP64__) || \
-      defined(_M_X64) || defined(_M_AMD64)
-#   define SC_DEFAULT_STACK_SIZE_ 0x40000
+    defined(_M_X64) || defined(_M_AMD64)
+#define SC_DEFAULT_STACK_SIZE_ 0x40000
 
 #else
-#   define SC_DEFAULT_STACK_SIZE_ 0x20000
+#define SC_DEFAULT_STACK_SIZE_ 0x20000
 
 #endif // SC_DEFAULT_STACK_SIZE_
-
 
 //------------------------------------------------------------------------------
 // force 16-byte alignment on coroutine entry functions, needed for
 // QuickThreads (32-bit, see also fixes in qt/md/{i386,iX86_64}.[hs]),
 // and MinGW32 / Cygwin32 compilers on Windows platforms
 #if defined(__GNUC__) && !defined(__ICC) && !defined(__x86_64__) && \
-    (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 1 )
-# define SC_ALIGNED_STACK_ \
+    (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ > 1)
+#define SC_ALIGNED_STACK_ \
     __attribute__((force_align_arg_pointer))
 #else
-# define SC_ALIGNED_STACK_ /* empty */
+#define SC_ALIGNED_STACK_ /* empty */
 #endif
 
+namespace sc_core
+{
 
-namespace sc_core {
-
-const int SC_DEFAULT_STACK_SIZE   = SC_DEFAULT_STACK_SIZE_;
+    const int SC_DEFAULT_STACK_SIZE = SC_DEFAULT_STACK_SIZE_;
 #undef SC_DEFAULT_STACK_SIZE_
 #undef SC_OVERRIDE_DEFAULT_STACK_SIZE
 
-//------------------------------------------------------------------------------
-//"sc_thread_cor_fn"
-// 
-// This function invokes the coroutine for the supplied object instance.
-//------------------------------------------------------------------------------
-SC_ALIGNED_STACK_
-void sc_thread_cor_fn( void* arg )
-{
-    sc_simcontext*   simc_p = sc_get_curr_simcontext();
-    sc_thread_handle thread_h = RCAST<sc_thread_handle>( arg );
-
-    // PROCESS THE THREAD AND PROCESS ANY EXCEPTIONS THAT ARE THROWN:
-
-    while( true ) {
-
-        try {
-            thread_h->semantics();
-        }
-        catch( sc_user ) {
-            continue;
-        }
-        catch( sc_halt ) {
-            ::std::cout << "Terminating process "
-                      << thread_h->name() << ::std::endl;
-        }
-        catch( const sc_unwind_exception& ex ) {
-	    ex.clear();
-            if ( ex.is_reset() ) continue;
-        }
-        catch( ... ) {
-            sc_report* err_p = sc_handle_exception();
-            thread_h->simcontext()->set_error( err_p );
-        }
-        break;
-    }
-
-    sc_process_b*    active_p = sc_get_current_process_b();
-
-    // REMOVE ALL TRACES OF OUR THREAD FROM THE SIMULATORS DATA STRUCTURES:
-
-    thread_h->disconnect_process();
-
-    // IF WE AREN'T ACTIVE MAKE SURE WE WON'T EXECUTE:
-
-    if ( thread_h->next_runnable() != 0 )
-    {
-	simc_p->remove_runnable_thread(thread_h);
-    }
-
-    // IF WE ARE THE ACTIVE PROCESS ABORT OUR EXECUTION:
-
-
-    if ( active_p == (sc_process_b*)thread_h )
-    {
-     
-        sc_core::sc_cor* x = simc_p->next_cor();
-	simc_p->cor_pkg()->abort( x );
-    }
-
-}
-
-
-//------------------------------------------------------------------------------
-//"sc_thread_process::disable_process"
-//
-// This virtual method suspends this process and its children if requested to.
-//     descendants = indicator of whether this process' children should also
-//                   be suspended
-//------------------------------------------------------------------------------
-void sc_thread_process::disable_process(
-    sc_descendant_inclusion_info descendants )
-{     
-
-    // IF NEEDED PROPOGATE THE DISABLE REQUEST THROUGH OUR DESCENDANTS:
-
-    if ( descendants == SC_INCLUDE_DESCENDANTS )
-    {
-        const std::vector<sc_object*>& children = get_child_objects();
-        int                            child_n  = children.size();
-
-        for ( int child_i = 0; child_i < child_n; child_i++ )
-        {
-            sc_process_b* child_p = DCAST<sc_process_b*>(children[child_i]);
-            if ( child_p ) child_p->disable_process(descendants);
-        }
-    }
-
-    // DON'T ALLOW CORNER CASE BY DEFAULT:
-
-    if ( !sc_allow_process_control_corners )
-    {
-	switch( m_trigger_type )
-	{ 
-	  case AND_LIST_TIMEOUT:
-	  case EVENT_TIMEOUT: 
-	  case OR_LIST_TIMEOUT:
-	  case TIMEOUT:
-	    report_error(SC_ID_PROCESS_CONTROL_CORNER_CASE_,
-		         "attempt to disable a thread with timeout wait");
-	    break;
-	  default:
-	    break;
-	}
-    }
-
-    // DISABLE OUR OBJECT INSTANCE:
-
-    m_state = m_state | ps_bit_disabled; 
-
-    // IF THIS CALL IS BEFORE THE SIMULATION DON'T RUN THE THREAD:
-
-    if ( !sc_is_running() ) 
-    {
-	m_state = m_state | ps_bit_ready_to_run;
-        simcontext()->remove_runnable_thread(this);
-    }
-}
-
-//------------------------------------------------------------------------------
-//"sc_thread_process::enable_process"
-//
-// This method resumes the execution of this process, and if requested, its
-// descendants. If the process was suspended and has a resumption pending it 
-// will be dispatched in the next delta cycle. Otherwise the state will be
-// adjusted to indicate it is no longer suspended, but no immediate execution
-// will occur.
-//------------------------------------------------------------------------------
-void sc_thread_process::enable_process(
-    sc_descendant_inclusion_info descendants )
-{
-
-    // IF NEEDED PROPOGATE THE ENABLE REQUEST THROUGH OUR DESCENDANTS:
-
-    if ( descendants == SC_INCLUDE_DESCENDANTS )
-    {
-        const std::vector<sc_object*>& children = get_child_objects();
-        int                            child_n  = children.size();
-
-        for ( int child_i = 0; child_i < child_n; child_i++ )
-        {
-            sc_process_b* child_p = DCAST<sc_process_b*>(children[child_i]);
-            if ( child_p ) child_p->enable_process(descendants);
-        }
-    }
-
-    // ENABLE THIS OBJECT INSTANCE:
+    //------------------------------------------------------------------------------
+    //"sc_thread_cor_fn"
     //
-    // If it was disabled and ready to run then put it on the run queue.
-
-    m_state = m_state & ~ps_bit_disabled; 
-    if ( m_state == ps_bit_ready_to_run && sc_allow_process_control_corners )
+    // This function invokes the coroutine for the supplied object instance.
+    //------------------------------------------------------------------------------
+    SC_ALIGNED_STACK_
+    void sc_thread_cor_fn(void *arg)
     {
-        m_state = ps_normal;
-	if ( next_runnable() == 0 )
-	    simcontext()->push_runnable_thread(this);
-    }
-}
+        sc_simcontext *simc_p = sc_get_curr_simcontext();
+        sc_thread_handle thread_h = RCAST<sc_thread_handle>(arg);
 
+        // PROCESS THE THREAD AND PROCESS ANY EXCEPTIONS THAT ARE THROWN:
 
-//------------------------------------------------------------------------------
-//"sc_thread_process::kill_process"
-//
-// This method removes this object instance from use. It calls the
-// sc_process_b::kill_process() method to perform low level clean up. Then
-// it aborts this process if it is the active process.
-//------------------------------------------------------------------------------
-void sc_thread_process::kill_process(sc_descendant_inclusion_info descendants )
-{
-
-    // IF THE SIMULATION HAS NOT BEEN INITIALIZED YET THAT IS AN ERROR:
-
-    if ( !sc_is_running() )
-    {
-        report_error( SC_ID_KILL_PROCESS_WHILE_UNITIALIZED_ );
-    }
-
-    // IF NEEDED PROPOGATE THE KILL REQUEST THROUGH OUR DESCENDANTS:
-
-    if ( descendants == SC_INCLUDE_DESCENDANTS )
-    {
-        const std::vector<sc_object*> children = get_child_objects();
-        int                           child_n  = children.size();
-
-        for ( int child_i = 0; child_i < child_n; child_i++ )
+        while (true)
         {
-            sc_process_b* child_p = DCAST<sc_process_b*>(children[child_i]);
-            if ( child_p ) child_p->kill_process(descendants);
+
+            try
+            {
+                thread_h->semantics();
+            }
+            catch (sc_user)
+            {
+                continue;
+            }
+            catch (sc_halt)
+            {
+                ::std::cout << "Terminating process "
+                            << thread_h->name() << ::std::endl;
+            }
+            catch (const sc_unwind_exception &ex)
+            {
+                ex.clear();
+                if (ex.is_reset())
+                    continue;
+            }
+            catch (...)
+            {
+                sc_report *err_p = sc_handle_exception();
+                thread_h->simcontext()->set_error(err_p);
+            }
+            break;
+        }
+
+        sc_process_b *active_p = sc_get_current_process_b();
+
+        // REMOVE ALL TRACES OF OUR THREAD FROM THE SIMULATORS DATA STRUCTURES:
+
+        thread_h->disconnect_process();
+
+        // IF WE AREN'T ACTIVE MAKE SURE WE WON'T EXECUTE:
+
+        if (thread_h->next_runnable() != 0)
+        {
+            simc_p->remove_runnable_thread(thread_h);
+        }
+
+        // IF WE ARE THE ACTIVE PROCESS ABORT OUR EXECUTION:
+
+        if (active_p == (sc_process_b *)thread_h)
+        {
+
+            sc_core::sc_cor *x = simc_p->next_cor();
+            simc_p->cor_pkg()->abort(x);
         }
     }
 
-    // IF THE PROCESS IS CURRENTLY UNWINDING OR IS ALREADY A ZOMBIE
-    // IGNORE THE KILL:
-
-    if ( m_unwinding )
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::disable_process"
+    //
+    // This virtual method suspends this process and its children if requested to.
+    //     descendants = indicator of whether this process' children should also
+    //                   be suspended
+    //------------------------------------------------------------------------------
+    void sc_thread_process::disable_process(
+        sc_descendant_inclusion_info descendants)
     {
-        SC_REPORT_WARNING( SC_ID_PROCESS_ALREADY_UNWINDING_, name() );
-        return;
+
+        // IF NEEDED PROPOGATE THE DISABLE REQUEST THROUGH OUR DESCENDANTS:
+
+        if (descendants == SC_INCLUDE_DESCENDANTS)
+        {
+            const std::vector<sc_object *> &children = get_child_objects();
+            int child_n = children.size();
+
+            for (int child_i = 0; child_i < child_n; child_i++)
+            {
+                sc_process_b *child_p = DCAST<sc_process_b *>(children[child_i]);
+                if (child_p)
+                    child_p->disable_process(descendants);
+            }
+        }
+
+        // DON'T ALLOW CORNER CASE BY DEFAULT:
+
+        if (!sc_allow_process_control_corners)
+        {
+            switch (m_trigger_type)
+            {
+            case AND_LIST_TIMEOUT:
+            case EVENT_TIMEOUT:
+            case OR_LIST_TIMEOUT:
+            case TIMEOUT:
+                report_error(SC_ID_PROCESS_CONTROL_CORNER_CASE_,
+                             "attempt to disable a thread with timeout wait");
+                break;
+            default:
+                break;
+            }
+        }
+
+        // DISABLE OUR OBJECT INSTANCE:
+
+        m_state = m_state | ps_bit_disabled;
+
+        // IF THIS CALL IS BEFORE THE SIMULATION DON'T RUN THE THREAD:
+
+        if (!sc_is_running())
+        {
+            m_state = m_state | ps_bit_ready_to_run;
+            simcontext()->remove_runnable_thread(this);
+        }
     }
 
-    if ( m_state & ps_bit_zombie )
-        return;
-
-    // SET UP TO KILL THE PROCESS IF SIMULATION HAS STARTED:
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::enable_process"
     //
-    // If the thread does not have a stack don't try the throw!
-
-    if ( sc_is_running() && m_has_stack )
+    // This method resumes the execution of this process, and if requested, its
+    // descendants. If the process was suspended and has a resumption pending it
+    // will be dispatched in the next delta cycle. Otherwise the state will be
+    // adjusted to indicate it is no longer suspended, but no immediate execution
+    // will occur.
+    //------------------------------------------------------------------------------
+    void sc_thread_process::enable_process(
+        sc_descendant_inclusion_info descendants)
     {
-        m_throw_status = THROW_KILL;
+
+        // IF NEEDED PROPOGATE THE ENABLE REQUEST THROUGH OUR DESCENDANTS:
+
+        if (descendants == SC_INCLUDE_DESCENDANTS)
+        {
+            const std::vector<sc_object *> &children = get_child_objects();
+            int child_n = children.size();
+
+            for (int child_i = 0; child_i < child_n; child_i++)
+            {
+                sc_process_b *child_p = DCAST<sc_process_b *>(children[child_i]);
+                if (child_p)
+                    child_p->enable_process(descendants);
+            }
+        }
+
+        // ENABLE THIS OBJECT INSTANCE:
+        //
+        // If it was disabled and ready to run then put it on the run queue.
+
+        m_state = m_state & ~ps_bit_disabled;
+        if (m_state == ps_bit_ready_to_run && sc_allow_process_control_corners)
+        {
+            m_state = ps_normal;
+            if (next_runnable() == 0)
+                simcontext()->push_runnable_thread(this);
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::kill_process"
+    //
+    // This method removes this object instance from use. It calls the
+    // sc_process_b::kill_process() method to perform low level clean up. Then
+    // it aborts this process if it is the active process.
+    //------------------------------------------------------------------------------
+    void sc_thread_process::kill_process(sc_descendant_inclusion_info descendants)
+    {
+
+        // IF THE SIMULATION HAS NOT BEEN INITIALIZED YET THAT IS AN ERROR:
+
+        if (!sc_is_running())
+        {
+            report_error(SC_ID_KILL_PROCESS_WHILE_UNITIALIZED_);
+        }
+
+        // IF NEEDED PROPOGATE THE KILL REQUEST THROUGH OUR DESCENDANTS:
+
+        if (descendants == SC_INCLUDE_DESCENDANTS)
+        {
+            const std::vector<sc_object *> children = get_child_objects();
+            int child_n = children.size();
+
+            for (int child_i = 0; child_i < child_n; child_i++)
+            {
+                sc_process_b *child_p = DCAST<sc_process_b *>(children[child_i]);
+                if (child_p)
+                    child_p->kill_process(descendants);
+            }
+        }
+
+        // IF THE PROCESS IS CURRENTLY UNWINDING OR IS ALREADY A ZOMBIE
+        // IGNORE THE KILL:
+
+        if (m_unwinding)
+        {
+            SC_REPORT_WARNING(SC_ID_PROCESS_ALREADY_UNWINDING_, name());
+            return;
+        }
+
+        if (m_state & ps_bit_zombie)
+            return;
+
+        // SET UP TO KILL THE PROCESS IF SIMULATION HAS STARTED:
+        //
+        // If the thread does not have a stack don't try the throw!
+
+        if (sc_is_running() && m_has_stack)
+        {
+            m_throw_status = THROW_KILL;
+            m_wait_cycle_n = 0;
+            simcontext()->preempt_with(this);
+        }
+
+        // IF THE SIMULATION HAS NOT STARTED REMOVE TRACES OF OUR PROCESS FROM
+        // EVENT QUEUES, ETC.:
+
+        else
+        {
+            disconnect_process();
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::prepare_for_simulation"
+    //
+    // This method prepares this object instance for simulation. It calls the
+    // coroutine package to create the actual thread.
+    //------------------------------------------------------------------------------
+    void sc_thread_process::prepare_for_simulation()
+    {
+        m_cor_p = simcontext()->cor_pkg()->create(m_stack_size,
+                                                  sc_thread_cor_fn, this);
+        m_cor_p->stack_protect(true);
+    }
+
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::resume_process"
+    //
+    // This method resumes the execution of this process, and if requested, its
+    // descendants. If the process was suspended and has a resumption pending it
+    // will be dispatched in the next delta cycle. Otherwise the state will be
+    // adjusted to indicate it is no longer suspended, but no immediate execution
+    // will occur.
+    //------------------------------------------------------------------------------
+    void sc_thread_process::resume_process(
+        sc_descendant_inclusion_info descendants)
+    {
+
+        // IF NEEDED PROPOGATE THE RESUME REQUEST THROUGH OUR DESCENDANTS:
+
+        if (descendants == SC_INCLUDE_DESCENDANTS)
+        {
+            const std::vector<sc_object *> &children = get_child_objects();
+            int child_n = children.size();
+
+            for (int child_i = 0; child_i < child_n; child_i++)
+            {
+                sc_process_b *child_p = DCAST<sc_process_b *>(children[child_i]);
+                if (child_p)
+                    child_p->resume_process(descendants);
+            }
+        }
+
+        // BY DEFAULT THE CORNER CASE IS AN ERROR:
+
+        if (!sc_allow_process_control_corners && (m_state & ps_bit_disabled) &&
+            (m_state & ps_bit_suspended))
+        {
+            m_state = m_state & ~ps_bit_suspended;
+            report_error(SC_ID_PROCESS_CONTROL_CORNER_CASE_,
+                         "call to resume() on a disabled suspended thread");
+        }
+
+        // CLEAR THE SUSPENDED BIT:
+
+        m_state = m_state & ~ps_bit_suspended;
+
+        // RESUME OBJECT INSTANCE IF IT IS READY TO RUN:
+
+        if (m_state & ps_bit_ready_to_run)
+        {
+            m_state = m_state & ~ps_bit_ready_to_run;
+            if (next_runnable() == 0)
+                simcontext()->push_runnable_thread(this);
+            remove_dynamic_events(); // order important.
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::sc_thread_process"
+    //
+    // This is the object instance constructor for this class.
+    //------------------------------------------------------------------------------
+    sc_thread_process::sc_thread_process(const char *name_p, bool free_host,
+                                         SC_ENTRY_FUNC method_p, sc_process_host *host_p,
+                                         const sc_spawn_options *opt_p) : sc_process_b(name_p ? name_p : sc_gen_unique_name("thread_p"),
+                                                                                       true, free_host, method_p, host_p, opt_p),
+                                                                          m_cor_p(0), m_monitor_q(), m_stack_size(SC_DEFAULT_STACK_SIZE),
+                                                                          m_wait_cycle_n(0)
+    {
+
+        // CHECK IF THIS IS AN sc_module-BASED PROCESS AND SIMULATION HAS STARTED:
+
+        if (DCAST<sc_module *>(host_p) != 0 && sc_is_running())
+        {
+            report_error(SC_ID_MODULE_THREAD_AFTER_START_);
+        }
+
+        // INITIALIZE VALUES:
+        //
+        // If there are spawn options use them.
+
+        m_process_kind = SC_THREAD_PROC_;
+
+        if (opt_p)
+        {
+            m_dont_init = opt_p->m_dont_initialize;
+            if (opt_p->m_stack_size)
+                m_stack_size = opt_p->m_stack_size;
+
+            // traverse event sensitivity list
+            for (unsigned int i = 0; i < opt_p->m_sensitive_events.size(); i++)
+            {
+                sc_sensitive::make_static_sensitivity(
+                    this, *opt_p->m_sensitive_events[i]);
+            }
+
+            // traverse port base sensitivity list
+            for (unsigned int i = 0; i < opt_p->m_sensitive_port_bases.size(); i++)
+            {
+                sc_sensitive::make_static_sensitivity(
+                    this, *opt_p->m_sensitive_port_bases[i]);
+            }
+
+            // traverse interface sensitivity list
+            for (unsigned int i = 0; i < opt_p->m_sensitive_interfaces.size(); i++)
+            {
+                sc_sensitive::make_static_sensitivity(
+                    this, *opt_p->m_sensitive_interfaces[i]);
+            }
+
+            // traverse event finder sensitivity list
+            for (unsigned int i = 0; i < opt_p->m_sensitive_event_finders.size();
+                 i++)
+            {
+                sc_sensitive::make_static_sensitivity(
+                    this, *opt_p->m_sensitive_event_finders[i]);
+            }
+
+            // process any reset signal specification:
+
+            opt_p->specify_resets();
+        }
+
+        else
+        {
+            m_dont_init = false;
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::~sc_thread_process"
+    //
+    // This is the object instance constructor for this class.
+    //------------------------------------------------------------------------------
+    sc_thread_process::~sc_thread_process()
+    {
+
+        // DESTROY THE COROUTINE FOR THIS THREAD:
+
+        if (m_cor_p != 0)
+        {
+            m_cor_p->stack_protect(false);
+            delete m_cor_p;
+            m_cor_p = 0;
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::signal_monitors"
+    //
+    // This methods signals the list of monitors for this object instance.
+    //------------------------------------------------------------------------------
+    void sc_thread_process::signal_monitors(int type)
+    {
+        int mon_n; // # of monitors present.
+
+        mon_n = m_monitor_q.size();
+        for (int mon_i = 0; mon_i < mon_n; mon_i++)
+            m_monitor_q[mon_i]->signal(this, type);
+    }
+
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::suspend_process"
+    //
+    // This virtual method suspends this process and its children if requested to.
+    //     descendants = indicator of whether this process' children should also
+    //                   be suspended
+    //------------------------------------------------------------------------------
+    void sc_thread_process::suspend_process(
+        sc_descendant_inclusion_info descendants)
+    {
+
+        // IF NEEDED PROPOGATE THE SUSPEND REQUEST THROUGH OUR DESCENDANTS:
+
+        if (descendants == SC_INCLUDE_DESCENDANTS)
+        {
+            const std::vector<sc_object *> &children = get_child_objects();
+            int child_n = children.size();
+
+            for (int child_i = 0; child_i < child_n; child_i++)
+            {
+                sc_process_b *child_p = DCAST<sc_process_b *>(children[child_i]);
+                if (child_p)
+                    child_p->suspend_process(descendants);
+            }
+        }
+
+        // CORNER CASE CHECKS, THE FOLLOWING ARE ERRORS:
+        //   (a) if this thread has a reset_signal_is specification
+        //   (b) if this thread is in synchronous reset
+
+        if (!sc_allow_process_control_corners && m_has_reset_signal)
+        {
+            report_error(SC_ID_PROCESS_CONTROL_CORNER_CASE_,
+                         "attempt to suspend a thread that has a reset signal");
+        }
+        else if (!sc_allow_process_control_corners && m_sticky_reset)
+        {
+            report_error(SC_ID_PROCESS_CONTROL_CORNER_CASE_,
+                         "attempt to suspend a thread in synchronous reset");
+        }
+
+        // SUSPEND OUR OBJECT INSTANCE:
+        //
+        // (1) If we are on the runnable queue then set suspended and ready_to_run,
+        //     and remove ourselves from the run queue.
+        // (2) If this is a self-suspension then a resume should cause immediate
+        //     scheduling of the process, and we need to call suspend_me() here.
+
+        m_state = m_state | ps_bit_suspended;
+        if (next_runnable() != 0)
+        {
+            m_state = m_state | ps_bit_ready_to_run;
+            simcontext()->remove_runnable_thread(this);
+        }
+        if (sc_get_current_process_b() == DCAST<sc_process_b *>(this))
+        {
+            m_state = m_state | ps_bit_ready_to_run;
+            suspend_me();
+        }
+    }
+
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::throw_reset"
+    //
+    // This virtual method is invoked when an reset is to be thrown. The
+    // method will cancel any dynamic waits. If the reset is asynchronous it will
+    // queue this object instance to be executed.
+    //------------------------------------------------------------------------------
+    void sc_thread_process::throw_reset(bool async)
+    {
+        // IF THE PROCESS IS CURRENTLY UNWINDING OR IS ALREADY A ZOMBIE
+        // IGNORE THE RESET:
+
+        if (m_unwinding)
+        {
+            SC_REPORT_WARNING(SC_ID_PROCESS_ALREADY_UNWINDING_, name());
+            return;
+        }
+
+        if (m_state & ps_bit_zombie)
+            return;
+
+        // Set the throw type and clear any pending dynamic events:
+
+        m_throw_status = async ? THROW_ASYNC_RESET : THROW_SYNC_RESET;
         m_wait_cycle_n = 0;
-        simcontext()->preempt_with(this);
-    }
 
-    // IF THE SIMULATION HAS NOT STARTED REMOVE TRACES OF OUR PROCESS FROM 
-    // EVENT QUEUES, ETC.:
+        // If this is an asynchronous reset:
+        //
+        //   (a) Cancel any dynamic events
+        //   (b) Set the thread up for execution:
+        //         (i) If we are in the execution phase do it now.
+        //         (ii) If we are not queue it to execute next when we hit
+        //              the execution phase.
 
-    else
-    {
-        disconnect_process();
-    }
-}
-
-//------------------------------------------------------------------------------
-//"sc_thread_process::prepare_for_simulation"
-//
-// This method prepares this object instance for simulation. It calls the
-// coroutine package to create the actual thread.
-//------------------------------------------------------------------------------
-void sc_thread_process::prepare_for_simulation()
-{
-    m_cor_p = simcontext()->cor_pkg()->create( m_stack_size,
-                         sc_thread_cor_fn, this );
-    m_cor_p->stack_protect( true );
-}
-
-
-//------------------------------------------------------------------------------
-//"sc_thread_process::resume_process"
-//
-// This method resumes the execution of this process, and if requested, its
-// descendants. If the process was suspended and has a resumption pending it 
-// will be dispatched in the next delta cycle. Otherwise the state will be
-// adjusted to indicate it is no longer suspended, but no immediate execution
-// will occur.
-//------------------------------------------------------------------------------
-void sc_thread_process::resume_process(
-    sc_descendant_inclusion_info descendants )
-{
-
-    // IF NEEDED PROPOGATE THE RESUME REQUEST THROUGH OUR DESCENDANTS:
-
-    if ( descendants == SC_INCLUDE_DESCENDANTS )
-    {
-        const std::vector<sc_object*>& children = get_child_objects();
-        int                            child_n  = children.size();
-
-        for ( int child_i = 0; child_i < child_n; child_i++ )
+        if (async)
         {
-            sc_process_b* child_p = DCAST<sc_process_b*>(children[child_i]);
-            if ( child_p ) child_p->resume_process(descendants);
+            m_state = m_state & ~ps_bit_ready_to_run;
+            remove_dynamic_events();
+            if (simcontext()->evaluation_phase())
+            {
+                simcontext()->preempt_with(this);
+            }
+            else
+            {
+                if (is_runnable())
+                    simcontext()->remove_runnable_thread(this);
+                simcontext()->execute_thread_next(this);
+            }
         }
     }
 
-    // BY DEFAULT THE CORNER CASE IS AN ERROR:
-
-    if ( !sc_allow_process_control_corners && (m_state & ps_bit_disabled) &&
-         (m_state & ps_bit_suspended) )
-    {
-	m_state = m_state & ~ps_bit_suspended;
-        report_error(SC_ID_PROCESS_CONTROL_CORNER_CASE_, 
-	             "call to resume() on a disabled suspended thread");
-    }
-
-    // CLEAR THE SUSPENDED BIT:
-
-    m_state = m_state & ~ps_bit_suspended;
-
-    // RESUME OBJECT INSTANCE IF IT IS READY TO RUN:
-
-    if ( m_state & ps_bit_ready_to_run )
-    {
-	m_state = m_state & ~ps_bit_ready_to_run;
-	if ( next_runnable() == 0 )  
-	    simcontext()->push_runnable_thread(this);
-	remove_dynamic_events();  // order important.
-    }
-}
-
-//------------------------------------------------------------------------------
-//"sc_thread_process::sc_thread_process"
-//
-// This is the object instance constructor for this class.
-//------------------------------------------------------------------------------
-sc_thread_process::sc_thread_process( const char* name_p, bool free_host,
-    SC_ENTRY_FUNC method_p, sc_process_host* host_p, 
-    const sc_spawn_options* opt_p 
-):
-    sc_process_b(
-        name_p ? name_p : sc_gen_unique_name("thread_p"), 
-        true, free_host, method_p, host_p, opt_p),
-    m_cor_p(0), m_monitor_q(), m_stack_size(SC_DEFAULT_STACK_SIZE),
-    m_wait_cycle_n(0)
-{
-
-    // CHECK IF THIS IS AN sc_module-BASED PROCESS AND SIMULATION HAS STARTED:
-
-    if ( DCAST<sc_module*>(host_p) != 0 && sc_is_running() )
-    {
-        report_error( SC_ID_MODULE_THREAD_AFTER_START_ );
-    }
-
-    // INITIALIZE VALUES:
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::throw_user"
     //
-    // If there are spawn options use them.
-
-    m_process_kind = SC_THREAD_PROC_;
-
-    if (opt_p) {
-        m_dont_init = opt_p->m_dont_initialize;
-        if ( opt_p->m_stack_size ) m_stack_size = opt_p->m_stack_size;
-
-        // traverse event sensitivity list
-        for (unsigned int i = 0; i < opt_p->m_sensitive_events.size(); i++) {
-            sc_sensitive::make_static_sensitivity(
-                this, *opt_p->m_sensitive_events[i]);
-        }
-
-        // traverse port base sensitivity list
-        for ( unsigned int i = 0; i < opt_p->m_sensitive_port_bases.size(); i++)
-        {
-            sc_sensitive::make_static_sensitivity(
-                this, *opt_p->m_sensitive_port_bases[i]);
-        }
-
-        // traverse interface sensitivity list
-        for ( unsigned int i = 0; i < opt_p->m_sensitive_interfaces.size(); i++)
-        {
-            sc_sensitive::make_static_sensitivity(
-                this, *opt_p->m_sensitive_interfaces[i]);
-        }
-
-        // traverse event finder sensitivity list
-        for ( unsigned int i = 0; i < opt_p->m_sensitive_event_finders.size();
-            i++)
-        {
-            sc_sensitive::make_static_sensitivity(
-                this, *opt_p->m_sensitive_event_finders[i]);
-        }
-
-        // process any reset signal specification:
-
-	opt_p->specify_resets();
-
-    }
-
-    else
+    // This virtual method is invoked when a user exception is to be thrown.
+    // If requested it will also throw the exception to the children of this
+    // object instance. The order of dispatch for the processes that are
+    // thrown the exception is from youngest child to oldest child and then
+    // this process instance. This means that this instance will be pushed onto
+    // the front of the simulator's runnable queue and then the children will
+    // be processed recursively.
+    //     helper_p    =  helper object to use to throw the exception.
+    //     descendants =  indicator of whether this process' children should also
+    //                    be suspended
+    //------------------------------------------------------------------------------
+    void sc_thread_process::throw_user(const sc_throw_it_helper &helper,
+                                       sc_descendant_inclusion_info descendants)
     {
-        m_dont_init = false;
-    }
 
-}
+        // IF THE SIMULATION IS NOT ACTAULLY RUNNING THIS IS AN ERROR:
 
-//------------------------------------------------------------------------------
-//"sc_thread_process::~sc_thread_process"
-//
-// This is the object instance constructor for this class.
-//------------------------------------------------------------------------------
-sc_thread_process::~sc_thread_process()
-{
-
-    // DESTROY THE COROUTINE FOR THIS THREAD:
-
-    if( m_cor_p != 0 ) {
-        m_cor_p->stack_protect( false );
-        delete m_cor_p;
-        m_cor_p = 0;
-    }
-}
-
-
-//------------------------------------------------------------------------------
-//"sc_thread_process::signal_monitors"
-//
-// This methods signals the list of monitors for this object instance.
-//------------------------------------------------------------------------------
-void sc_thread_process::signal_monitors(int type)
-{       
-    int mon_n;  // # of monitors present.
-        
-    mon_n = m_monitor_q.size();
-    for ( int mon_i = 0; mon_i < mon_n; mon_i++ )
-        m_monitor_q[mon_i]->signal(this, type);
-}   
-
-
-//------------------------------------------------------------------------------
-//"sc_thread_process::suspend_process"
-//
-// This virtual method suspends this process and its children if requested to.
-//     descendants = indicator of whether this process' children should also
-//                   be suspended
-//------------------------------------------------------------------------------
-void sc_thread_process::suspend_process(
-    sc_descendant_inclusion_info descendants )
-{     
-
-    // IF NEEDED PROPOGATE THE SUSPEND REQUEST THROUGH OUR DESCENDANTS:
-
-    if ( descendants == SC_INCLUDE_DESCENDANTS )
-    {
-        const std::vector<sc_object*>& children = get_child_objects();
-        int                            child_n  = children.size();
-
-        for ( int child_i = 0; child_i < child_n; child_i++ )
+        if (sc_get_status() != SC_RUNNING)
         {
-            sc_process_b* child_p = DCAST<sc_process_b*>(children[child_i]);
-            if ( child_p ) child_p->suspend_process(descendants);
+            report_error(SC_ID_THROW_IT_WHILE_NOT_RUNNING_);
+        }
+
+        // IF NEEDED PROPOGATE THE THROW REQUEST THROUGH OUR DESCENDANTS:
+
+        if (descendants == SC_INCLUDE_DESCENDANTS)
+        {
+            const std::vector<sc_object *> children = get_child_objects();
+            int child_n = children.size();
+
+            for (int child_i = 0; child_i < child_n; child_i++)
+            {
+                sc_process_b *child_p = DCAST<sc_process_b *>(children[child_i]);
+                if (child_p)
+                {
+                    DEBUG_MSG(DEBUG_NAME, child_p, "about to throw user on");
+                    child_p->throw_user(helper, descendants);
+                }
+            }
+        }
+
+        // IF THE PROCESS IS CURRENTLY UNWINDING IGNORE THE THROW:
+
+        if (m_unwinding)
+        {
+            SC_REPORT_WARNING(SC_ID_PROCESS_ALREADY_UNWINDING_, name());
+            return;
+        }
+
+        // SET UP THE THROW REQUEST FOR THIS OBJECT INSTANCE AND QUEUE IT FOR
+        // EXECUTION:
+
+        if (m_has_stack)
+        {
+            remove_dynamic_events();
+            DEBUG_MSG(DEBUG_NAME, this, "throwing user exception to");
+            m_throw_status = THROW_USER;
+            if (m_throw_helper_p != 0)
+                delete m_throw_helper_p;
+            m_throw_helper_p = helper.clone();
+            simcontext()->preempt_with(this);
+        }
+        else
+        {
+            SC_REPORT_WARNING(SC_ID_THROW_IT_IGNORED_, name());
         }
     }
 
-    // CORNER CASE CHECKS, THE FOLLOWING ARE ERRORS:
-    //   (a) if this thread has a reset_signal_is specification 
-    //   (b) if this thread is in synchronous reset
-
-    if ( !sc_allow_process_control_corners && m_has_reset_signal )
-    {
-	report_error(SC_ID_PROCESS_CONTROL_CORNER_CASE_,
-		     "attempt to suspend a thread that has a reset signal");
-    }
-    else if ( !sc_allow_process_control_corners && m_sticky_reset )
-    {
-	report_error(SC_ID_PROCESS_CONTROL_CORNER_CASE_,
-		     "attempt to suspend a thread in synchronous reset");
-    }
-
-    // SUSPEND OUR OBJECT INSTANCE:
+    //------------------------------------------------------------------------------
+    //"sc_thread_process::trigger_dynamic"
     //
-    // (1) If we are on the runnable queue then set suspended and ready_to_run,
-    //     and remove ourselves from the run queue.
-    // (2) If this is a self-suspension then a resume should cause immediate
-    //     scheduling of the process, and we need to call suspend_me() here.
-
-    m_state = m_state | ps_bit_suspended;
-    if ( next_runnable() != 0 ) 
-    {
-	m_state = m_state | ps_bit_ready_to_run;
-	simcontext()->remove_runnable_thread( this );
-    }
-    if ( sc_get_current_process_b() == DCAST<sc_process_b*>(this)  )
-    {
-	m_state = m_state | ps_bit_ready_to_run;
-	suspend_me();
-    }
-}
-
-//------------------------------------------------------------------------------
-//"sc_thread_process::throw_reset"
-//
-// This virtual method is invoked when an reset is to be thrown. The
-// method will cancel any dynamic waits. If the reset is asynchronous it will 
-// queue this object instance to be executed. 
-//------------------------------------------------------------------------------
-void sc_thread_process::throw_reset( bool async )
-{     
-    // IF THE PROCESS IS CURRENTLY UNWINDING OR IS ALREADY A ZOMBIE
-    // IGNORE THE RESET:
-
-    if ( m_unwinding )
-    {
-        SC_REPORT_WARNING( SC_ID_PROCESS_ALREADY_UNWINDING_, name() );
-        return;
-    }
-
-    if ( m_state & ps_bit_zombie )
-        return;
-
-
-    // Set the throw type and clear any pending dynamic events: 
-
-    m_throw_status = async ? THROW_ASYNC_RESET : THROW_SYNC_RESET;
-    m_wait_cycle_n = 0;
-
-    // If this is an asynchronous reset:
+    // This method sets up a dynamic trigger on an event.
     //
-    //   (a) Cancel any dynamic events 
-    //   (b) Set the thread up for execution:
-    //         (i) If we are in the execution phase do it now.
-    //         (ii) If we are not queue it to execute next when we hit
-    //              the execution phase.
-
-    if ( async ) 
+    // Notes:
+    //   (1) This method is identical to sc_method_process::trigger_dynamic(),
+    //       but they cannot be combined as sc_process_b::trigger_dynamic()
+    //       because the signatures things like sc_event::remove_dynamic()
+    //       have different overloads for sc_thread_process* and sc_method_process*.
+    //       So if you change code here you'll also need to change it in
+    //       sc_method_process.cpp.
+    //
+    // Result is true if this process should be removed from the event's list,
+    // false if not.
+    //------------------------------------------------------------------------------
+    bool sc_thread_process::trigger_dynamic(sc_event *e)
     {
-        m_state = m_state & ~ps_bit_ready_to_run;
-        remove_dynamic_events();
-	if ( simcontext()->evaluation_phase() )
-	{
-            simcontext()->preempt_with( this );
-	}
-	else
-	{
-	    if ( is_runnable() )
-	        simcontext()->remove_runnable_thread(this);
-	    simcontext()->execute_thread_next(this);
-	}
-    }
-}
+        // No time outs yet, and keep gcc happy.
 
+        m_timed_out = false;
 
-//------------------------------------------------------------------------------
-//"sc_thread_process::throw_user"
-//
-// This virtual method is invoked when a user exception is to be thrown.
-// If requested it will also throw the exception to the children of this 
-// object instance. The order of dispatch for the processes that are 
-// thrown the exception is from youngest child to oldest child and then
-// this process instance. This means that this instance will be pushed onto
-// the front of the simulator's runnable queue and then the children will
-// be processed recursively.
-//     helper_p    =  helper object to use to throw the exception.
-//     descendants =  indicator of whether this process' children should also
-//                    be suspended
-//------------------------------------------------------------------------------
-void sc_thread_process::throw_user( const sc_throw_it_helper& helper,
-    sc_descendant_inclusion_info descendants )
-{     
+        // Escape cases:
+        //   (a) If this thread issued the notify() don't schedule it for
+        //       execution, but leave the sensitivity in place.
+        //   (b) If this thread is already runnable can't trigger an event.
 
-    // IF THE SIMULATION IS NOT ACTAULLY RUNNING THIS IS AN ERROR:
-
-    if ( sc_get_status() != SC_RUNNING )
-    {
-        report_error( SC_ID_THROW_IT_WHILE_NOT_RUNNING_ ); 
-    }
-
-    // IF NEEDED PROPOGATE THE THROW REQUEST THROUGH OUR DESCENDANTS:
-
-    if ( descendants == SC_INCLUDE_DESCENDANTS )
-    {
-        const std::vector<sc_object*> children = get_child_objects();
-        int                           child_n  = children.size();
-
-        for ( int child_i = 0; child_i < child_n; child_i++ )
-        {
-            sc_process_b* child_p = DCAST<sc_process_b*>(children[child_i]);
-            if ( child_p )
-	    {
-	        DEBUG_MSG(DEBUG_NAME,child_p,"about to throw user on");
-	        child_p->throw_user(helper, descendants);
-	    }
-        }
-    }
-
-    // IF THE PROCESS IS CURRENTLY UNWINDING IGNORE THE THROW:
-
-    if ( m_unwinding )
-    {
-        SC_REPORT_WARNING( SC_ID_PROCESS_ALREADY_UNWINDING_, name() );
-	return; 
-    }
-
-    // SET UP THE THROW REQUEST FOR THIS OBJECT INSTANCE AND QUEUE IT FOR
-    // EXECUTION:
-
-    if( m_has_stack )
-    {
-        remove_dynamic_events();
-        DEBUG_MSG(DEBUG_NAME,this,"throwing user exception to");
-        m_throw_status = THROW_USER;
-        if ( m_throw_helper_p != 0 ) delete m_throw_helper_p;
-        m_throw_helper_p = helper.clone();
-        simcontext()->preempt_with( this );
-    }
-    else
-    {
-        SC_REPORT_WARNING( SC_ID_THROW_IT_IGNORED_, name() );
-    }
-}
-
-
-//------------------------------------------------------------------------------
-//"sc_thread_process::trigger_dynamic"
-//
-// This method sets up a dynamic trigger on an event.
-//
-// Notes:
-//   (1) This method is identical to sc_method_process::trigger_dynamic(), 
-//       but they cannot be combined as sc_process_b::trigger_dynamic() 
-//       because the signatures things like sc_event::remove_dynamic()
-//       have different overloads for sc_thread_process* and sc_method_process*.
-//       So if you change code here you'll also need to change it in 
-//       sc_method_process.cpp.
-//
-// Result is true if this process should be removed from the event's list,
-// false if not.
-//------------------------------------------------------------------------------
-bool sc_thread_process::trigger_dynamic( sc_event* e )
-{
-    // No time outs yet, and keep gcc happy.
-
-    m_timed_out = false;
-
-    // Escape cases:
-    //   (a) If this thread issued the notify() don't schedule it for
-    //       execution, but leave the sensitivity in place.
-    //   (b) If this thread is already runnable can't trigger an event.
-
-    // not possible for thread processes!
-#if 0 // ! defined( SC_ENABLE_IMMEDIATE_SELF_NOTIFICATIONS )
+        // not possible for thread processes!
+#if 0  // ! defined( SC_ENABLE_IMMEDIATE_SELF_NOTIFICATIONS )
     if ( sc_get_current_process_b() == (sc_process_b*)this )
     {
         report_immediate_self_notification();
@@ -711,171 +711,169 @@ bool sc_thread_process::trigger_dynamic( sc_event* e )
     }
 #endif // SC_ENABLE_IMMEDIATE_SELF_NOTIFICATIONS
 
-    if( is_runnable() ) 
-        return true;
+        if (is_runnable())
+            return true;
 
-    // If a process is disabled then we ignore any events, leaving them enabled:
-    //
-    // But if this is a time out event we need to remove both it and the
-    // event that was being waited for.
+        // If a process is disabled then we ignore any events, leaving them enabled:
+        //
+        // But if this is a time out event we need to remove both it and the
+        // event that was being waited for.
 
-    if ( m_state & ps_bit_disabled )
-    {
-        if ( e == m_timeout_event_p )
-	{
-	    remove_dynamic_events( true );  
-	    return true;
-	}
-	else
-	{
-	    return false;
-	}
-    }
+        if (m_state & ps_bit_disabled)
+        {
+            if (e == m_timeout_event_p)
+            {
+                remove_dynamic_events(true);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
+        // Process based on the event type and current process state:
+        //
+        // Every case needs to set 'rc' and continue on to the end of
+        // this method to allow suspend processing to work correctly.
 
-    // Process based on the event type and current process state:
-    //
-    // Every case needs to set 'rc' and continue on to the end of
-    // this method to allow suspend processing to work correctly.
-
-    switch( m_trigger_type ) 
-    {
-      case EVENT: 
-	m_event_p = 0;
-	m_trigger_type = STATIC;
-	break;
-
-      case AND_LIST:
-        -- m_event_count;
-	if ( m_event_count == 0 )
-	{
-	    m_event_list_p->auto_delete();
-	    m_event_list_p = 0;
-	    m_trigger_type = STATIC;
-	}
-	else
-	{
-	    return true;
-	}
-	break;
-
-      case OR_LIST:
-	m_event_list_p->remove_dynamic( this, e );
-	m_event_list_p->auto_delete();
-	m_event_list_p = 0;
-	m_trigger_type = STATIC;
-	break;
-
-      case TIMEOUT: 
-	m_trigger_type = STATIC;
-	break;
-
-      case EVENT_TIMEOUT: 
-        if ( e == m_timeout_event_p )
-	{
-	    m_timed_out = true;
-	    m_event_p->remove_dynamic( this );
-	    m_event_p = 0;
-	    m_trigger_type = STATIC;
-	}
-	else
-	{
-	    m_timeout_event_p->cancel();
-	    m_timeout_event_p->reset();
-	    m_event_p = 0;
-	    m_trigger_type = STATIC;
-	}
-	break;
-
-      case OR_LIST_TIMEOUT:
-        if ( e == m_timeout_event_p )
-	{
-            m_timed_out = true;
-            m_event_list_p->remove_dynamic( this, e ); 
-            m_event_list_p->auto_delete();
-            m_event_list_p = 0; 
+        switch (m_trigger_type)
+        {
+        case EVENT:
+            m_event_p = 0;
             m_trigger_type = STATIC;
-	}
+            break;
 
-	else
-	{
-            m_timeout_event_p->cancel();
-            m_timeout_event_p->reset();
-	    m_event_list_p->remove_dynamic( this, e ); 
-	    m_event_list_p->auto_delete();
-	    m_event_list_p = 0; 
-	    m_trigger_type = STATIC;
-	}
-	break;
-      
-      case AND_LIST_TIMEOUT:
-        if ( e == m_timeout_event_p )
-	{
-            m_timed_out = true;
-            m_event_list_p->remove_dynamic( this, e ); 
+        case AND_LIST:
+            --m_event_count;
+            if (m_event_count == 0)
+            {
+                m_event_list_p->auto_delete();
+                m_event_list_p = 0;
+                m_trigger_type = STATIC;
+            }
+            else
+            {
+                return true;
+            }
+            break;
+
+        case OR_LIST:
+            m_event_list_p->remove_dynamic(this, e);
             m_event_list_p->auto_delete();
-            m_event_list_p = 0; 
+            m_event_list_p = 0;
             m_trigger_type = STATIC;
-	}
+            break;
 
-	else
-	{
-	    -- m_event_count;
-	    if ( m_event_count == 0 )
-	    {
-		m_timeout_event_p->cancel();
-		m_timeout_event_p->reset();
-		// no need to remove_dynamic
-		m_event_list_p->auto_delete();
-		m_event_list_p = 0; 
-		m_trigger_type = STATIC;
-	    }
-	    else
-	    {
-	        return true;
-	    }
-	}
-	break;
+        case TIMEOUT:
+            m_trigger_type = STATIC;
+            break;
 
-      case STATIC: {
-        // we should never get here, but throw_it() can make it happen.
-	SC_REPORT_WARNING(SC_ID_NOT_EXPECTING_DYNAMIC_EVENT_NOTIFY_, name());
+        case EVENT_TIMEOUT:
+            if (e == m_timeout_event_p)
+            {
+                m_timed_out = true;
+                m_event_p->remove_dynamic(this);
+                m_event_p = 0;
+                m_trigger_type = STATIC;
+            }
+            else
+            {
+                m_timeout_event_p->cancel();
+                m_timeout_event_p->reset();
+                m_event_p = 0;
+                m_trigger_type = STATIC;
+            }
+            break;
+
+        case OR_LIST_TIMEOUT:
+            if (e == m_timeout_event_p)
+            {
+                m_timed_out = true;
+                m_event_list_p->remove_dynamic(this, e);
+                m_event_list_p->auto_delete();
+                m_event_list_p = 0;
+                m_trigger_type = STATIC;
+            }
+
+            else
+            {
+                m_timeout_event_p->cancel();
+                m_timeout_event_p->reset();
+                m_event_list_p->remove_dynamic(this, e);
+                m_event_list_p->auto_delete();
+                m_event_list_p = 0;
+                m_trigger_type = STATIC;
+            }
+            break;
+
+        case AND_LIST_TIMEOUT:
+            if (e == m_timeout_event_p)
+            {
+                m_timed_out = true;
+                m_event_list_p->remove_dynamic(this, e);
+                m_event_list_p->auto_delete();
+                m_event_list_p = 0;
+                m_trigger_type = STATIC;
+            }
+
+            else
+            {
+                --m_event_count;
+                if (m_event_count == 0)
+                {
+                    m_timeout_event_p->cancel();
+                    m_timeout_event_p->reset();
+                    // no need to remove_dynamic
+                    m_event_list_p->auto_delete();
+                    m_event_list_p = 0;
+                    m_trigger_type = STATIC;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            break;
+
+        case STATIC:
+        {
+            // we should never get here, but throw_it() can make it happen.
+            SC_REPORT_WARNING(SC_ID_NOT_EXPECTING_DYNAMIC_EVENT_NOTIFY_, name());
+            return true;
+        }
+        }
+
+        // If we get here then the thread is has satisfied its wait criteria, if
+        // its suspended mark its state as ready to run. If its not suspended then
+        // push it onto the runnable queue.
+
+        if ((m_state & ps_bit_suspended))
+        {
+            m_state = m_state | ps_bit_ready_to_run;
+        }
+        else
+        {
+            simcontext()->push_runnable_thread(this);
+        }
+
         return true;
-      }
     }
 
-    // If we get here then the thread is has satisfied its wait criteria, if 
-    // its suspended mark its state as ready to run. If its not suspended then 
-    // push it onto the runnable queue.
-
-    if ( (m_state & ps_bit_suspended) )
+    //------------------------------------------------------------------------------
+    //"sc_set_stack_size"
+    //
+    //------------------------------------------------------------------------------
+    void
+    sc_set_stack_size(sc_thread_handle thread_h, std::size_t size)
     {
-	m_state = m_state | ps_bit_ready_to_run;
+        thread_h->set_stack_size(size);
     }
-    else
-    {
-        simcontext()->push_runnable_thread(this);
-    }
-
-    return true;
-}
-
-
-//------------------------------------------------------------------------------
-//"sc_set_stack_size"
-//
-//------------------------------------------------------------------------------
-void
-sc_set_stack_size( sc_thread_handle thread_h, std::size_t size )
-{
-    thread_h->set_stack_size( size );
-}
 
 #undef DEBUG_MSG
 #undef DEBUG_NAME
 
-} // namespace sc_core 
-
+} // namespace sc_core
 
 /*****************************************************************************
 

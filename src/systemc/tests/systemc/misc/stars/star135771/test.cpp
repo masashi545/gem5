@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,7 +38,7 @@
 /*
 Hi,
 
-Im using SystemC 2.0b2 with gcc 2.95.3 (Linux). If I create an sc_lv 
+Im using SystemC 2.0b2 with gcc 2.95.3 (Linux). If I create an sc_lv
 assignment with range methods on every side like
 
 lv1.range(15,8) = lv2.range(7,0);
@@ -48,8 +48,8 @@ and the lv2 vector contains "z", I get the warning message
 WARNING: (E2004) sc_bv cannot contain values X and Z :
  - ../../../../../src/sysc/datatypes/bit/sc_bv.h: 340
 
-and the assignment is not done. Further investigation revealed that the 
-vector seems to get mistakenly converted to a sc_bv in between. Removing the 
+and the assignment is not done. Further investigation revealed that the
+vector seems to get mistakenly converted to a sc_bv in between. Removing the
 range method on one side or adding a cast
 
 lv1.range(15,8) = (sc_lv<8>)lv2.range(7,0);
@@ -61,13 +61,12 @@ Regards, S. Heithecker
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_lv<16> a( "01ZX0000111101ZX" );
+    sc_lv<16> a("01ZX0000111101ZX");
     sc_lv<16> b;
 
-    b.range( 15, 8 ) = a.range( 7, 0 );
+    b.range(15, 8) = a.range(7, 0);
     cout << a << endl;
     cout << b << endl;
 

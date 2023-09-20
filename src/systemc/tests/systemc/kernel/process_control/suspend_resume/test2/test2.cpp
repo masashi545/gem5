@@ -22,7 +22,7 @@
 //  test02.cpp -- test that suspended processes with static sensitivity
 //                wake up when resumed.
 //
-//  Original Author: Andy Goodrich, Forte Design Systems, Inc. 
+//  Original Author: Andy Goodrich, Forte Design Systems, Inc.
 //
 //  CVS MODIFICATION LOG - modifiers, enter your name, affiliation, date and
 //  changes you are making here.
@@ -48,39 +48,41 @@
 
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 #include "systemc.h"
-    
-enum my_process_states {
+
+enum my_process_states
+{
     ST_SUSPENDD,
     ST_NORMAL,
     ST_SUSPENDED
 };
 
-inline ostream& time_stamp( ostream& os )
+inline ostream &time_stamp(ostream &os)
 {
     os << dec << sc_time_stamp() << "[" << sc_delta_count() << "]: ";
     return os;
 }
 
-SC_MODULE(top) {
+SC_MODULE(top)
+{
     // constructor:
 
-    SC_CTOR(top) 
+    SC_CTOR(top)
     {
         m_state_cthread0 = ST_NORMAL;
-	m_state_method0 = ST_NORMAL;
+        m_state_method0 = ST_NORMAL;
         m_state_thread0 = ST_NORMAL;
 
         SC_THREAD(stimulator0);
 
-        SC_CTHREAD( target_cthread0, m_clk.pos() );
+        SC_CTHREAD(target_cthread0, m_clk.pos());
         m_target_cthread0 = sc_get_current_process_handle();
 
         SC_METHOD(target_method0);
-	sensitive << m_clk.pos();
+        sensitive << m_clk.pos();
         m_target_method0 = sc_get_current_process_handle();
 
         SC_THREAD(target_thread0);
-	sensitive << m_clk.neg();
+        sensitive << m_clk.neg();
         m_target_thread0 = sc_get_current_process_handle();
     }
 
@@ -91,34 +93,34 @@ SC_MODULE(top) {
     void target_method0();
     void target_thread0();
 
-    // Storage: 
+    // Storage:
 
-    sc_in<bool>       m_clk;      
-    int               m_state_cthread0;
-    int               m_state_method0;
-    int               m_state_thread0;
+    sc_in<bool> m_clk;
+    int m_state_cthread0;
+    int m_state_method0;
+    int m_state_thread0;
     sc_process_handle m_target_cthread0;
     sc_process_handle m_target_method0;
     sc_process_handle m_target_thread0;
 };
 
-#define SUSPEND(TARGET) \
-    cout << endl; \
+#define SUSPEND(TARGET)                                                    \
+    cout << endl;                                                          \
     time_stamp(cout) << name << ": suspending target_" << #TARGET << endl; \
-    m_state_##TARGET = ST_SUSPENDD; \
-    m_target_##TARGET.suspend(); \
-    cout << endl; 
+    m_state_##TARGET = ST_SUSPENDD;                                        \
+    m_target_##TARGET.suspend();                                           \
+    cout << endl;
 
-#define RESUME(TARGET) \
-    cout << endl; \
+#define RESUME(TARGET)                                                   \
+    cout << endl;                                                        \
     time_stamp(cout) << name << ": resuming target_" << #TARGET << endl; \
-    m_state_##TARGET = ST_NORMAL; \
-    m_target_##TARGET.resume(); \
-    cout << endl; 
+    m_state_##TARGET = ST_NORMAL;                                        \
+    m_target_##TARGET.resume();                                          \
+    cout << endl;
 
-void top::stimulator0() 
+void top::stimulator0()
 {
-    const char* name = "stimulator";
+    const char *name = "stimulator";
 
     wait(2, SC_NS);
 
@@ -156,82 +158,81 @@ void top::stimulator0()
     sc_stop();
 }
 
-void top::target_cthread0() 
+void top::target_cthread0()
 {
-    const char* name = "target_cthread0";
+    const char *name = "target_cthread0";
 
-    time_stamp(cout) << name  << ": starting" << endl;
+    time_stamp(cout) << name << ": starting" << endl;
     for (int i = 0; i < 12; i++)
     {
-	wait();
-	if ( m_state_cthread0 == ST_SUSPENDD )
-	{
-	    time_stamp(cout) << name  << ": ERROR should not see this" << endl;
-	}
-	else
-	{
-	    time_stamp(cout) << name  << ": active" << endl;
-	}
+        wait();
+        if (m_state_cthread0 == ST_SUSPENDD)
+        {
+            time_stamp(cout) << name << ": ERROR should not see this" << endl;
+        }
+        else
+        {
+            time_stamp(cout) << name << ": active" << endl;
+        }
     }
-    time_stamp(cout) << name  << ": terminating" << endl;
+    time_stamp(cout) << name << ": terminating" << endl;
 }
 
-void top::target_method0() 
+void top::target_method0()
 {
-    const char* name = "target_method0";
-    static int  state = 0;
-    switch( state )
+    const char *name = "target_method0";
+    static int state = 0;
+    switch (state)
     {
-      case 0:
-        time_stamp(cout) << name  << ": starting" << endl;
+    case 0:
+        time_stamp(cout) << name << ": starting" << endl;
         break;
-      default:
-	if ( m_state_method0 == ST_SUSPENDD )
-	{
-	    time_stamp(cout) << name  << ": ERROR should not see this" << endl;
-	}
-	else if ( state < 20 )
-	{
-	    time_stamp(cout) << name  << ": active" << endl;
-	}
+    default:
+        if (m_state_method0 == ST_SUSPENDD)
+        {
+            time_stamp(cout) << name << ": ERROR should not see this" << endl;
+        }
+        else if (state < 20)
+        {
+            time_stamp(cout) << name << ": active" << endl;
+        }
         break;
-      case 21:
-        time_stamp(cout) << name  << ": terminating" << endl;
+    case 21:
+        time_stamp(cout) << name << ": terminating" << endl;
         break;
     }
     state++;
 }
 
-void top::target_thread0() 
+void top::target_thread0()
 {
-    const char* name = "target_thread0";
+    const char *name = "target_thread0";
 
-    time_stamp(cout) << name  << ": starting" << endl;
+    time_stamp(cout) << name << ": starting" << endl;
     for (int i = 0; i < 12; i++)
     {
-	wait();
-	if ( m_state_thread0 == ST_SUSPENDD )
-	{
-	    time_stamp(cout) << name  << ": ERROR should not see this" << endl;
-	}
-	else
-	{
-	    time_stamp(cout) << name  << ": active" << endl;
-	}
+        wait();
+        if (m_state_thread0 == ST_SUSPENDD)
+        {
+            time_stamp(cout) << name << ": ERROR should not see this" << endl;
+        }
+        else
+        {
+            time_stamp(cout) << name << ": active" << endl;
+        }
     }
-    time_stamp(cout) << name  << ": terminating" << endl;
+    time_stamp(cout) << name << ": terminating" << endl;
 }
 
-int sc_main (int argc, char *argv[])
+int sc_main(int argc, char *argv[])
 {
     sc_core::sc_allow_process_control_corners = true;
-    sc_clock clock( "clock", 2.0, SC_NS );
+    sc_clock clock("clock", 2.0, SC_NS);
 
-    top* top_p = new top("top");
+    top *top_p = new top("top");
     top_p->m_clk(clock);
 
     sc_core::sc_allow_process_control_corners = true;
     sc_start();
     return 0;
 }
-

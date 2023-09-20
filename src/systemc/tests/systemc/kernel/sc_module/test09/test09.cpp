@@ -39,68 +39,65 @@
 
 // sc_module ---> non-sc_module
 
-SC_MODULE(ModuleBase) 
+SC_MODULE(ModuleBase)
 {
-  public:
+public:
     SC_CTOR(ModuleBase)
     {
     }
-	void base_method()
-	{
-		cout << sc_time_stamp() << ": ModuleBase" << endl;
-	}
-	sc_in_clk m_clk;
+    void base_method()
+    {
+        cout << sc_time_stamp() << ": ModuleBase" << endl;
+    }
+    sc_in_clk m_clk;
 };
 
 class NonModuleDerived : public ModuleBase
 {
-  public:
-	SC_HAS_PROCESS(NonModuleDerived);
-	NonModuleDerived(sc_module_name name_) : ModuleBase(name_)
-	{
-		SC_METHOD(base_method)
-		sensitive << m_clk;
-		SC_METHOD(derived_method)
-		sensitive << m_clk;
-	}
-	void derived_method()
-	{
-		cout << sc_time_stamp() << ": NonModuleDerived" << endl;
-	}
+public:
+    SC_HAS_PROCESS(NonModuleDerived);
+    NonModuleDerived(sc_module_name name_) : ModuleBase(name_)
+    {
+        SC_METHOD(base_method)
+        sensitive << m_clk;
+        SC_METHOD(derived_method)
+        sensitive << m_clk;
+    }
+    void derived_method()
+    {
+        cout << sc_time_stamp() << ": NonModuleDerived" << endl;
+    }
 };
 
 // non-sc_module ---> sc_module
 
 class NonModuleBase
 {
-  public:
-	sc_in_clk m_clk;
+public:
+    sc_in_clk m_clk;
 };
 
-SC_MODULE(ModuleDerived), public NonModuleBase
-{
-	SC_CTOR(ModuleDerived) : NonModuleBase()
-	{
-		SC_METHOD(derived_method)
-		sensitive << m_clk;
-	}
-	void derived_method()
-	{
-		cout << sc_time_stamp() << ": ModuleDerived" << endl;
-	}
-};
-
-int sc_main(int argc, char* argv[])
-{
-	sc_clock clock;
-	NonModuleDerived  non_derived("nonderived");
-	ModuleDerived     derived("derived");
-	non_derived.m_clk(clock);
-	derived.m_clk(clock);
-
-	sc_start(20, SC_NS);
-	return 0;
+SC_MODULE(ModuleDerived), public NonModuleBase{
+    SC_CTOR(ModuleDerived) : NonModuleBase(){
+        SC_METHOD(derived_method)
+            sensitive
+        << m_clk;
 }
+void derived_method()
+{
+    cout << sc_time_stamp() << ": ModuleDerived" << endl;
+}
+}
+;
 
+int sc_main(int argc, char *argv[])
+{
+    sc_clock clock;
+    NonModuleDerived non_derived("nonderived");
+    ModuleDerived derived("derived");
+    non_derived.m_clk(clock);
+    derived.m_clk(clock);
 
-
+    sc_start(20, SC_NS);
+    return 0;
+}

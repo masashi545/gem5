@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -44,9 +44,9 @@ using SC5.0 on Solaris. It works fine with gcc, though.
 
 #include <systemc.h>
 
-int sc_main(int argc, char* arg[]) 
+int sc_main(int argc, char *arg[])
 {
-    int i =0;
+    int i = 0;
     sc_lv<4> lv4;
 
     lv4 = i;

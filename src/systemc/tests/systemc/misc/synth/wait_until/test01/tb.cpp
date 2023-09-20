@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  tb.cpp -- 
+  tb.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,25 +37,23 @@
 
 #include "tb.h"
 #include "define.h"
- 
-void tb::entry() 
+
+void tb::entry()
 {
-  cout << "Begin Simulation" << endl;
+    cout << "Begin Simulation" << endl;
 
-  reset_sig = 1;
-  cont1 = 0;
-  single_cycle;
-  single_cycle;
-  reset_sig = 0;
-  
-  long_wait;
-  
-  set_value(cont1,1);
-  single_cycle;
-  test_value(o1.read(),4);
-  long_wait;
+    reset_sig = 1;
+    cont1 = 0;
+    single_cycle;
+    single_cycle;
+    reset_sig = 0;
 
-  sc_stop();
+    long_wait;
 
+    set_value(cont1, 1);
+    single_cycle;
+    test_value(o1.read(), 4);
+    long_wait;
+
+    sc_stop();
 }
-

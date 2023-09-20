@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test07.cpp -- 
+  test07.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,16 +40,16 @@
 #define DEBUG_SYSTEMC
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_in_clk clk;
 
-    sc_out<int>      out_int;
-    sc_out<sc_uint<1> >     out_uint;
+    sc_out<int> out_int;
+    sc_out<sc_uint<1>> out_uint;
     sc_out<sc_logic> out_logic;
-    sc_out<int>      out_int2;
-    sc_out_resolved  out_resolved;
-    sc_out_rv<1>     out_rv1;
+    sc_out<int> out_int2;
+    sc_out_resolved out_resolved;
+    sc_out_rv<1> out_rv1;
 
     void main_action1()
     {
@@ -58,7 +58,7 @@ SC_MODULE( mod_a )
         out_logic = SC_LOGIC_1;
         out_int2 = 1;
         out_resolved = SC_LOGIC_1;
-        out_rv1 = sc_lv<1>( SC_LOGIC_1 );
+        out_rv1 = sc_lv<1>(SC_LOGIC_1);
     }
 
     void main_action2()
@@ -68,27 +68,26 @@ SC_MODULE( mod_a )
         out_logic = SC_LOGIC_0;
         out_int2 = 0;
         out_resolved = SC_LOGIC_0;
-        out_rv1 = sc_lv<1>( SC_LOGIC_0 );
+        out_rv1 = sc_lv<1>(SC_LOGIC_0);
     }
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
-        SC_METHOD( main_action1 );
+        SC_METHOD(main_action1);
         sensitive << clk.pos();
         dont_initialize();
-        SC_METHOD( main_action2 );
+        SC_METHOD(main_action2);
         sensitive << clk.neg();
         dont_initialize();
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_clock clk;
 
     sc_signal<int> sig_int;
-    sc_signal<sc_uint<1> > sig_bool;
+    sc_signal<sc_uint<1>> sig_bool;
     sc_signal<sc_logic> sig_logic;
     sc_buffer<int> buf_int;
     sc_signal_resolved sig_resolved;
@@ -97,7 +96,7 @@ sc_main( int, char*[] )
     mod_a a("a");
     a(clk, sig_int, sig_bool, sig_logic, buf_int, sig_resolved, sig_rv1);
 
-    sc_start( 20, SC_NS );
+    sc_start(20, SC_NS);
 
     return 0;
 }

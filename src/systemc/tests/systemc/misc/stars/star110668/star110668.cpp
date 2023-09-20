@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star110668.cpp -- 
+  star110668.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,26 +36,32 @@
  *****************************************************************************/
 
 #include "systemc.h"
-typedef struct tstruct {
-  sc_int<16> val1;
-  sc_int<16> val2;
+typedef struct tstruct
+{
+    sc_int<16> val1;
+    sc_int<16> val2;
 } dummy_struct;
-SC_MODULE(design) {
-  sc_in_clk    clock;
-  sc_in <sc_int<8> > input;
-  sc_out<sc_int<8> > output;
-  void write_in_fifo();
-  SC_CTOR(design) {
-    SC_CTHREAD(write_in_fifo, clock.pos() );
-  }  
+SC_MODULE(design)
+{
+    sc_in_clk clock;
+    sc_in<sc_int<8>> input;
+    sc_out<sc_int<8>> output;
+    void write_in_fifo();
+    SC_CTOR(design)
+    {
+        SC_CTHREAD(write_in_fifo, clock.pos());
+    }
 };
-void design :: write_in_fifo() {
-  sc_int<8> data_in;
-  dummy_struct foofoo;
- write_loop: while (1) {
-   data_in = input.read();
-   foofoo.val1.range(0,7) = data_in;
-   output.write(foofoo.val2.range(8,15));
-   wait();
- }
+void design ::write_in_fifo()
+{
+    sc_int<8> data_in;
+    dummy_struct foofoo;
+write_loop:
+    while (1)
+    {
+        data_in = input.read();
+        foofoo.val1.range(0, 7) = data_in;
+        output.write(foofoo.val2.range(8, 15));
+        wait();
+    }
 }

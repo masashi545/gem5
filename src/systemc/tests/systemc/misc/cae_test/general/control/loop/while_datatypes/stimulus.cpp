@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stimulus.cpp -- 
+  stimulus.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-27
 
@@ -35,49 +35,53 @@
 
  *****************************************************************************/
 
-
 #include "stimulus.h"
 
-void stimulus::entry() {
+void stimulus::entry()
+{
 
-  int i, j;
+    int i, j;
 
-  // sending some reset values
-  reset.write(true);
-  in_valid.write(false);
-  in_value.write(0);
-  wait();
-  reset.write(false);
-  wait(5);
-  for(i=0; i<3; i++){
-    in_valid.write(true);
-    for(j=0; j<=10; j++) {
-      in_value.write(j);
-      cout << "Stimuli1 : in_valid = true in_value " << j << " at "
-	   << sc_time_stamp() << endl;
-      wait();
-    };
+    // sending some reset values
+    reset.write(true);
     in_valid.write(false);
-    wait(4);
-    for(j=0; j<=10; j++) {
-      in_value.write(j);
-      cout << "Stimuli2 : in_valid = true in_value " << j << " at "
-	   << sc_time_stamp() << endl;
-      wait();
+    in_value.write(0);
+    wait();
+    reset.write(false);
+    wait(5);
+    for (i = 0; i < 3; i++)
+    {
+        in_valid.write(true);
+        for (j = 0; j <= 10; j++)
+        {
+            in_value.write(j);
+            cout << "Stimuli1 : in_valid = true in_value " << j << " at "
+                 << sc_time_stamp() << endl;
+            wait();
+        };
+        in_valid.write(false);
+        wait(4);
+        for (j = 0; j <= 10; j++)
+        {
+            in_value.write(j);
+            cout << "Stimuli2 : in_valid = true in_value " << j << " at "
+                 << sc_time_stamp() << endl;
+            wait();
+        };
+        in_valid.write(false);
+        wait(4);
+        for (j = 0; j <= 10; j++)
+        {
+            in_value.write(j);
+            cout << "Stimuli3 : in_valid = true in_value " << j << " at "
+                 << sc_time_stamp() << endl;
+            wait();
+        };
+        wait(10);
     };
-    in_valid.write(false);
-    wait(4);
-    for(j=0; j<=10; j++) {
-      in_value.write(j);
-      cout << "Stimuli3 : in_valid = true in_value " << j << " at "
-	   << sc_time_stamp() << endl;
-      wait();
-    };
-    wait(10);
-  };
 
-  wait(15);
-  sc_stop();
+    wait(15);
+    sc_stop();
 }
 
 // EOF

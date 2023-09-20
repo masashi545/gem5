@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,7 +40,7 @@ If a process is sensitive to sc_port<some_if<T>, N> and
 this port is bind to two signals, the process is responding
 to only the events on first signal, it's not responding to
 events on second (or other) signals. it seems to me as a
-bug. how to resolve this problem?? 
+bug. how to resolve this problem??
 
 Thanks in advance,
 kiran
@@ -60,41 +60,44 @@ but expected output is,
 
 #include "systemc.h"
 
-SC_MODULE(tst) {
-  sc_port<sc_signal_in_if<bool>, 2> INP;
+SC_MODULE(tst)
+{
+    sc_port<sc_signal_in_if<bool>, 2> INP;
 
-  void print_mthd() {
-    cout <<sc_time_stamp()<<": Method Activated"<<endl;
-  }
- 
-  SC_CTOR(tst) {
-    SC_METHOD(print_mthd);
-    sensitive << INP;
-  }
+    void print_mthd()
+    {
+        cout << sc_time_stamp() << ": Method Activated" << endl;
+    }
+
+    SC_CTOR(tst)
+    {
+        SC_METHOD(print_mthd);
+        sensitive << INP;
+    }
 };
 
-int sc_main(int argc, char* argv[]) {
+int sc_main(int argc, char *argv[])
+{
 
-  sc_signal<bool> INP1, INP2;
-  
-  tst tsti("tsti");
-  tsti.INP(INP1);
-  tsti.INP(INP2);
+    sc_signal<bool> INP1, INP2;
 
-  sc_start(0, SC_NS);
+    tst tsti("tsti");
+    tsti.INP(INP1);
+    tsti.INP(INP2);
 
-  INP1.write(1);
-  sc_start(1, SC_NS);
-  INP2.write(1);
-  sc_start(1, SC_NS);
-  INP2.write(0);
-  sc_start(1, SC_NS);
-  INP1.write(0);
-  sc_start(1, SC_NS);
+    sc_start(0, SC_NS);
 
-  return 0;
+    INP1.write(1);
+    sc_start(1, SC_NS);
+    INP2.write(1);
+    sc_start(1, SC_NS);
+    INP2.write(0);
+    sc_start(1, SC_NS);
+    INP1.write(0);
+    sc_start(1, SC_NS);
+
+    return 0;
 }
-
 
 /*
 =====

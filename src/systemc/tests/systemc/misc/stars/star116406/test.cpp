@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -41,13 +41,13 @@ The following testcase runs on gcc but crashes with SC5.0:
 
 #include <systemc.h>
 
-int sc_main(int argc, char* arg[])
+int sc_main(int argc, char *arg[])
 {
-  sc_int<8> a = 5;
+    sc_int<8> a = 5;
 
-  a = 12 & a;
+    a = 12 & a;
 
-  cout << "a = " << a << endl;
+    cout << "a = " << a << endl;
 
-  return 0;
+    return 0;
 }

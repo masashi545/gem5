@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-03-22
 
@@ -37,15 +37,14 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     sc_uint<5> a = 10;
     const sc_uint<5> b = 10;
 
-    sc_uint<5> x = ( a[2], a[4], a[3], a[1], a[0] );
+    sc_uint<5> x = (a[2], a[4], a[3], a[1], a[0]);
 
-    sc_uint<5> y = ( b[2], b[4], b[3], b[1], b[0] );
+    sc_uint<5> y = (b[2], b[4], b[3], b[1], b[0]);
 
     cout << a << endl;
     cout << b << endl;
@@ -54,4 +53,3 @@ sc_main( int, char*[] )
 
     return 0;
 }
-

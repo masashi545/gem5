@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  delay_line.cpp -- 
+  delay_line.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,8 +42,8 @@
 
 void delay_line::entry()
 {
-  out.write(line[delay-1]);
-  for (int i = delay - 1; i > 0; i--)
-    line[i] = line[i-1];
-  line[0] = in.read();
+    out.write(line[delay - 1]);
+    for (int i = delay - 1; i > 0; i--)
+        line[i] = line[i - 1];
+    line[0] = in.read();
 } // end of entry function

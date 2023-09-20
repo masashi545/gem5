@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  display.cpp -- 
+  display.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-30
 
@@ -35,36 +35,42 @@
 
  *****************************************************************************/
 
-
 #include "display.h"
 
-void display::entry(){
+void display::entry()
+{
     int i = 0;
-    
+
     wait(2);
-    while(i++<20) {
-	//  Reading Data, and Counter i,j is counted up.
-	while (in_valid1.read()==false) wait();
-        while (in_valid1.read()==true) {
-	  cout << "Display : in_data1 " << in_data1.read() << " "
-	       << " at " << sc_time_stamp() << endl;
-	  wait();
-	};
-	while (in_valid2.read()==false) wait();
-        while (in_valid2.read()==true) {
-	  cout << "Display : in_data2 " << in_data2.read() << " "
-	       << " at " << sc_time_stamp() << endl;
-	  wait();
-	};
-	while (in_valid3.read()==false) wait();
-        while (in_valid3.read()==true) {
-	  cout << "Display : in_data3 " << in_data3.read() << " "
-	       << " at " << sc_time_stamp() << endl;
-	  wait();
-	};
+    while (i++ < 20)
+    {
+        //  Reading Data, and Counter i,j is counted up.
+        while (in_valid1.read() == false)
+            wait();
+        while (in_valid1.read() == true)
+        {
+            cout << "Display : in_data1 " << in_data1.read() << " "
+                 << " at " << sc_time_stamp() << endl;
+            wait();
+        };
+        while (in_valid2.read() == false)
+            wait();
+        while (in_valid2.read() == true)
+        {
+            cout << "Display : in_data2 " << in_data2.read() << " "
+                 << " at " << sc_time_stamp() << endl;
+            wait();
+        };
+        while (in_valid3.read() == false)
+            wait();
+        while (in_valid3.read() == true)
+        {
+            cout << "Display : in_data3 " << in_data3.read() << " "
+                 << " at " << sc_time_stamp() << endl;
+            wait();
+        };
     };
     sc_stop();
 }
-
 
 // EOF

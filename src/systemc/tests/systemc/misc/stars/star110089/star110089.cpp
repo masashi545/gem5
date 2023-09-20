@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star110089.cpp -- 
+  star110089.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -115,214 +115,228 @@ SystemC-specific things
 
 #include "systemc.h"
 
-SC_MODULE(lp_write_buf) {
-  sc_in_clk         clk;
-  sc_in<bool>       reset;
-  sc_in<unsigned>   minor;
-  sc_in<unsigned>   buf;   /* a pointer */
-  sc_in<int>        count;
+SC_MODULE(lp_write_buf)
+{
+    sc_in_clk clk;
+    sc_in<bool> reset;
+    sc_in<unsigned> minor;
+    sc_in<unsigned> buf; /* a pointer */
+    sc_in<int> count;
 
-  sc_out<int>       result;       /* return code */
-  sc_out<bool>      result_ready; /* return flag */
+    sc_out<int> result;        /* return code */
+    sc_out<bool> result_ready; /* return flag */
 
-  sc_out<char>      control;      /* printer control port */
+    sc_out<char> control; /* printer control port */
 
-  sc_inout<unsigned>  user_addr;	  /* user memory address */
-  sc_in<char>       user_read_data; /* user data value */
-  sc_out<bool>      user_read;    /* user memory read flag */
+    sc_inout<unsigned> user_addr; /* user memory address */
+    sc_in<char> user_read_data;   /* user data value */
+    sc_out<bool> user_read;       /* user memory read flag */
 
-  sc_out<unsigned>  kernel_addr;  /* kernel memory address */
-  sc_in<char>       kernel_read_data; /* kernel data value */
-  sc_out<char>      kernel_write_data; /* kernel data value */
-  sc_out<bool>      kernel_read;
-  sc_out<bool>      kernel_write;
+    sc_out<unsigned> kernel_addr;   /* kernel memory address */
+    sc_in<char> kernel_read_data;   /* kernel data value */
+    sc_out<char> kernel_write_data; /* kernel data value */
+    sc_out<bool> kernel_read;
+    sc_out<bool> kernel_write;
 
-  sc_out<bool>      invalid_read; /* debugging flag: should never be true */
+    sc_out<bool> invalid_read; /* debugging flag: should never be true */
 
-  void lp_write_buf_body();
-  int lp_write_buf_f(unsigned int minor,  pchar_t buf, int count);
+    void lp_write_buf_body();
+    int lp_write_buf_f(unsigned int minor, pchar_t buf, int count);
 
-  /* User and kernel memory operations */
-  char read_from_user(unsigned a);
-  char read_from_kernel(unsigned a);
-  void write_to_kernel(unsigned a, char d); 
+    /* User and kernel memory operations */
+    char read_from_user(unsigned a);
+    char read_from_kernel(unsigned a);
+    void write_to_kernel(unsigned a, char d);
 
-  int copy_from_user(pchar_t,  pchar_t, unsigned long);
+    int copy_from_user(pchar_t, pchar_t, unsigned long);
 
-  /* Output verification */
-  void check_read_address();
-  
-  SC_CTOR(lp_write_buf)
-  {
-    SC_CTHREAD(lp_write_buf_body, clk.pos());
-    reset_signal_is(reset,true);
-    SC_CTHREAD(check_read_address, clk.pos());
-    reset_signal_is(reset,true);
-  }
+    /* Output verification */
+    void check_read_address();
+
+    SC_CTOR(lp_write_buf)
+    {
+        SC_CTHREAD(lp_write_buf_body, clk.pos());
+        reset_signal_is(reset, true);
+        SC_CTHREAD(check_read_address, clk.pos());
+        reset_signal_is(reset, true);
+    }
 };
 
 void lp_write_buf::check_read_address()
 {
-  /* This causes the systemC compiler a fatal internal error */
-  for (;;) {
-    invalid_read = user_addr < buf || user_addr >= buf + count;
-    wait();
-  }
+    /* This causes the systemC compiler a fatal internal error */
+    for (;;)
+    {
+        invalid_read = user_addr < buf || user_addr >= buf + count;
+        wait();
+    }
 }
-
 
 void lp_write_buf::lp_write_buf_body()
 {
-  unsigned dummy; /* These three statements compensate for BC weirdness */
-  dummy = 0;
-  wait();
-  for (;;) {
-    result = 0; result_ready = 0;
-    unsigned res = lp_write_buf_f(minor, buf, count);
-    result = (int) res; result_ready = 1;
+    unsigned dummy; /* These three statements compensate for BC weirdness */
+    dummy = 0;
     wait();
-    result_ready = 0;
-    wait();
-  }
+    for (;;)
+    {
+        result = 0;
+        result_ready = 0;
+        unsigned res = lp_write_buf_f(minor, buf, count);
+        result = (int)res;
+        result_ready = 1;
+        wait();
+        result_ready = 0;
+        wait();
+    }
 }
 
 char lp_write_buf::read_from_user(unsigned a)
 {
-  char d;
-  user_addr = a;
-  user_read = 1;
-  wait();
-  d = user_read_data;
-  user_read = 0;
-  wait();
-  return d;
+    char d;
+    user_addr = a;
+    user_read = 1;
+    wait();
+    d = user_read_data;
+    user_read = 0;
+    wait();
+    return d;
 }
 
 char lp_write_buf::read_from_kernel(unsigned a)
 {
-  char d;
-  kernel_addr = a;
-  kernel_read = 1;
-  wait();
-  d = kernel_read_data;
-  kernel_read = 0;
-  wait();
-  return d;
+    char d;
+    kernel_addr = a;
+    kernel_read = 1;
+    wait();
+    d = kernel_read_data;
+    kernel_read = 0;
+    wait();
+    return d;
 }
 
 void lp_write_buf::write_to_kernel(unsigned a, char d)
 {
-  kernel_addr = a;
-  kernel_write_data = d;
-  kernel_write = 1;
-  wait();
-  kernel_write = 0;
-  wait();
+    kernel_addr = a;
+    kernel_write_data = d;
+    kernel_write = 1;
+    wait();
+    kernel_write = 0;
+    wait();
 }
 
-int lp_write_buf::copy_from_user(pchar_t src,  pchar_t dest,
-				 unsigned long count)
+int lp_write_buf::copy_from_user(pchar_t src, pchar_t dest,
+                                 unsigned long count)
 {
-  for ( ; count > 0 ; count--)
-    write_to_kernel(dest++, read_from_user(src++));
-  /* What about an error? */
-  return 0;
+    for (; count > 0; count--)
+        write_to_kernel(dest++, read_from_user(src++));
+    /* What about an error? */
+    return 0;
 }
 
 /********************************************************************
   "Normal" C begins here
  ********************************************************************/
 
-#define	ENXIO		 6	/* No such device or address */
-#define	EFAULT		14	/* Bad address */
+#define ENXIO 6   /* No such device or address */
+#define EFAULT 14 /* Bad address */
 
 // #define NULL             0
 
-#define LP_PINTEN	0x10  /* high to read data in or-ed with data out */
-#define LP_PSELECP	0x08  /* inverted output, active low */
-#define LP_PINITP	0x04  /* unchanged output, active low */
-#define LP_PAUTOLF	0x02  /* inverted output, active low */
-#define LP_PSTROBE	0x01  /* short high output on raising edge */
+#define LP_PINTEN 0x10  /* high to read data in or-ed with data out */
+#define LP_PSELECP 0x08 /* inverted output, active low */
+#define LP_PINITP 0x04  /* unchanged output, active low */
+#define LP_PAUTOLF 0x02 /* inverted output, active low */
+#define LP_PSTROBE 0x01 /* short high output on raising edge */
 
 /* #define LP_POLLED(minor) (lp_table[(minor)].dev->port->irq == PARPORT_IRQ_NONE) */
 #define LP_POLLED(minor) 1
 
-#define w_ctr(dev,val) (control = (val))
+#define w_ctr(dev, val) (control = (val))
 
 #define LP_NO 3
 #define LP_BUFFER_SIZE 32
 
-struct lp_struct {
-  /* struct pardevice *dev; */
-  pchar_t dev;
-  unsigned long flags;
-  unsigned int chars;
-  unsigned int time;
-  /*	unsigned int wait; */
-  pchar_t lp_buffer;
-  /* struct wait_queue *wait_q; */
-  unsigned int last_error;
-  volatile unsigned int irq_detected:1;
-  volatile unsigned int irq_missed:1;
+struct lp_struct
+{
+    /* struct pardevice *dev; */
+    pchar_t dev;
+    unsigned long flags;
+    unsigned int chars;
+    unsigned int time;
+    /*	unsigned int wait; */
+    pchar_t lp_buffer;
+    /* struct wait_queue *wait_q; */
+    unsigned int last_error;
+    volatile unsigned int irq_detected : 1;
+    volatile unsigned int irq_missed : 1;
 };
 
 /* Write count bytes starting at buf in user space to the parallel port
    defined by the minor device number */
 
 int lp_write_buf::lp_write_buf_f(unsigned int minor,
-				 pchar_t buf, int count)
+                                 pchar_t buf, int count)
 {
-  int err;
-  struct lp_struct lp_table[LP_NO];
+    int err;
+    struct lp_struct lp_table[LP_NO];
 
-  /* Added to fake a device */
-  lp_table[minor].dev = 5;
+    /* Added to fake a device */
+    lp_table[minor].dev = 5;
 
-  unsigned long copy_size;
-  unsigned long total_bytes_written = 0;
-  unsigned long bytes_written;
-  /* Removed because pointers are prohibited */
-  /* struct lp_struct *lp = &lp_table[minor]; */
+    unsigned long copy_size;
+    unsigned long total_bytes_written = 0;
+    unsigned long bytes_written;
+    /* Removed because pointers are prohibited */
+    /* struct lp_struct *lp = &lp_table[minor]; */
 
-  if (minor >= LP_NO) {
-    wait();
-    return -ENXIO;
-  } else {
+    if (minor >= LP_NO)
+    {
+        wait();
+        return -ENXIO;
+    }
+    else
+    {
 
-    /*   if (lp->dev == NULL) */ /* Removed because of a pointer */
-    /* The following causes a BC error (bad matching width of n15[1]) */
-    if (lp_table[minor].dev == 0) {
-      wait();
-      return -ENXIO;
-    } else {
+        /*   if (lp->dev == NULL) */ /* Removed because of a pointer */
+        /* The following causes a BC error (bad matching width of n15[1]) */
+        if (lp_table[minor].dev == 0)
+        {
+            wait();
+            return -ENXIO;
+        }
+        else
+        {
 
-      lp_table[minor].last_error = 0;
-      lp_table[minor].irq_detected = 0;
-      lp_table[minor].irq_missed = 1;
+            lp_table[minor].last_error = 0;
+            lp_table[minor].irq_detected = 0;
+            lp_table[minor].irq_missed = 1;
 
-      if (LP_POLLED(minor))
-	w_ctr(minor, LP_PSELECP | LP_PINITP);
-      else
-	w_ctr(minor, LP_PSELECP | LP_PINITP | LP_PINTEN);
+            if (LP_POLLED(minor))
+                w_ctr(minor, LP_PSELECP | LP_PINITP);
+            else
+                w_ctr(minor, LP_PSELECP | LP_PINITP | LP_PINTEN);
 
-      err = 0;
-      wait();
-      do {
-	wait();
-	bytes_written = 0;
-	copy_size = (count <= LP_BUFFER_SIZE ? count : LP_BUFFER_SIZE);
+            err = 0;
+            wait();
+            do
+            {
+                wait();
+                bytes_written = 0;
+                copy_size = (count <= LP_BUFFER_SIZE ? count : LP_BUFFER_SIZE);
 
+                /* Adding this gives width mismatch errors */
+                if (copy_from_user(lp_table[minor].lp_buffer, buf, copy_size))
+                {
+                    wait();
+                    w_ctr(minor, LP_PSELECP | LP_PINITP);
+                    // return -EFAULT;
+                    err = -EFAULT;
+                }
+                else
+                {
 
-	/* Adding this gives width mismatch errors */
-	if (copy_from_user(lp_table[minor].lp_buffer, buf, copy_size)) {
-	  wait();
-	  w_ctr(minor, LP_PSELECP | LP_PINITP);
-	  // return -EFAULT;
-	  err = -EFAULT;
-	} else {
-
-	/** Fake! **/
-	bytes_written = copy_size;
+                    /** Fake! **/
+                    bytes_written = copy_size;
 
 #if 0
 
@@ -378,26 +392,27 @@ int lp_write_buf::lp_write_buf_f(unsigned int minor,
 
 #endif
 
-	total_bytes_written += bytes_written;
-	buf += bytes_written;
-	count -= bytes_written;
+                    total_bytes_written += bytes_written;
+                    buf += bytes_written;
+                    count -= bytes_written;
 
-	wait();
-	}
+                    wait();
+                }
 
-      } while (count > 0 && err >= 0);
+            } while (count > 0 && err >= 0);
 
-      wait();
+            wait();
 
-      if (err >= 0 ) {
+            if (err >= 0)
+            {
 
-	w_ctr(minor, LP_PSELECP | LP_PINITP);
-	return total_bytes_written;
-      } else {
-	return err;
-      }
-
+                w_ctr(minor, LP_PSELECP | LP_PINITP);
+                return total_bytes_written;
+            }
+            else
+            {
+                return err;
+            }
+        }
     }
-  }
 }
-

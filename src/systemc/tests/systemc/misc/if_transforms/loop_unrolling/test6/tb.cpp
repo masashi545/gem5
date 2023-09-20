@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  tb.cpp -- 
+  tb.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,15 +37,12 @@
 
 #include "tb.h"
 #include "define.h"
- 
-void tb::entry() 
+
+void tb::entry()
 {
-  cout << "Begin Simulation" << endl;
+    cout << "Begin Simulation" << endl;
 
+    cout << "End Simulation" << endl;
 
-  cout << "End Simulation" << endl;
-
-  sc_stop();
-
+    sc_stop();
 }
-

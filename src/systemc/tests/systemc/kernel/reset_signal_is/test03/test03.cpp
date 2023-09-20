@@ -22,7 +22,7 @@
   test03.cpp -- Test reset_signal_is() usage with SC_CTHREAD processes.
 
   Original Author: Andy Goodrich, Forte Design Systems, 12 August 2005
-    
+
  *****************************************************************************/
 
 /*****************************************************************************
@@ -31,50 +31,49 @@
   changes you are making here.
 
       Name, Affiliation, Date:
-  Description of Modification:    
-    
+  Description of Modification:
+
  *****************************************************************************/
 
 #include "systemc.h"
 SC_MODULE(DUT)
 {
-	SC_CTOR(DUT)
-	{
-		SC_CTHREAD(cthread,m_clk.pos());
-		reset_signal_is(m_reset,true);
-	}
-	void cthread()
-	{
-		cout << sc_time_stamp() << ": initializing" << endl;
-		for (;;)
-		{
-		    wait(3);
-			cout << sc_time_stamp() << ": waited 3" << endl;
-		}
-	}
-	sc_in<bool> m_clk;
-	sc_in<bool> m_reset;
+    SC_CTOR(DUT)
+    {
+        SC_CTHREAD(cthread, m_clk.pos());
+        reset_signal_is(m_reset, true);
+    }
+    void cthread()
+    {
+        cout << sc_time_stamp() << ": initializing" << endl;
+        for (;;)
+        {
+            wait(3);
+            cout << sc_time_stamp() << ": waited 3" << endl;
+        }
+    }
+    sc_in<bool> m_clk;
+    sc_in<bool> m_reset;
 };
 
-int sc_main( int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-	sc_clock        clock;
-	DUT             dut("dut");
-	sc_signal<bool> reset;
+    sc_clock clock;
+    DUT dut("dut");
+    sc_signal<bool> reset;
 
-	dut.m_clk(clock);
-	dut.m_reset(reset);
+    dut.m_clk(clock);
+    dut.m_reset(reset);
 
-	reset = false;
-	sc_start(3, SC_NS);
-	reset = true;
-	sc_start(2, SC_NS);
-	reset = false;
-	sc_start(6, SC_NS);
-	reset = true;
-	sc_start(5, SC_NS);
-	reset = false;
-	sc_start(5, SC_NS);
-	return 0;
+    reset = false;
+    sc_start(3, SC_NS);
+    reset = true;
+    sc_start(2, SC_NS);
+    reset = false;
+    sc_start(6, SC_NS);
+    reset = true;
+    sc_start(5, SC_NS);
+    reset = false;
+    sc_start(5, SC_NS);
+    return 0;
 }
-

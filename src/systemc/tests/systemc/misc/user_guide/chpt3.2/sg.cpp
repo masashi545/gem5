@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  sg.cpp -- 
+  sg.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -41,18 +41,19 @@
 
 void stimgen::entry()
 {
-  char c;
-  FILE *file;
+    char c;
+    FILE *file;
 
-  file = fopen("./chpt3.2/testcase", "r");
-  
-  while (true) {
-    if (fscanf(file, "%c", &c) == EOF)
-      sc_stop();
-    data_ready.write(true);
-    stream.write(c);
-    wait();
-    data_ready.write(false);
-    wait();
-  }
+    file = fopen("./chpt3.2/testcase", "r");
+
+    while (true)
+    {
+        if (fscanf(file, "%c", &c) == EOF)
+            sc_stop();
+        data_ready.write(true);
+        stream.write(c);
+        wait();
+        data_ready.write(false);
+        wait();
+    }
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,36 +35,35 @@
 
  *****************************************************************************/
 
-/* 
+/*
    Verifies directives synthesis_on/synthesis_off
-   Author: PRP 
+   Author: PRP
    From Test Case translate_on: syn2.cc
 */
-
 
 #include "systemc.h"
 #include "test.h"
 
-void test::entry() 
+void test::entry()
 {
-  int i,j,y,z;
- 
- 
-        i = 7;
- 
-     y = 3;
- 
-     y = 2;
-     o1 = 7;
-     if (i2 == 4) {
-       o2  = 8;
-     }  else {
-       o2 = 9;
-     }
- 
-     o1 = 6;
- 
-  wait();
+    int i, j, y, z;
 
+    i = 7;
+
+    y = 3;
+
+    y = 2;
+    o1 = 7;
+    if (i2 == 4)
+    {
+        o2 = 8;
+    }
+    else
+    {
+        o2 = 9;
+    }
+
+    o1 = 6;
+
+    wait();
 }
-

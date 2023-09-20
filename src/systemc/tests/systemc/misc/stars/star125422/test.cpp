@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,14 +39,14 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_clock clk( "clk", 20, SC_NS );
+    sc_clock clk("clk", 20, SC_NS);
 
-    for( int i = 0; i < 5; ++ i ) {
+    for (int i = 0; i < 5; ++i)
+    {
         cout << sc_time_stamp() << endl;
-        sc_start( 15, SC_NS );
+        sc_start(15, SC_NS);
     }
     cout << sc_time_stamp() << endl;
 

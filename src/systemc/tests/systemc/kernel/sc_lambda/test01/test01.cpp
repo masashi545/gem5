@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-03-22
                    Ucar Aziz, Synopsys, Inc.
@@ -48,39 +48,42 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
-    sc_in_clk   clk1;
+    sc_in_clk clk1;
     sc_in<bool> clk2;
 
     void main_action()
     {
-	int i = 0;
+        int i = 0;
 
-	while( true ) {
-	    do { wait(); } while ( !(clk2 == true) );
-	    cout << "i = " << i << endl;
-	    i ++;
-	    wait();
-	}
+        while (true)
+        {
+            do
+            {
+                wait();
+            } while (!(clk2 == true));
+            cout << "i = " << i << endl;
+            i++;
+            wait();
+        }
     }
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
-	SC_CTHREAD( main_action, clk1.pos() );
+        SC_CTHREAD(main_action, clk1.pos());
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    mod_a a( "a" );
-    sc_clock clk1( "clk1", 0.1, SC_NS );
-    sc_clock clk2( "clk2", 0.5, SC_NS );
-    a.clk1( clk1 );
-    a.clk2( clk2 );
+    mod_a a("a");
+    sc_clock clk1("clk1", 0.1, SC_NS);
+    sc_clock clk2("clk2", 0.5, SC_NS);
+    a.clk1(clk1);
+    a.clk2(clk2);
 
-    sc_start( 3, SC_NS );
+    sc_start(3, SC_NS);
 
     return 0;
 }

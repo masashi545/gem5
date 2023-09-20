@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,26 +42,23 @@ In SystemC 1.0.1:
 Conversion (via assignment or constructor) from an integer to sc_lv<32> is broken
 on Sun SC5.0. I think it's an endless recursion.
 
-It works fine with gcc. 
+It works fine with gcc.
 
 Example:
 */
 
 #include "systemc.h"
 
-int sc_main(int argc, char* arg[]) 
+int sc_main(int argc, char *arg[])
 {
     int a;
     sc_lv<32> b;
-    a=10;
+    a = 10;
 
-    b=a;     // core dump
+    b = a; // core dump
     cout << b << endl;
-    b=sc_lv<32>(a);  // core dump
+    b = sc_lv<32>(a); // core dump
     cout << b << endl;
 
     return 0;
 }
-
-
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,34 +35,32 @@
 
  *****************************************************************************/
 
-
 //
 //      Verifies function inlining
 //
 //      Author: PRP
 //      Date Created: 26 Feb 99
 //
- 
+
 #include "systemc.h"
 #include "test.h"
 
-int test::incr (int x)
+int test::incr(int x)
 {
-  int a, b, c;
- 
-  a = x + 1;
-  b = a + x;
-  o1 = x + i2.read() + b;
-  return b + c;
+    int a, b, c;
+
+    a = x + 1;
+    b = a + x;
+    o1 = x + i2.read() + b;
+    return b + c;
 }
- 
-void test::entry() 
+
+void test::entry()
 {
-  int i;
- 
-  wait();
- 
-  o2 = incr (i1);
-  wait();
+    int i;
+
+    wait();
+
+    o2 = incr(i1);
+    wait();
 }
- 

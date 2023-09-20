@@ -43,127 +43,130 @@
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 #include <systemc.h>
 
-
 int test_function(double d)
 {
-  cout << endl << sc_time_stamp() << ": " << sc_get_current_process_handle().name()
-       << ": Test_function sees " << d << endl;
-  return int(d);
+    cout << endl
+         << sc_time_stamp() << ": " << sc_get_current_process_handle().name()
+         << ": Test_function sees " << d << endl;
+    return int(d);
 }
 
 void void_function(double d)
 {
-  cout << endl << sc_time_stamp() << ": " << sc_get_current_process_handle().name()
-       << ": void_function sees " << d << endl;
+    cout << endl
+         << sc_time_stamp() << ": " << sc_get_current_process_handle().name()
+         << ": void_function sees " << d << endl;
 }
 
-int ref_function(const double& d)
+int ref_function(const double &d)
 {
-  cout << endl << sc_time_stamp() << ": " << sc_get_current_process_handle().name()
-       << ": ref_function sees " << d << endl;
-  return int(d);
+    cout << endl
+         << sc_time_stamp() << ": " << sc_get_current_process_handle().name()
+         << ": ref_function sees " << d << endl;
+    return int(d);
 }
-
 
 class top : public sc_module
 {
 public:
-  SC_HAS_PROCESS(top);
+    SC_HAS_PROCESS(top);
 
-  top(sc_module_name name) : sc_module(name) 
-  {
-     SC_THREAD(main);
-  }
-
-  void main()
-  {
-    int r;
-    sc_event e1, e2, e3, e4;
-
-    cout << endl;
-
-    e1.notify(100, SC_NS);
-
-    // Spawn several threads that co-operatively execute in round robin order
-
-    SC_FORK
-      sc_spawn(&r,
-        sc_bind(&top::round_robin, this, "1", sc_ref(e1), sc_ref(e2), 3), "t1") ,
-      sc_spawn(&r,
-        sc_bind(&top::round_robin, this, "2", sc_ref(e2), sc_ref(e3), 3), "t2") ,
-      sc_spawn(&r,
-        sc_bind(&top::round_robin, this, "3", sc_ref(e3), sc_ref(e4), 3), "t3") ,
-      sc_spawn(&r,
-        sc_bind(&top::round_robin, this, "4", sc_ref(e4), sc_ref(e1), 3), "t4") ,
-    SC_JOIN
-
-    cout << "Returned int is " << r << endl;
-    cout << endl << endl;
-
-    // Test that threads in thread pool are successfully reused ...
-
-    for (int i = 0 ; i < 10; i++)
-      sc_spawn(&r, sc_bind(&top::wait_and_end, this, i));
-
-    wait(20, SC_NS);
-
-    // Test thread reuse
-
-    for (int i = 0 ; i < 10; i++)
-      sc_spawn(&r, sc_bind(&top::wait_and_end, this, i));
-
-    wait(20, SC_NS);
-
-    // Demo of a function rather than method call, & use return value ...
-    
-    wait( sc_spawn(&r, sc_bind(&test_function, 3.14159)).terminated_event() );
-
-    cout << "Returned int is " << r << endl;
-
-    // demo sc_spawn_options usage
-
-    sc_spawn_options ops;
-    ops.set_stack_size(0);
-    sc_process_handle handle1 = sc_spawn(
-      sc_bind(&void_function, 1.2345), "void_function", &ops
-    );
-    wait(handle1.terminated_event());
-
-    double d = 9.8765;
-    wait( sc_spawn(&r, sc_bind(&ref_function, sc_cref(d))).terminated_event() );
-
-    cout << "Returned int is " << r << endl;
-
-    cout << endl << "Done." << endl;
-  }
-
-  int round_robin(const char *str, sc_event& receive, sc_event& send, int cnt)
-  {
-    while (--cnt >= 0)
+    top(sc_module_name name) : sc_module(name)
     {
-      wait(receive);
-      cout << sc_time_stamp() << ": " << sc_get_current_process_handle().name()
-           << ": Round robin thread " << str << endl;
-      wait(10, SC_NS);
-      send.notify();
+        SC_THREAD(main);
     }
 
-    return 0;
-  }
+    void main()
+    {
+        int r;
+        sc_event e1, e2, e3, e4;
 
-  int wait_and_end(int i)
-  {
-    wait( i + 1, SC_NS);
-    cout << sc_time_stamp() << ": " << sc_get_current_process_handle().name()
-         << ": Thread " << i << " ending." << endl;
-    return 0;
-  }
+        cout << endl;
+
+        e1.notify(100, SC_NS);
+
+        // Spawn several threads that co-operatively execute in round robin order
+
+        SC_FORK
+        sc_spawn(&r,
+                 sc_bind(&top::round_robin, this, "1", sc_ref(e1), sc_ref(e2), 3), "t1"),
+            sc_spawn(&r,
+                     sc_bind(&top::round_robin, this, "2", sc_ref(e2), sc_ref(e3), 3), "t2"),
+            sc_spawn(&r,
+                     sc_bind(&top::round_robin, this, "3", sc_ref(e3), sc_ref(e4), 3), "t3"),
+            sc_spawn(&r,
+                     sc_bind(&top::round_robin, this, "4", sc_ref(e4), sc_ref(e1), 3), "t4"),
+            SC_JOIN
+
+                    cout
+                << "Returned int is " << r << endl;
+        cout << endl
+             << endl;
+
+        // Test that threads in thread pool are successfully reused ...
+
+        for (int i = 0; i < 10; i++)
+            sc_spawn(&r, sc_bind(&top::wait_and_end, this, i));
+
+        wait(20, SC_NS);
+
+        // Test thread reuse
+
+        for (int i = 0; i < 10; i++)
+            sc_spawn(&r, sc_bind(&top::wait_and_end, this, i));
+
+        wait(20, SC_NS);
+
+        // Demo of a function rather than method call, & use return value ...
+
+        wait(sc_spawn(&r, sc_bind(&test_function, 3.14159)).terminated_event());
+
+        cout << "Returned int is " << r << endl;
+
+        // demo sc_spawn_options usage
+
+        sc_spawn_options ops;
+        ops.set_stack_size(0);
+        sc_process_handle handle1 = sc_spawn(
+            sc_bind(&void_function, 1.2345), "void_function", &ops);
+        wait(handle1.terminated_event());
+
+        double d = 9.8765;
+        wait(sc_spawn(&r, sc_bind(&ref_function, sc_cref(d))).terminated_event());
+
+        cout << "Returned int is " << r << endl;
+
+        cout << endl
+             << "Done." << endl;
+    }
+
+    int round_robin(const char *str, sc_event &receive, sc_event &send, int cnt)
+    {
+        while (--cnt >= 0)
+        {
+            wait(receive);
+            cout << sc_time_stamp() << ": " << sc_get_current_process_handle().name()
+                 << ": Round robin thread " << str << endl;
+            wait(10, SC_NS);
+            send.notify();
+        }
+
+        return 0;
+    }
+
+    int wait_and_end(int i)
+    {
+        wait(i + 1, SC_NS);
+        cout << sc_time_stamp() << ": " << sc_get_current_process_handle().name()
+             << ": Thread " << i << " ending." << endl;
+        return 0;
+    }
 };
 
-int sc_main (int argc , char *argv[]) 
+int sc_main(int argc, char *argv[])
 {
-  top top1("Top1");
-  sc_start();
+    top top1("Top1");
+    sc_start();
 
-  return 0;
+    return 0;
 }

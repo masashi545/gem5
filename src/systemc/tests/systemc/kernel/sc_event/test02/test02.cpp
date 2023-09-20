@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,7 +39,7 @@
 
 #include "systemc.h"
 
-SC_MODULE( source )
+SC_MODULE(source)
 {
     sc_in_clk clk;
     sc_out<int> out;
@@ -47,20 +47,21 @@ SC_MODULE( source )
     void main_action()
     {
         int a = 0;
-        while( true ) {
+        while (true)
+        {
             wait();
-            out = a ++;
+            out = a++;
         }
     }
 
-    SC_CTOR( source )
+    SC_CTOR(source)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
         sensitive << clk.pos();
     }
 };
 
-SC_MODULE( sink )
+SC_MODULE(sink)
 {
     sc_in_clk clk;
     sc_in<int> in;
@@ -70,11 +71,13 @@ SC_MODULE( sink )
     void main_action()
     {
         int a;
-        while( true ) {
+        while (true)
+        {
             wait();
             cout << sc_delta_count() << " -- " << in.read() << endl;
             a = in.read();
-            if( ( a % 3 ) == 0 ) {
+            if ((a % 3) == 0)
+            {
                 e.notify();
             }
         }
@@ -82,46 +85,47 @@ SC_MODULE( sink )
 
     void other_action()
     {
-        while( true ) {
-            wait( e );
+        while (true)
+        {
+            wait(e);
             cout << sc_delta_count() << " AA " << in.read() << endl;
-            wait( e | e );  // same as wait( e )
+            wait(e | e); // same as wait( e )
             cout << sc_delta_count() << " BB " << in.read() << endl;
-            wait( e & e );  // same as wait( e )
+            wait(e & e); // same as wait( e )
             cout << sc_delta_count() << " CC " << in.read() << endl;
-            wait( e | e | e );  // same as wait( e )
+            wait(e | e | e); // same as wait( e )
             cout << sc_delta_count() << " DD " << in.read() << endl;
-            wait( e & e & e );  // same as wait( e )
+            wait(e & e & e); // same as wait( e )
             cout << sc_delta_count() << " EE " << in.read() << endl;
-            wait( e & clk->negedge_event() );
+            wait(e & clk->negedge_event());
             cout << sc_delta_count() << " FF " << in.read() << endl;
-            wait( e | clk->negedge_event() );
+            wait(e | clk->negedge_event());
             cout << sc_delta_count() << " GG " << in.read() << endl;
         }
     }
 
-    SC_CTOR( sink )
+    SC_CTOR(sink)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
         sensitive << clk.pos();
-        SC_THREAD( other_action );
+        SC_THREAD(other_action);
     }
 };
 
-int sc_main( int, char** )
+int sc_main(int, char **)
 {
     sc_clock clk;
 
     sc_signal<int> sig;
-    source src( "src" );
-    sink snk( "snk" );
+    source src("src");
+    sink snk("snk");
 
-    src.clk( clk );
-    src.out( sig );
-    snk.clk( clk );
-    snk.in( sig );
+    src.clk(clk);
+    src.out(sig);
+    snk.clk(clk);
+    snk.in(sig);
 
-    sc_start( 100, SC_NS );
+    sc_start(100, SC_NS);
 
     return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test2.cpp -- 
+  test2.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,21 +36,25 @@
  *****************************************************************************/
 
 #include "test.h"
- 
-void t::entry() 
+
+void t::entry()
 {
-  wait();
-  while (1) {
-    do { wait(); } while (cont1 == 0);
-    if (i2 == 1)
-      break; 
-    /* error: wait needs to be inserted between do { wait(); } while 
-       and break */
-  }
-  wait();
+    wait();
+    while (1)
+    {
+        do
+        {
+            wait();
+        } while (cont1 == 0);
+        if (i2 == 1)
+            break;
+        /* error: wait needs to be inserted between do { wait(); } while
+           and break */
+    }
+    wait();
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

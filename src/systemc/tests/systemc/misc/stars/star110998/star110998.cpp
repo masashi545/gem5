@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star110998.cpp -- 
+  star110998.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,23 +35,19 @@
 
  *****************************************************************************/
 
-
 #include "systemc.h"
 #include "test1.h"
-#define SCAN_INTERVAL 200000   // 200 us
+#define SCAN_INTERVAL 200000 // 200 us
 #define NS *1e-9
-
 
 void io_controller_m::control_write()
 {
-   sc_uint<32> word_cnt;
-   wait();
+    sc_uint<32> word_cnt;
+    wait();
 
-   while(true)
-     {
-       wait(unsigned ((SCAN_INTERVAL NS)/40e-9));
-       wait();         
-         
-     }
+    while (true)
+    {
+        wait(unsigned((SCAN_INTERVAL NS) / 40e-9));
+        wait();
+    }
 }
-

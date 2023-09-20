@@ -37,70 +37,68 @@
 
 #include "systemc.h"
 
-
 SC_MODULE(A)
 {
     SC_CTOR(A)
-	{
-		SC_CTHREAD(test,m_clk.pos());
-		reset_signal_is( m_reset, false );
-	}
-	void test()
-	{
-		{
-			cout << "A: reset" << endl;
-			wait();
-		}
-		for (;;)
-		{
-			wait();
-		}
-	}
-	sc_in_clk   m_clk;
-	sc_in<bool> m_reset;
+    {
+        SC_CTHREAD(test, m_clk.pos());
+        reset_signal_is(m_reset, false);
+    }
+    void test()
+    {
+        {
+            cout << "A: reset" << endl;
+            wait();
+        }
+        for (;;)
+        {
+            wait();
+        }
+    }
+    sc_in_clk m_clk;
+    sc_in<bool> m_reset;
 };
 
 SC_MODULE(B)
 {
-    B(sc_module_name name, sc_signal<bool>* reset_p ):
-		sc_module(name), m_reset_p(reset_p)
-	{
-		SC_HAS_PROCESS(B);
-		SC_CTHREAD(test,m_clk.pos());
-		reset_signal_is( *m_reset_p, false );
-	}
-	void test()
-	{
-		{
-			cout << "B: reset" << endl;
-			wait();
-		}
-		for (;;)
-		{
-			wait();
-		}
-	}
-	sc_in_clk        m_clk;
-	sc_signal<bool>* m_reset_p;
+    B(sc_module_name name, sc_signal<bool> * reset_p) : sc_module(name), m_reset_p(reset_p)
+    {
+        SC_HAS_PROCESS(B);
+        SC_CTHREAD(test, m_clk.pos());
+        reset_signal_is(*m_reset_p, false);
+    }
+    void test()
+    {
+        {
+            cout << "B: reset" << endl;
+            wait();
+        }
+        for (;;)
+        {
+            wait();
+        }
+    }
+    sc_in_clk m_clk;
+    sc_signal<bool> *m_reset_p;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-	sc_clock        clk;
-	sc_signal<bool> reset;
-	A a("a");
-    B b("b",&reset);
+    sc_clock clk;
+    sc_signal<bool> reset;
+    A a("a");
+    B b("b", &reset);
 
-	a.m_clk(clk);
-	a.m_reset(reset);
-	b.m_clk(clk);
+    a.m_clk(clk);
+    a.m_reset(reset);
+    b.m_clk(clk);
 
-	cout << "Before start" << endl;
-	sc_start(2, SC_NS);
-	reset = true;
-	cout << "After reset true" << endl;
-	sc_start(3, SC_NS);
-	cout << "Ending" << endl;
+    cout << "Before start" << endl;
+    sc_start(2, SC_NS);
+    reset = true;
+    cout << "After reset true" << endl;
+    sc_start(3, SC_NS);
+    cout << "Ending" << endl;
 
-	return 0;
+    return 0;
 }

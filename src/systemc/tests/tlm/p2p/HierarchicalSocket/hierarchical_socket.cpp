@@ -17,24 +17,24 @@
 
  *****************************************************************************/
 
-//#include <iostream>
+// #include <iostream>
 
-//#include <systemc>
+// #include <systemc>
 
 #include "tlm.h"
 
 #include "SimpleInitiatorWrapper.h"
 #include "SimpleTargetWrapper.h"
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  SimpleInitiatorWrapper initiator("initiatorWrapper");
-  SimpleTargetWrapper target("targetWrapper");
+    SimpleInitiatorWrapper initiator("initiatorWrapper");
+    SimpleTargetWrapper target("targetWrapper");
 
-  initiator.socket(target.socket);
+    initiator.socket(target.socket);
 
-  sc_core::sc_start();
-  sc_core::sc_stop();
+    sc_core::sc_start();
+    sc_core::sc_stop();
 
-  return 0;
+    return 0;
 }

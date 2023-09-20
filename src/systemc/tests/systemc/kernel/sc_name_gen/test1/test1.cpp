@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test1.cpp -- 
+  test1.cpp --
 
   Original Author: Andy Goodrich, Forte Design Systems 16 July 2004
 
@@ -39,42 +39,42 @@
 
 #include "systemc.h"
 
-SC_MODULE(A) 
+SC_MODULE(A)
 {
-	SC_CTOR(A)
-	{
-		SC_CTHREAD(abc, m_clk.pos());
-		SC_CTHREAD(abc, m_clk.pos());
-		SC_METHOD(def);
-		SC_METHOD(def);
-		SC_METHOD(def);
-		SC_THREAD(ghi);
-		SC_THREAD(ghi);
-	}
-	void abc()
-	{
-		sc_curr_proc_handle cpi = sc_get_curr_simcontext()->get_curr_proc_info();
-		cout << cpi->process_handle->name() << endl;
-	}
-	void def()
-	{
-		sc_curr_proc_handle cpi = sc_get_curr_simcontext()->get_curr_proc_info();
-		cout << cpi->process_handle->name() << endl;
-	}
-	void ghi()
-	{
-		sc_curr_proc_handle cpi = sc_get_curr_simcontext()->get_curr_proc_info();
-		cout << cpi->process_handle->name() << endl;
-	}
-	sc_in_clk m_clk;
+    SC_CTOR(A)
+    {
+        SC_CTHREAD(abc, m_clk.pos());
+        SC_CTHREAD(abc, m_clk.pos());
+        SC_METHOD(def);
+        SC_METHOD(def);
+        SC_METHOD(def);
+        SC_THREAD(ghi);
+        SC_THREAD(ghi);
+    }
+    void abc()
+    {
+        sc_curr_proc_handle cpi = sc_get_curr_simcontext()->get_curr_proc_info();
+        cout << cpi->process_handle->name() << endl;
+    }
+    void def()
+    {
+        sc_curr_proc_handle cpi = sc_get_curr_simcontext()->get_curr_proc_info();
+        cout << cpi->process_handle->name() << endl;
+    }
+    void ghi()
+    {
+        sc_curr_proc_handle cpi = sc_get_curr_simcontext()->get_curr_proc_info();
+        cout << cpi->process_handle->name() << endl;
+    }
+    sc_in_clk m_clk;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-	A        a("a");
-	sc_clock clock;
-	a.m_clk(clock);
+    A a("a");
+    sc_clock clock;
+    a.m_clk(clock);
 
-	sc_start(10, SC_NS);
+    sc_start(10, SC_NS);
     return 0;
 }

@@ -26,7 +26,6 @@
  CHANGE LOG APPEARS AT THE END OF THE FILE
  *****************************************************************************/
 
-
 #include "sysc/kernel/sc_cmnhdr.h"
 #include "sysc/kernel/sc_externs.h"
 #include "sysc/kernel/sc_except.h"
@@ -36,92 +35,91 @@
 #include "sysc/utils/sc_utils_ids.h"
 #include <vector>
 
-namespace sc_core {
-
-extern void pln();
-
-static int    argc_copy;	// Copy of argc value passed to sc_elab_and_sim.
-static char** argv_copy;	// Copy of argv value passed to sc_elab_and_sim.
-
-static
-inline
-void
-message_function( const char* s )
+namespace sc_core
 {
-    ::std::cout << "\n" << s << ::std::endl;
-}
 
-bool sc_in_action = false;
+    extern void pln();
 
-int sc_argc() 
-{
-    return argc_copy;
-}
+    static int argc_copy;    // Copy of argc value passed to sc_elab_and_sim.
+    static char **argv_copy; // Copy of argv value passed to sc_elab_and_sim.
 
-const char* const* sc_argv() 
-{
-    return argv_copy;
-}
-
-
-int
-sc_elab_and_sim( int argc, char* argv[] )
-{
-    int status = 1;
-    argc_copy = argc;
-    argv_copy = argv;
-    std::vector<char*> argv_call;
-    for ( int i = 0; i < argc; i++ ) 
-        argv_call.push_back(argv[i]);
-
-    try
+    static inline void
+    message_function(const char *s)
     {
-        pln();
-
-        // Perform initialization here
-        sc_in_action = true;
-
-        status = sc_main( argc, &argv_call[0] );
-
-        // Perform cleanup here
-        sc_in_action = false;
-    }
-    catch( const sc_report& x )
-    {
-	message_function( x.what() );
-    }
-    catch( ... )
-    {
-        // translate other escaping exceptions
-        sc_report*  err_p = sc_handle_exception();
-        if( err_p ) message_function( err_p->what() );
-        delete err_p;
+        ::std::cout << "\n"
+                    << s << ::std::endl;
     }
 
-    // IF DEPRECATION WARNINGS WERE ISSUED TELL THE USER HOW TO TURN THEM OFF 
+    bool sc_in_action = false;
 
-    if ( sc_report_handler::get_count( SC_ID_IEEE_1666_DEPRECATION_ ) > 0 )
+    int sc_argc()
     {
-        std::stringstream ss;
-
-#       define MSGNL  "\n             "
-#       define CODENL "\n  "
-
-        ss <<
-          "You can turn off warnings about" MSGNL
-          "IEEE 1666 deprecated features by placing this method call" MSGNL
-          "as the first statement in your sc_main() function:\n" CODENL
-          "sc_core::sc_report_handler::set_actions( "
-          "\"" << SC_ID_IEEE_1666_DEPRECATION_ << "\"," CODENL
-          "                                         " /* indent param */
-          "sc_core::SC_DO_NOTHING );"
-          << std::endl;
-
-        SC_REPORT_INFO( SC_ID_IEEE_1666_DEPRECATION_, ss.str().c_str() );
+        return argc_copy;
     }
 
-    return status;
-}
+    const char *const *sc_argv()
+    {
+        return argv_copy;
+    }
+
+    int
+    sc_elab_and_sim(int argc, char *argv[])
+    {
+        int status = 1;
+        argc_copy = argc;
+        argv_copy = argv;
+        std::vector<char *> argv_call;
+        for (int i = 0; i < argc; i++)
+            argv_call.push_back(argv[i]);
+
+        try
+        {
+            pln();
+
+            // Perform initialization here
+            sc_in_action = true;
+
+            status = sc_main(argc, &argv_call[0]);
+
+            // Perform cleanup here
+            sc_in_action = false;
+        }
+        catch (const sc_report &x)
+        {
+            message_function(x.what());
+        }
+        catch (...)
+        {
+            // translate other escaping exceptions
+            sc_report *err_p = sc_handle_exception();
+            if (err_p)
+                message_function(err_p->what());
+            delete err_p;
+        }
+
+        // IF DEPRECATION WARNINGS WERE ISSUED TELL THE USER HOW TO TURN THEM OFF
+
+        if (sc_report_handler::get_count(SC_ID_IEEE_1666_DEPRECATION_) > 0)
+        {
+            std::stringstream ss;
+
+#define MSGNL "\n             "
+#define CODENL "\n  "
+
+            ss << "You can turn off warnings about" MSGNL
+                  "IEEE 1666 deprecated features by placing this method call" MSGNL
+                  "as the first statement in your sc_main() function:\n" CODENL
+                  "sc_core::sc_report_handler::set_actions( "
+                  "\""
+               << SC_ID_IEEE_1666_DEPRECATION_ << "\"," CODENL "                                         " /* indent param */
+                                                  "sc_core::SC_DO_NOTHING );"
+               << std::endl;
+
+            SC_REPORT_INFO(SC_ID_IEEE_1666_DEPRECATION_, ss.str().c_str());
+        }
+
+        return status;
+    }
 
 } // namespace sc_core
 

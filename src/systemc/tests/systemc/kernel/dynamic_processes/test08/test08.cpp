@@ -48,56 +48,58 @@
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 #include "systemc.h"
 
-class prim_channel : public sc_prim_channel {
-  public:
-  	prim_channel(const char* name = sc_gen_unique_name("prim_channel") ) 
-	    : sc_prim_channel(name)
-	{}
-	void thread()
-	{
-		cout << "thread here..." << endl;
-	}
-	void update()
-	{
-		cout << "update called..." << endl;
-		sc_spawn( sc_bind(&prim_channel::thread,this), 
-		          sc_gen_unique_name("thread"));
-	}
-	void write( int i )
-	{
-		request_update();
-	}
+class prim_channel : public sc_prim_channel
+{
+public:
+    prim_channel(const char *name = sc_gen_unique_name("prim_channel"))
+        : sc_prim_channel(name)
+    {
+    }
+    void thread()
+    {
+        cout << "thread here..." << endl;
+    }
+    void update()
+    {
+        cout << "update called..." << endl;
+        sc_spawn(sc_bind(&prim_channel::thread, this),
+                 sc_gen_unique_name("thread"));
+    }
+    void write(int i)
+    {
+        request_update();
+    }
 };
 
 SC_MODULE(DUT)
 {
-	SC_CTOR(DUT)
-	{
-		SC_CTHREAD(thread,m_clk.pos());
-	}
-	void thread()
-	{
-		for (;;)
-		{
-			wait();
-			m_chan.write(0);
-			wait();
-			m_chan.write(0);
-			sc_stop();
-		}
-	}
-	sc_in<bool>  m_clk;
-	prim_channel m_chan;
+    SC_CTOR(DUT)
+    {
+        SC_CTHREAD(thread, m_clk.pos());
+    }
+    void thread()
+    {
+        for (;;)
+        {
+            wait();
+            m_chan.write(0);
+            wait();
+            m_chan.write(0);
+            sc_stop();
+        }
+    }
+    sc_in<bool> m_clk;
+    prim_channel m_chan;
 };
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-	sc_clock        clock;
-	DUT             dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
 
-	dut.m_clk(clock);
+    dut.m_clk(clock);
 
-	sc_start(10, SC_NS);
+    sc_start(10, SC_NS);
 
-	cout << "Program completed" << endl;
-	return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }

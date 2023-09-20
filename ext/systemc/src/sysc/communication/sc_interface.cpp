@@ -30,49 +30,48 @@
 #include "sysc/communication/sc_communication_ids.h"
 #include "sysc/kernel/sc_event.h"
 
-
-namespace sc_core {
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_interface
-//
-//  Abstract base class of all interface classes.
-//  BEWARE: Direct inheritance from this class must be done virtual.
-// ----------------------------------------------------------------------------
-
-// register a port with this interface (does nothing by default)
-
-void
-sc_interface::register_port( sc_port_base&, const char* )
-{}
-
-
-// get the default event
-
-const sc_event&
-sc_interface::default_event() const
+namespace sc_core
 {
-    SC_REPORT_WARNING( SC_ID_NO_DEFAULT_EVENT_, 0 );
-    return m_never_notified;
-}
 
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_interface
+    //
+    //  Abstract base class of all interface classes.
+    //  BEWARE: Direct inheritance from this class must be done virtual.
+    // ----------------------------------------------------------------------------
 
-// destructor (does nothing)
+    // register a port with this interface (does nothing by default)
 
-sc_interface::~sc_interface()
-{}
+    void
+    sc_interface::register_port(sc_port_base &, const char *)
+    {
+    }
 
+    // get the default event
 
-// constructor (does nothing)
+    const sc_event &
+    sc_interface::default_event() const
+    {
+        SC_REPORT_WARNING(SC_ID_NO_DEFAULT_EVENT_, 0);
+        return m_never_notified;
+    }
 
-sc_interface::sc_interface()
-{}
+    // destructor (does nothing)
 
+    sc_interface::~sc_interface()
+    {
+    }
 
-// special event for never notified cases, note the special name to keep
-// it out of the named event structures.
+    // constructor (does nothing)
 
-sc_event sc_interface::m_never_notified(SC_KERNEL_EVENT_PREFIX);
+    sc_interface::sc_interface()
+    {
+    }
+
+    // special event for never notified cases, note the special name to keep
+    // it out of the named event structures.
+
+    sc_event sc_interface::m_never_notified(SC_KERNEL_EVENT_PREFIX);
 
 } // namespace sc_core
 

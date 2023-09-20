@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-30
 
@@ -39,53 +39,54 @@
 #include "display.h"
 #include "datatypes.h"
 
-int sc_main (int argc , char *argv[]) {
-  sc_clock        clock;
-  sc_signal<bool> reset;
-  sc_signal_bool_vector2      stimulus_line1;
-  sc_signal_bool_vector2      stimulus_line2;
-  sc_signal_bool_vector3      stimulus_line3;
-  sc_signal_bool_vector3      stimulus_line4;
-  sc_signal<bool>             input_valid;
-  sc_signal<bool>             ack;
-  sc_signal<bool>             output_valid;
-  sc_signal_bool_vector2      result_line1;
-  sc_signal_bool_vector2      result_line2;
-  sc_signal_bool_vector3      result_line3;
-  sc_signal_bool_vector3      result_line4;
+int sc_main(int argc, char *argv[])
+{
+    sc_clock clock;
+    sc_signal<bool> reset;
+    sc_signal_bool_vector2 stimulus_line1;
+    sc_signal_bool_vector2 stimulus_line2;
+    sc_signal_bool_vector3 stimulus_line3;
+    sc_signal_bool_vector3 stimulus_line4;
+    sc_signal<bool> input_valid;
+    sc_signal<bool> ack;
+    sc_signal<bool> output_valid;
+    sc_signal_bool_vector2 result_line1;
+    sc_signal_bool_vector2 result_line2;
+    sc_signal_bool_vector3 result_line3;
+    sc_signal_bool_vector3 result_line4;
 
-  stimulus stimulus1("stimulus_block",
-                      clock,
-		      reset,
-                      stimulus_line1,
-                      stimulus_line2,
-                      stimulus_line3,
-                      stimulus_line4,
-		      input_valid,
-                      ack);
-
-  datatypes datatypes1( "process_body",
-            	       clock, 
-		       reset,
+    stimulus stimulus1("stimulus_block",
+                       clock,
+                       reset,
                        stimulus_line1,
                        stimulus_line2,
                        stimulus_line3,
                        stimulus_line4,
-		       input_valid,
-                       result_line1, 
-                       result_line2, 
-                       result_line3, 
-                       result_line4,
-                       ack, 
-		       output_valid);
+                       input_valid,
+                       ack);
 
-  display  display1( "display_block",
-                       clock,
-		       result_line1,
-		       result_line2,
-		       result_line3,
-		       result_line4,
-		       output_valid);
+    datatypes datatypes1("process_body",
+                         clock,
+                         reset,
+                         stimulus_line1,
+                         stimulus_line2,
+                         stimulus_line3,
+                         stimulus_line4,
+                         input_valid,
+                         result_line1,
+                         result_line2,
+                         result_line3,
+                         result_line4,
+                         ack,
+                         output_valid);
+
+    display display1("display_block",
+                     clock,
+                     result_line1,
+                     result_line2,
+                     result_line3,
+                     result_line4,
+                     output_valid);
 
     sc_start();
     return 0;

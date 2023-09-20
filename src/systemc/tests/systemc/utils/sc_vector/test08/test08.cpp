@@ -30,31 +30,32 @@
 
 struct foo
 {
-  explicit
-  foo( const char* nm )
-    : name(nm)
-  {}
-  std::string name;
+    explicit foo(const char *nm)
+        : name(nm)
+    {
+    }
+    std::string name;
 };
 
-int sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-  sc_report_handler::set_actions( SC_ERROR, SC_DISPLAY );
+    sc_report_handler::set_actions(SC_ERROR, SC_DISPLAY);
 
-  sc_vector< sc_event > ev_vec ( "evs", 1 );
+    sc_vector<sc_event> ev_vec("evs", 1);
 
-  sc_assert( ev_vec.size() == 1 );
-  // should print an error
-  sc_assert( ev_vec.get_elements().size() == 0 );
+    sc_assert(ev_vec.size() == 1);
+    // should print an error
+    sc_assert(ev_vec.get_elements().size() == 0);
 
-  sc_vector< foo >      foo_vec( "foo", 1 );
+    sc_vector<foo> foo_vec("foo", 1);
 
-  sc_assert( foo_vec.size() == 1 );
-  sc_assert( sc_assemble_vector( foo_vec, &foo::name ).size() == 1 );
-  // should print an error
-  sc_assert( sc_assemble_vector( foo_vec, &foo::name )
-               .get_elements().size() == 0 );
+    sc_assert(foo_vec.size() == 1);
+    sc_assert(sc_assemble_vector(foo_vec, &foo::name).size() == 1);
+    // should print an error
+    sc_assert(sc_assemble_vector(foo_vec, &foo::name)
+                  .get_elements()
+                  .size() == 0);
 
-  cout << "\nSuccess" << endl;
-  return 0;
+    cout << "\nSuccess" << endl;
+    return 0;
 }

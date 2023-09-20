@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-480.cpp -- 
+  pr-480.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,24 +37,23 @@
 
 #include "systemc.h"
 
-SC_MODULE( yow )
+SC_MODULE(yow)
 {
-    SC_HAS_PROCESS( yow );
+    SC_HAS_PROCESS(yow);
 
     sc_in_clk clk;
 
-    yow( sc_module_name name, sc_clock& clk_ )
-    : clk(clk_)
+    yow(sc_module_name name, sc_clock & clk_)
+        : clk(clk_)
     {
-      SC_CTHREAD( entry, clk.pos() );
+        SC_CTHREAD(entry, clk.pos());
     }
     sc_unsigned foo(int x);
     int bar();
     void entry();
 };
 
-int
-yow::bar()
+int yow::bar()
 {
     sc_bigint<10> x;
     return (x + foo(x.to_int())).to_int();

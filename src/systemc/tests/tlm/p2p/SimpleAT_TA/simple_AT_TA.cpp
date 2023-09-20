@@ -22,15 +22,15 @@
 #include "SimpleATInitiator2.h"
 #include "SimpleATTarget2.h"
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  SimpleATInitiator2 initiator("initiator");
-  SimpleATTarget2 target("target");
+    SimpleATInitiator2 initiator("initiator");
+    SimpleATTarget2 target("target");
 
-  initiator.socket(target.socket);
+    initiator.socket(target.socket);
 
-  sc_core::sc_start();
-  sc_core::sc_stop();
+    sc_core::sc_start();
+    sc_core::sc_stop();
 
-  return 0;
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star109678.cpp -- 
+  star109678.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,70 +37,82 @@
 
 #include "systemc.h"
 
-SC_MODULE(test) {
-  sc_in_clk clk;
-  sc_in<bool> reset;
-  sc_in<sc_uint<10> > inp;
-  sc_out<sc_uint<10> > outp;
-  sc_out<sc_uint<10> > outp2;
+SC_MODULE(test)
+{
+    sc_in_clk clk;
+    sc_in<bool> reset;
+    sc_in<sc_uint<10>> inp;
+    sc_out<sc_uint<10>> outp;
+    sc_out<sc_uint<10>> outp2;
 
-  SC_CTOR(test) {
-    SC_CTHREAD(entry, clk.pos());
-    reset_signal_is(reset,true);
-    SC_CTHREAD(entry2, clk.pos());
-    end_module();
-  }
+    SC_CTOR(test)
+    {
+        SC_CTHREAD(entry, clk.pos());
+        reset_signal_is(reset, true);
+        SC_CTHREAD(entry2, clk.pos());
+        end_module();
+    }
 
-  void entry();
-  void entry2();
+    void entry();
+    void entry2();
 };
 
+void test::entry()
+{
+    sc_uint<10> tmp, tmp2;
 
-void test::entry() {
-  sc_uint<10> tmp, tmp2;
-
-  outp.write(0);
-  wait();
-  for(;;) {
-    if(inp.read() == 0) {
-      wait();
-      while(inp.read() != 0) {
-        wait();
-        tmp = inp.read();
-        break;
-      }
-      break;
-    } else {
-      tmp = 5;
-      wait();
+    outp.write(0);
+    wait();
+    for (;;)
+    {
+        if (inp.read() == 0)
+        {
+            wait();
+            while (inp.read() != 0)
+            {
+                wait();
+                tmp = inp.read();
+                break;
+            }
+            break;
+        }
+        else
+        {
+            tmp = 5;
+            wait();
+        }
     }
-  }
-  wait();
-  outp = tmp;
-  wait();
+    wait();
+    outp = tmp;
+    wait();
 }
 
+void test::entry2()
+{
+    sc_uint<10> tmp, tmp2;
 
-void test::entry2() {
-  sc_uint<10> tmp, tmp2;
-
-  outp2.write(0);
-  wait();
-  for(;;) {
-    if(inp.read() == 0) {
-      wait();
-      while(inp.read() != 0) {
-        wait();
-        tmp = inp.read();
-        continue;
-      }
-      break;
-    } else {
-      tmp = 5;
-      wait();
+    outp2.write(0);
+    wait();
+    for (;;)
+    {
+        if (inp.read() == 0)
+        {
+            wait();
+            while (inp.read() != 0)
+            {
+                wait();
+                tmp = inp.read();
+                continue;
+            }
+            break;
+        }
+        else
+        {
+            tmp = 5;
+            wait();
+        }
     }
-  }
-  wait();
-  outp2 = tmp;
-  wait();
+    wait();
+    outp2 = tmp;
+    wait();
 }

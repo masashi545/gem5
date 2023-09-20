@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  T_2_3_1_1.cpp -- 
+  T_2_3_1_1.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,13 +40,12 @@
 #define MYNAME T_2_3_1_1
 
 const int WIDTH = 8;
-typedef sc_bv<WIDTH>         my_vector;
+typedef sc_bv<WIDTH> my_vector;
 typedef sc_signal<my_vector> signal_vector;
 
 #include "T_2_3_1.h"
 
-void
-MYNAME::entry()
+void MYNAME::entry()
 {
     my_vector a;
     my_vector b;
@@ -63,13 +62,13 @@ MYNAME::entry()
     b = x.read() | y.read();
     z = a ^ b;
     wait();
-    a = ~ x.read();
-    b = ~ y.read();
+    a = ~x.read();
+    b = ~y.read();
     z = a | b;
     wait();
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

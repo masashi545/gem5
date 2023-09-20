@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  display.cpp -- 
+  display.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,11 +42,11 @@
 
 void display::entry()
 {
-  while (true) {
-    char buf[BUFSIZ];
-    sprintf( buf, "Result = %.16g", in.read() );
-    cout << buf << endl;
-    wait();
-  }
+    while (true)
+    {
+        char buf[BUFSIZ];
+        sprintf(buf, "Result = %.16g", in.read());
+        cout << buf << endl;
+        wait();
+    }
 } // end of entry function
-

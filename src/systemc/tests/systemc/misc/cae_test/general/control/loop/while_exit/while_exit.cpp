@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  while_exit.cpp -- 
+  while_exit.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-30
 
@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 #include "while_exit.h"
 
 #define max 10
@@ -43,82 +42,99 @@
 void while_exit::entry()
 {
 
-  int  i, inp_tmp;
+    int i, inp_tmp;
 
-  // reset_loop
-  if (reset.read()==true) {
-    result.write(0);
-    out_valid.write(false);
-    wait();
-  } else wait(); 
+    // reset_loop
+    if (reset.read() == true)
+    {
+        result.write(0);
+        out_valid.write(false);
+        wait();
+    }
+    else
+        wait();
 
-  //----------
-  // main loop
-  //----------
-  while(1) {
+    //----------
+    // main loop
+    //----------
+    while (1)
+    {
 
-    // read inputs
-    while (in_valid.read()==false) wait();
+        // read inputs
+        while (in_valid.read() == false)
+            wait();
 
-    // execution of while loop with exit after write statement 
-    out_valid.write(true);
-    i=1;
-    wait();
-    while (i<=max) {
-      inp_tmp = in_value.read();
-      result.write(inp_tmp); 
-      if (inp_tmp==7) {
-	wait();
-	break;
-      } else {
-	i++;
-	wait();
-      };
-    };
-    out_valid.write(false);
-    wait(6);
+        // execution of while loop with exit after write statement
+        out_valid.write(true);
+        i = 1;
+        wait();
+        while (i <= max)
+        {
+            inp_tmp = in_value.read();
+            result.write(inp_tmp);
+            if (inp_tmp == 7)
+            {
+                wait();
+                break;
+            }
+            else
+            {
+                i++;
+                wait();
+            };
+        };
+        out_valid.write(false);
+        wait(6);
 
-    // execution of do loop with continues
-    out_valid.write(true);
-    i=0;
-    wait();
-    do {
-      i++;
-      inp_tmp = in_value.read();
-      if (i==8) {
-	wait();
-	continue;
-      } else if (in_value.read()<5) {
-	wait();
-	continue;
-      } else {
-	result.write(inp_tmp);
-	wait();
-      }
-    } while (i<=max);
-    out_valid.write(false);
-    wait(5);
+        // execution of do loop with continues
+        out_valid.write(true);
+        i = 0;
+        wait();
+        do
+        {
+            i++;
+            inp_tmp = in_value.read();
+            if (i == 8)
+            {
+                wait();
+                continue;
+            }
+            else if (in_value.read() < 5)
+            {
+                wait();
+                continue;
+            }
+            else
+            {
+                result.write(inp_tmp);
+                wait();
+            }
+        } while (i <= max);
+        out_valid.write(false);
+        wait(5);
 
-    // execution of do loop with exit after before statement
-    out_valid.write(true);
-    i=0;
-    wait();
-    do {
-      i++;
-      inp_tmp = in_value.read();
-      if (inp_tmp==7) {
-	wait();
-	break;
-      } else {
-	result.write(inp_tmp);
-	wait();
-      };
-    } while (i<=max);
-    out_valid.write(false);
-    wait();
-
-  }
+        // execution of do loop with exit after before statement
+        out_valid.write(true);
+        i = 0;
+        wait();
+        do
+        {
+            i++;
+            inp_tmp = in_value.read();
+            if (inp_tmp == 7)
+            {
+                wait();
+                break;
+            }
+            else
+            {
+                result.write(inp_tmp);
+                wait();
+            };
+        } while (i <= max);
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-

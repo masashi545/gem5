@@ -31,49 +31,50 @@ using namespace sc_core;
 using std::cout;
 using std::endl;
 
-struct Top: sc_module
+struct Top : sc_module
 {
-  Top(sc_module_name _name)
-  {
-    SC_THREAD(T1);
-    SC_THREAD(T2);
-  }
-  
-  void T1()
-  {
-    sc_assert( sc_time_stamp() == sc_time(0, SC_NS) );
-    wait(15, SC_NS);
-    sc_assert( sc_time_stamp() == sc_time(15, SC_NS) );
-    sc_pause();
-  }
+    Top(sc_module_name _name)
+    {
+        SC_THREAD(T1);
+        SC_THREAD(T2);
+    }
 
-  void T2()
-  {
-    sc_assert( sc_time_stamp() == sc_time(0, SC_NS) );
-    wait(30, SC_NS);
-    sc_assert( sc_time_stamp() == sc_time(30, SC_NS) );
-    sc_pause();
-  }
+    void T1()
+    {
+        sc_assert(sc_time_stamp() == sc_time(0, SC_NS));
+        wait(15, SC_NS);
+        sc_assert(sc_time_stamp() == sc_time(15, SC_NS));
+        sc_pause();
+    }
 
-  SC_HAS_PROCESS(Top);
+    void T2()
+    {
+        sc_assert(sc_time_stamp() == sc_time(0, SC_NS));
+        wait(30, SC_NS);
+        sc_assert(sc_time_stamp() == sc_time(30, SC_NS));
+        sc_pause();
+    }
+
+    SC_HAS_PROCESS(Top);
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  Top top("top");
-  
-  sc_start(10, SC_NS, SC_RUN_TO_TIME);
-  sc_assert( sc_time_stamp() == sc_time(10, SC_NS) );
+    Top top("top");
 
-  sc_start(10, SC_NS, SC_RUN_TO_TIME);
-  sc_assert( sc_time_stamp() == sc_time(15, SC_NS) );
-  
-  sc_start(10, SC_NS, SC_RUN_TO_TIME);
-  sc_assert( sc_time_stamp() == sc_time(25, SC_NS) );
-  
-  sc_start(10, SC_NS, SC_RUN_TO_TIME);
-  sc_assert( sc_time_stamp() == sc_time(30, SC_NS) );
-  
-  cout << endl << "Success" << endl;
-  return 0;
+    sc_start(10, SC_NS, SC_RUN_TO_TIME);
+    sc_assert(sc_time_stamp() == sc_time(10, SC_NS));
+
+    sc_start(10, SC_NS, SC_RUN_TO_TIME);
+    sc_assert(sc_time_stamp() == sc_time(15, SC_NS));
+
+    sc_start(10, SC_NS, SC_RUN_TO_TIME);
+    sc_assert(sc_time_stamp() == sc_time(25, SC_NS));
+
+    sc_start(10, SC_NS, SC_RUN_TO_TIME);
+    sc_assert(sc_time_stamp() == sc_time(30, SC_NS));
+
+    cout << endl
+         << "Success" << endl;
+    return 0;
 }

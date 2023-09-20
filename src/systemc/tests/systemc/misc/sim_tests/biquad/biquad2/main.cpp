@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -43,35 +43,34 @@
 #include "op_queue.h"
 #include "getres.h"
 
-int
-sc_main(int ac, char *av[])
+int sc_main(int ac, char *av[])
 {
-  sc_signal<float> sample;
-  sc_signal<float> result;
-  sc_signal<float> delayed_out;
-  sc_signal<float> final_out;
-  sc_signal<bool> reset;
-  sc_signal<bool> pop;
+    sc_signal<float> sample;
+    sc_signal<float> result;
+    sc_signal<float> delayed_out;
+    sc_signal<float> final_out;
+    sc_signal<bool> reset;
+    sc_signal<bool> pop;
 
-  sample = 0.0;
-  result = 0.0;
-  delayed_out = 0.0;
-  final_out = 0.0;
-  pop = false;
+    sample = 0.0;
+    result = 0.0;
+    delayed_out = 0.0;
+    final_out = 0.0;
+    pop = false;
 
-  sc_clock clk("Clock", CLOCK_PERIOD, SC_NS);
+    sc_clock clk("Clock", CLOCK_PERIOD, SC_NS);
 
-  testbench TB("TB", clk, result, reset, sample);
-  biquad filter("BFILTER", clk, sample, reset, result);
-  delay_line D("Delay", clk, result, delayed_out);
-  op_queue OPQ("OPQueue", clk, delayed_out, pop, final_out, 1000);
-  getres OP("OPStage", clk, final_out, pop);
+    testbench TB("TB", clk, result, reset, sample);
+    biquad filter("BFILTER", clk, sample, reset, result);
+    delay_line D("Delay", clk, result, delayed_out);
+    op_queue OPQ("OPQueue", clk, delayed_out, pop, final_out, 1000);
+    getres OP("OPStage", clk, final_out, pop);
 
-  int n;
-  if (ac == 2) 
-    n = atoi(av[1]);
-  else
-    n = 10000;
-  sc_start(n, SC_NS);
-  return 0;
+    int n;
+    if (ac == 2)
+        n = atoi(av[1]);
+    else
+        n = 10000;
+    sc_start(n, SC_NS);
+    return 0;
 }

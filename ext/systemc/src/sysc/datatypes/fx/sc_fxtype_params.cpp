@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  sc_fxtype_params.cpp - 
+  sc_fxtype_params.cpp -
 
   Original Author: Martin Janssen, Synopsys, Inc.
 
@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 // $Log: sc_fxtype_params.cpp,v $
 // Revision 1.1.1.1  2006/12/15 20:20:04  acg
 // SystemC 2.3
@@ -47,62 +46,59 @@
 
 #include "sysc/datatypes/fx/sc_fxtype_params.h"
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_fxtype_params
-//
-//  Fixed-point type parameters class.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_fxtype_params
+    //
+    //  Fixed-point type parameters class.
+    // ----------------------------------------------------------------------------
 
-const std::string
-sc_fxtype_params::to_string() const
-{
-    std::string s;
+    const std::string
+    sc_fxtype_params::to_string() const
+    {
+        std::string s;
 
-    char buf[BUFSIZ];
+        char buf[BUFSIZ];
 
-    s += "(";
-    std::sprintf( buf, "%d", m_wl );
-    s += buf;
-    s += ",";
-    std::sprintf( buf, "%d", m_iwl );
-    s += buf;
-    s += ",";
-    s += sc_dt::to_string( m_q_mode );
-    s += ",";
-    s += sc_dt::to_string( m_o_mode );
-    s += ",";
-    std::sprintf( buf, "%d", m_n_bits );
-    s += buf;
-    s += ")";
+        s += "(";
+        std::sprintf(buf, "%d", m_wl);
+        s += buf;
+        s += ",";
+        std::sprintf(buf, "%d", m_iwl);
+        s += buf;
+        s += ",";
+        s += sc_dt::to_string(m_q_mode);
+        s += ",";
+        s += sc_dt::to_string(m_o_mode);
+        s += ",";
+        std::sprintf(buf, "%d", m_n_bits);
+        s += buf;
+        s += ")";
 
-    return s;
-}
+        return s;
+    }
 
+    void
+    sc_fxtype_params::print(::std::ostream &os) const
+    {
+        os << to_string();
+    }
 
-void
-sc_fxtype_params::print( ::std::ostream& os ) const
-{
-    os << to_string();
-}
-
-void
-sc_fxtype_params::dump( ::std::ostream& os ) const
-{
-    os << "sc_fxtype_params" << ::std::endl;
-    os << "(" << ::std::endl;
-    os << "wl     = " << m_wl << ::std::endl;
-    os << "iwl    = " << m_iwl << ::std::endl;
-    os << "q_mode = " << m_q_mode << ::std::endl;
-    os << "o_mode = " << m_o_mode << ::std::endl;
-    os << "n_bits = " << m_n_bits << ::std::endl;
-    os << ")" << ::std::endl;
-}
+    void
+    sc_fxtype_params::dump(::std::ostream &os) const
+    {
+        os << "sc_fxtype_params" << ::std::endl;
+        os << "(" << ::std::endl;
+        os << "wl     = " << m_wl << ::std::endl;
+        os << "iwl    = " << m_iwl << ::std::endl;
+        os << "q_mode = " << m_q_mode << ::std::endl;
+        os << "o_mode = " << m_o_mode << ::std::endl;
+        os << "n_bits = " << m_n_bits << ::std::endl;
+        os << ")" << ::std::endl;
+    }
 
 } // namespace sc_dt
-
 
 // Taf!

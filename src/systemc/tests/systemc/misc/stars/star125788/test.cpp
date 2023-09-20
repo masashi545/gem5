@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -47,103 +47,103 @@ g++ 2.92.5 and Sun SC6.1 on Solaris.
 
 #include <systemc.h>
 
-int sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-  sc_int<8>      i8   =  8;
-  sc_uint<9>     u9   =  9;
-  sc_bigint<10>  bi10 = 10;
-  sc_biguint<11> bu11 = 11;
+    sc_int<8> i8 = 8;
+    sc_uint<9> u9 = 9;
+    sc_bigint<10> bi10 = 10;
+    sc_biguint<11> bu11 = 11;
 
-  sc_int<8>      i8_2;
-  sc_uint<9>     u9_2;
-  sc_bigint<10>  bi10_2;
-  sc_biguint<11> bu11_2;
+    sc_int<8> i8_2;
+    sc_uint<9> u9_2;
+    sc_bigint<10> bi10_2;
+    sc_biguint<11> bu11_2;
 
-  i8_2 = sc_int<8>(i8);
-  cout << i8_2 << endl;
-  i8_2 = sc_int<8>(u9);     // g++ 2.95.2: ambiguous
-  cout << i8_2 << endl;
-  i8_2 = sc_int<8>(bi10);
-  cout << i8_2 << endl;
-  i8_2 = sc_int<8>(bu11);
-  cout << i8_2 << endl;
+    i8_2 = sc_int<8>(i8);
+    cout << i8_2 << endl;
+    i8_2 = sc_int<8>(u9); // g++ 2.95.2: ambiguous
+    cout << i8_2 << endl;
+    i8_2 = sc_int<8>(bi10);
+    cout << i8_2 << endl;
+    i8_2 = sc_int<8>(bu11);
+    cout << i8_2 << endl;
 
-  cout << endl;
+    cout << endl;
 
-  u9_2 = sc_uint<9>(i8);     // g++ 2.95.2: ambiguous
-  cout << u9_2 << endl;
-  u9_2 = sc_uint<9>(u9);
-  cout << u9_2 << endl;
-  u9_2 = sc_uint<9>(bi10);
-  cout << u9_2 << endl;
-  u9_2 = sc_uint<9>(bu11);
-  cout << u9_2 << endl;
+    u9_2 = sc_uint<9>(i8); // g++ 2.95.2: ambiguous
+    cout << u9_2 << endl;
+    u9_2 = sc_uint<9>(u9);
+    cout << u9_2 << endl;
+    u9_2 = sc_uint<9>(bi10);
+    cout << u9_2 << endl;
+    u9_2 = sc_uint<9>(bu11);
+    cout << u9_2 << endl;
 
-  cout << endl;
+    cout << endl;
 
-  bi10_2 = sc_bigint<10>(i8);
-  cout << bi10_2 << endl;
-  bi10_2 = sc_bigint<10>(u9);
-  cout << bi10_2 << endl;
-  bi10_2 = sc_bigint<10>(bi10);
-  cout << bi10_2 << endl;
-  bi10_2 = sc_bigint<10>(bu11);
-  cout << bi10_2 << endl;
+    bi10_2 = sc_bigint<10>(i8);
+    cout << bi10_2 << endl;
+    bi10_2 = sc_bigint<10>(u9);
+    cout << bi10_2 << endl;
+    bi10_2 = sc_bigint<10>(bi10);
+    cout << bi10_2 << endl;
+    bi10_2 = sc_bigint<10>(bu11);
+    cout << bi10_2 << endl;
 
-  cout << endl;
+    cout << endl;
 
-  bu11_2 = sc_biguint<11>(i8);  // g++ 2.95.2: ambiguous, SC6.1: error
-  cout << bu11_2 << endl;
-  bu11_2 = sc_biguint<11>(u9);  // g++ 2.95.2: ambiguous, SC6.1: error
-  cout << bu11_2 << endl;
-  bu11_2 = sc_biguint<11>(bi10);
-  cout << bu11_2 << endl;
-  bu11_2 = sc_biguint<11>(bu11);
-  cout << bu11_2 << endl;
+    bu11_2 = sc_biguint<11>(i8); // g++ 2.95.2: ambiguous, SC6.1: error
+    cout << bu11_2 << endl;
+    bu11_2 = sc_biguint<11>(u9); // g++ 2.95.2: ambiguous, SC6.1: error
+    cout << bu11_2 << endl;
+    bu11_2 = sc_biguint<11>(bi10);
+    cout << bu11_2 << endl;
+    bu11_2 = sc_biguint<11>(bu11);
+    cout << bu11_2 << endl;
 
-  cout << endl;
+    cout << endl;
 
-  i8_2 = i8;
-  cout << i8_2 << endl;
-  i8_2 = u9;
-  cout << i8_2 << endl;
-  i8_2 = bi10;
-  cout << i8_2 << endl;
-  i8_2 = bu11;
-  cout << i8_2 << endl;
+    i8_2 = i8;
+    cout << i8_2 << endl;
+    i8_2 = u9;
+    cout << i8_2 << endl;
+    i8_2 = bi10;
+    cout << i8_2 << endl;
+    i8_2 = bu11;
+    cout << i8_2 << endl;
 
-  cout << endl;
+    cout << endl;
 
-  u9_2 = i8;
-  cout << u9_2 << endl;
-  u9_2 = u9;
-  cout << u9_2 << endl;
-  u9_2 = bi10;
-  cout << u9_2 << endl;
-  u9_2 = bu11;
-  cout << u9_2 << endl;
+    u9_2 = i8;
+    cout << u9_2 << endl;
+    u9_2 = u9;
+    cout << u9_2 << endl;
+    u9_2 = bi10;
+    cout << u9_2 << endl;
+    u9_2 = bu11;
+    cout << u9_2 << endl;
 
-  cout << endl;
+    cout << endl;
 
-  bi10_2 = i8;
-  cout << bi10_2 << endl;
-  bi10_2 = u9;
-  cout << bi10_2 << endl;
-  bi10_2 = bi10;
-  cout << bi10_2 << endl;
-  bi10_2 = bu11;
-  cout << bi10_2 << endl;
+    bi10_2 = i8;
+    cout << bi10_2 << endl;
+    bi10_2 = u9;
+    cout << bi10_2 << endl;
+    bi10_2 = bi10;
+    cout << bi10_2 << endl;
+    bi10_2 = bu11;
+    cout << bi10_2 << endl;
 
-  cout << endl;
+    cout << endl;
 
-  bu11_2 = i8;
-  cout << bu11_2 << endl;
-  bu11_2 = u9;
-  cout << bu11_2 << endl;
-  bu11_2 = bi10;
-  cout << bu11_2 << endl;
-  bu11_2 = bu11;
-  cout << bu11_2 << endl;
+    bu11_2 = i8;
+    cout << bu11_2 << endl;
+    bu11_2 = u9;
+    cout << bu11_2 << endl;
+    bu11_2 = bi10;
+    cout << bu11_2 << endl;
+    bu11_2 = bu11;
+    cout << bu11_2 << endl;
 
-  return 0;
+    return 0;
 }

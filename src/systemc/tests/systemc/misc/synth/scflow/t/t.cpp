@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  t.cpp -- 
+  t.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,17 +37,18 @@
 
 #include "systemc.h"
 #include "test.h"
- 
-void t::entry() 
+
+void t::entry()
 {
-  wait();
-  wait ();
-  do { wait(); } while (cont1 == 0);
-  wait ();
-  o1 = 4;
-  wait ();
-  wait ();
-  wait ();
- 
+    wait();
+    wait();
+    do
+    {
+        wait();
+    } while (cont1 == 0);
+    wait();
+    o1 = 4;
+    wait();
+    wait();
+    wait();
 }
- 

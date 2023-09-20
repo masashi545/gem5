@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,29 +39,28 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_fifo<int> a( 2 );
+    sc_fifo<int> a(2);
 
     cout << "print\n";
-    a.print( cout );
+    a.print(cout);
     cout << "dump\n";
-    a.dump( cout );
-
-    cout << endl;
-    a.write( 123 );
-    cout << "print\n";
-    a.print( cout );
-    cout << "dump\n";
-    a.dump( cout );
+    a.dump(cout);
 
     cout << endl;
-    a.write( 321 );
+    a.write(123);
     cout << "print\n";
-    a.print( cout );
+    a.print(cout);
     cout << "dump\n";
-    a.dump( cout );
+    a.dump(cout);
+
+    cout << endl;
+    a.write(321);
+    cout << "print\n";
+    a.print(cout);
+    cout << "dump\n";
+    a.dump(cout);
 
     return 0;
 }

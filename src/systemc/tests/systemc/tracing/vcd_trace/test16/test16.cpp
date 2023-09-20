@@ -40,62 +40,60 @@ using namespace sc_core;
 
 SC_MODULE(module)
 {
-  SC_CTOR(module)
-  {
-    SC_THREAD(driver);
-    SC_METHOD(consumer);
-      sensitive << event;
-      dont_initialize();
-  }
+    SC_CTOR(module)
+    {
+        SC_THREAD(driver);
+        SC_METHOD(consumer);
+        sensitive << event;
+        dont_initialize();
+    }
 
-  void driver()
-  {
-    wait(1, SC_NS);
-    event.notify(); // t == 1ns
+    void driver()
+    {
+        wait(1, SC_NS);
+        event.notify(); // t == 1ns
 
-    wait(1, SC_NS);
-    event.notify(SC_ZERO_TIME); // t == 2ns
+        wait(1, SC_NS);
+        event.notify(SC_ZERO_TIME); // t == 2ns
 
-    wait(1, SC_NS);
-    event.notify(1, SC_NS); // t == 4ns
-    time = sc_time_stamp();
+        wait(1, SC_NS);
+        event.notify(1, SC_NS); // t == 4ns
+        time = sc_time_stamp();
 
-    wait(2, SC_NS);
-    event.notify(); // t == 5ns
+        wait(2, SC_NS);
+        event.notify(); // t == 5ns
 
-    wait(1, SC_NS);
-    event.notify(SC_ZERO_TIME); // t == 6ns
+        wait(1, SC_NS);
+        event.notify(SC_ZERO_TIME); // t == 6ns
 
-    wait(1, SC_NS);
-    event.notify(1, SC_NS); // t == 8ns
-    time = sc_time_stamp();
+        wait(1, SC_NS);
+        event.notify(1, SC_NS); // t == 8ns
+        time = sc_time_stamp();
 
-    wait(2, SC_NS);
-  }
+        wait(2, SC_NS);
+    }
 
-  void consumer()
-  {
-    time = sc_time_stamp();
-  }
+    void consumer()
+    {
+        time = sc_time_stamp();
+    }
 
-  sc_event event;
-  sc_time  time;
+    sc_event event;
+    sc_time time;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  sc_trace_file* tf = sc_create_vcd_trace_file("test16");
+    sc_trace_file *tf = sc_create_vcd_trace_file("test16");
 
-  module m("m");
+    module m("m");
 
-  sc_trace(tf, m.event, "event");
-  sc_trace(tf, m.time,  "time");
+    sc_trace(tf, m.event, "event");
+    sc_trace(tf, m.time, "time");
 
-  sc_start();
-  sc_stop();
+    sc_start();
+    sc_stop();
 
-  sc_close_vcd_trace_file(tf);
-  return 0;
+    sc_close_vcd_trace_file(tf);
+    return 0;
 }
-
-

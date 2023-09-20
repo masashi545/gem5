@@ -39,38 +39,38 @@
 
 SC_MODULE(DUT)
 {
-	SC_CTOR(DUT)
-	{
-		SC_CTHREAD(thread,m_clk.pos());
-		reset_signal_is(m_reset, true);
-	}
-	void thread()
-	{
-		sc_report_handler::set_actions(SC_FATAL,SC_DISPLAY);
-		sc_report_handler::stop_after(SC_FATAL,-1);
-		for (;;)
-		{
-			wait();
-			SC_REPORT_FATAL("Oh no!","A bad thing has happened");
-		}
-	}
-	sc_in<bool> m_clk;
-	sc_in<bool> m_reset;
+    SC_CTOR(DUT)
+    {
+        SC_CTHREAD(thread, m_clk.pos());
+        reset_signal_is(m_reset, true);
+    }
+    void thread()
+    {
+        sc_report_handler::set_actions(SC_FATAL, SC_DISPLAY);
+        sc_report_handler::stop_after(SC_FATAL, -1);
+        for (;;)
+        {
+            wait();
+            SC_REPORT_FATAL("Oh no!", "A bad thing has happened");
+        }
+    }
+    sc_in<bool> m_clk;
+    sc_in<bool> m_reset;
 };
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-	sc_clock        clock;
-	DUT             dut("dut");
-	sc_signal<bool> reset;
+    sc_clock clock;
+    DUT dut("dut");
+    sc_signal<bool> reset;
 
-	dut.m_clk(clock);
-	dut.m_reset(reset);
+    dut.m_clk(clock);
+    dut.m_reset(reset);
 
-	reset = true;
-	sc_start(1, SC_NS);
-	reset = false;
-	sc_start(2, SC_NS);
+    reset = true;
+    sc_start(1, SC_NS);
+    reset = false;
+    sc_start(2, SC_NS);
 
-	cout << "Program completed" << endl;
-	return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }

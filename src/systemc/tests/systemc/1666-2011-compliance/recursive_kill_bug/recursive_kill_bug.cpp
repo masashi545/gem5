@@ -17,14 +17,14 @@
 
  *****************************************************************************/
 
-// recursive_kill_bug.cpp -- test for 
+// recursive_kill_bug.cpp -- test for
 //
 //  Original Author: John Aynsley, Doulus
 //
 // MODIFICATION LOG - modifiers, enter your name, affiliation, date and
 //
 
-// 
+//
 
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 
@@ -34,91 +34,93 @@ using namespace sc_core;
 using std::cout;
 using std::endl;
 
-struct Top: sc_module
+struct Top : sc_module
 {
-  Top(sc_module_name _name)
-  {
-    SC_THREAD(control);
-    
-    SC_METHOD(caller);
-      sensitive << ev;
-      dont_initialize();
-      caller_handle = sc_get_current_process_handle();
-
-    SC_THREAD(target);
-      target_handle = sc_get_current_process_handle();
-
-    count = 0;
-    f0 = f1 = f2 = f3 = f4 = f5 = f6 = f7 = f8 = f9 = 0;
-  }
-  
-  struct bomb
-  {
-    sc_process_handle h;
-    
-    bomb(sc_process_handle _h)
+    Top(sc_module_name _name)
     {
-      h = _h;
+        SC_THREAD(control);
+
+        SC_METHOD(caller);
+        sensitive << ev;
+        dont_initialize();
+        caller_handle = sc_get_current_process_handle();
+
+        SC_THREAD(target);
+        target_handle = sc_get_current_process_handle();
+
+        count = 0;
+        f0 = f1 = f2 = f3 = f4 = f5 = f6 = f7 = f8 = f9 = 0;
     }
-    
-    ~bomb()
+
+    struct bomb
     {
-      h.kill();
-    }
-  };
+        sc_process_handle h;
 
-  sc_process_handle caller_handle;
-  sc_process_handle target_handle;
-  int count;
-  int f0, f1, f2, f3, f4, f5, f6, f7, f8, f9;
-  sc_event ev;
-  
-  void control()
-  {
-    count = 0;
-    wait(10, SC_NS);
-    
-    count = 1;
-    ev.notify();
-  }
+        bomb(sc_process_handle _h)
+        {
+            h = _h;
+        }
 
-  void caller()
-  {
-    f0 = 1;
-    target_handle.kill();
-    sc_assert( false );  // FAILS !!!!!!
-  }
+        ~bomb()
+        {
+            h.kill();
+        }
+    };
 
-  void target()
-  {
-    bomb local_obj(caller_handle);
-    sc_assert( count == 0 );
-    f1 = 1;
-    try {
-      wait(20, SC_NS);
+    sc_process_handle caller_handle;
+    sc_process_handle target_handle;
+    int count;
+    int f0, f1, f2, f3, f4, f5, f6, f7, f8, f9;
+    sc_event ev;
+
+    void control()
+    {
+        count = 0;
+        wait(10, SC_NS);
+
+        count = 1;
+        ev.notify();
     }
-    catch (const sc_unwind_exception& e) {
-      sc_assert( count == 1 );
-      sc_assert( sc_time_stamp() == sc_time(10, SC_NS) );
-      f2 = 1;
-      throw e;
+
+    void caller()
+    {
+        f0 = 1;
+        target_handle.kill();
+        sc_assert(false); // FAILS !!!!!!
     }
-  }
-  
-  SC_HAS_PROCESS(Top);
+
+    void target()
+    {
+        bomb local_obj(caller_handle);
+        sc_assert(count == 0);
+        f1 = 1;
+        try
+        {
+            wait(20, SC_NS);
+        }
+        catch (const sc_unwind_exception &e)
+        {
+            sc_assert(count == 1);
+            sc_assert(sc_time_stamp() == sc_time(10, SC_NS));
+            f2 = 1;
+            throw e;
+        }
+    }
+
+    SC_HAS_PROCESS(Top);
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  Top top("top");
-  
-  sc_start();
+    Top top("top");
 
-  sc_assert( top.f0 ); 
-  sc_assert( top.f1 ); 
-  sc_assert( top.f2 ); 
-  
-  cout << endl << "Success" << endl;
-  return 0;
+    sc_start();
+
+    sc_assert(top.f0);
+    sc_assert(top.f1);
+    sc_assert(top.f2);
+
+    cout << endl
+         << "Success" << endl;
+    return 0;
 }
-  

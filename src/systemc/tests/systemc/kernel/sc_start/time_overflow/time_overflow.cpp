@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  Original Author: Bishnupriya Bhattacharya, Cadence Design Systems, 
+  Original Author: Bishnupriya Bhattacharya, Cadence Design Systems,
                    Spetember 5, 2003
 
  *****************************************************************************/
@@ -35,12 +35,12 @@
  *****************************************************************************/
 #include "systemc.h"
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
     cout << sc_time_stamp() << ": Issuing sc_start(10, SC_NS)" << endl;
     sc_start(10, SC_NS);
     cout << sc_time_stamp() << ": Issuing sc_start()" << endl;
-    sc_start(sc_max_time() - sc_time(10,SC_NS) );
+    sc_start(sc_max_time() - sc_time(10, SC_NS));
     cout << sc_time_stamp() << ": Issuing sc_start()" << endl;
     sc_start();
     cout << sc_time_stamp() << ": Issuing sc_start(10, SC_NS)" << endl;
@@ -48,4 +48,3 @@ int sc_main(int argc, char* argv[])
     cout << sc_time_stamp() << ": Program completed" << endl;
     return 0;
 }
-

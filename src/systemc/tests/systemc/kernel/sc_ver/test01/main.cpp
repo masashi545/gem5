@@ -27,12 +27,12 @@
 *****************************************************************************/
 
 #ifndef SC_DEFAULT_WRITER_POLICY
-# define SC_DEFAULT_WRITER_POLICY SC_MANY_WRITERS
+#define SC_DEFAULT_WRITER_POLICY SC_MANY_WRITERS
 #endif
 #include <systemc>
 
-int sc_main(int,char*[])
+int sc_main(int, char *[])
 {
-  SC_REPORT_INFO( "sc_api_version", "in sc_main" );
-  return 0;
+    SC_REPORT_INFO("sc_api_version", "in sc_main");
+    return 0;
 }

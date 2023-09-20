@@ -24,11 +24,11 @@
 
  *****************************************************************************/
 /*****************************************************************************
-  MODIFICATION LOG - modifiers, enter your name, affiliation, date and  
+  MODIFICATION LOG - modifiers, enter your name, affiliation, date and
   changes you are making here.
 
-      Name, Affiliation, Date: 
-  Description of Modification: 
+      Name, Affiliation, Date:
+  Description of Modification:
 
  *****************************************************************************/
 
@@ -40,10 +40,10 @@ SC_MODULE(DUT)
 {
     SC_CTOR(DUT)
     {
-        SC_CTHREAD(cthread_target,m_clk.pos());
+        SC_CTHREAD(cthread_target, m_clk.pos());
         SC_THREAD(thread_target)
         sensitive << m_clk.pos();
-        SC_CTHREAD(watcher,m_clk.pos());
+        SC_CTHREAD(watcher, m_clk.pos());
     }
     void cthread_target()
     {
@@ -59,29 +59,29 @@ SC_MODULE(DUT)
     {
         wait();
         wait();
-        if ( m_cthread_handle.valid() )
+        if (m_cthread_handle.valid())
         {
-            if ( m_cthread_handle.proc_kind() == SC_NO_PROC_ )
+            if (m_cthread_handle.proc_kind() == SC_NO_PROC_)
                 cout << "Cthread process handle kind not maintained" << endl;
-            if ( m_cthread_handle.terminated() == false )
-                cout<< "Cthread process handle doesn't show terminated" << endl;
+            if (m_cthread_handle.terminated() == false)
+                cout << "Cthread process handle doesn't show terminated" << endl;
         }
-        if ( m_thread_handle.valid() )
+        if (m_thread_handle.valid())
         {
-            if ( m_thread_handle.proc_kind() == SC_NO_PROC_ )
+            if (m_thread_handle.proc_kind() == SC_NO_PROC_)
                 cout << "Thread process handle kind not maintained" << endl;
-            if ( m_thread_handle.terminated() == false )
-                cout<< "Thread process handle does not show terminated" << endl;
+            if (m_thread_handle.terminated() == false)
+                cout << "Thread process handle does not show terminated" << endl;
         }
     }
-    sc_in<bool>      m_clk;
+    sc_in<bool> m_clk;
     sc_process_handle m_cthread_handle;
     sc_process_handle m_thread_handle;
 };
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-    sc_clock        clock;
-    DUT             dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
 
     dut.m_clk(clock);
 

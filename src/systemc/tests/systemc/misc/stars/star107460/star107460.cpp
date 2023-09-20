@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  star107460.cpp -- 
+  star107460.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,19 +38,19 @@
 // If one assigns a sc_lv vector containing X or Z to
 // sc_bv the error message tells you that this is not
 // possible, but doesn't tell you where(which variable
-// at least) this happened. In a large program such a 
+// at least) this happened. In a large program such a
 // message is impossible to trace
 
 #include "systemc.h"
 
-int sc_main(int, char**)
+int sc_main(int, char **)
 {
-  sc_lv<8> lv("00X0100");
-  sc_bv<8> bv;
+    sc_lv<8> lv("00X0100");
+    sc_bv<8> bv;
 
-  cout << "\nbv = "<<bv <<"\nlv = "<<lv;
-  bv = lv;
-  cout << "\nbv = "<<bv <<"\nlv = "<<lv<<"\n";
-  
-  return 0;
+    cout << "\nbv = " << bv << "\nlv = " << lv;
+    bv = lv;
+    cout << "\nbv = " << bv << "\nlv = " << lv << "\n";
+
+    return 0;
 }

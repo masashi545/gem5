@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test01.cpp -- 
+  test01.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -46,35 +46,43 @@ class my_datatype
 {
 public:
     my_datatype()
-        : m_val( 0 ) {}
-    my_datatype( int val_ )
-        : m_val( val_ ) {}
-    my_datatype( const my_datatype& a )
-        : m_val( a.m_val ) {}
+        : m_val(0) {}
+    my_datatype(int val_)
+        : m_val(val_) {}
+    my_datatype(const my_datatype &a)
+        : m_val(a.m_val) {}
     ~my_datatype()
-        {}
-    my_datatype& operator = ( const my_datatype& a )
-        { m_val = a.m_val; return *this; }
-    friend bool operator == ( const my_datatype& a, const my_datatype& b )
-        { return ( a.m_val == b.m_val ); }
-    void print( ostream& os ) const
-        { os << m_val; }
+    {
+    }
+    my_datatype &operator=(const my_datatype &a)
+    {
+        m_val = a.m_val;
+        return *this;
+    }
+    friend bool operator==(const my_datatype &a, const my_datatype &b)
+    {
+        return (a.m_val == b.m_val);
+    }
+    void print(ostream &os) const
+    {
+        os << m_val;
+    }
+
 private:
     int m_val;
 };
 
-ostream&
-operator << ( ostream& os, const my_datatype& a )
+ostream &
+operator<<(ostream &os, const my_datatype &a)
 {
-    a.print( os );
+    a.print(os);
     return os;
 }
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    my_datatype a( 123 );
-    a.print( cout );
+    my_datatype a(123);
+    a.print(cout);
     cout << endl;
 
     sc_signal<my_datatype> sig;

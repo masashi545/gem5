@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,43 +35,43 @@
 
  *****************************************************************************/
 
-                /****************************************/
-                /* Main Filename:       main.cc         */
-                /****************************************/
-                /*                                      */
-                /* 9-bit bool = 4-bit bool + 6-bit bool */
-                /*                                      */
-		/*	Max addition is 63 + 63	        */
-                /*                                      */
-                /****************************************/
+/****************************************/
+/* Main Filename:       main.cc         */
+/****************************************/
+/*                                      */
+/* 9-bit bool = 4-bit bool + 6-bit bool */
+/*                                      */
+/*	Max addition is 63 + 63	        */
+/*                                      */
+/****************************************/
 
-#include "datawidth.h" 	
-#include "stimgen.h" 	
+#include "datawidth.h"
+#include "stimgen.h"
 
 int sc_main(int ac, char *av[])
 {
 
-// Parameter Settings
-  int result_size = 9;
-  int in1_size = 4;
-  int in2_size = 6;
-  
-// Signal Instantiation
-  signal_bool_vector4  	  in1 		("in1");
-  signal_bool_vector6  	  in2		("in2");
-  signal_bool_vector9  	  result 	("result");   
-  sc_signal<bool> 	  ready 	("ready");     
+    // Parameter Settings
+    int result_size = 9;
+    int in1_size = 4;
+    int in2_size = 6;
 
-// Clock Instantiation
-  sc_clock clk( "clock", 10, SC_NS, 0.5, 0, SC_NS); 
+    // Signal Instantiation
+    signal_bool_vector4 in1("in1");
+    signal_bool_vector6 in2("in2");
+    signal_bool_vector9 result("result");
+    sc_signal<bool> ready("ready");
 
-// Process Instantiation
-  datawidth	D1 ("D1", clk, in1, in2, ready, result, 
-			  in1_size, in2_size, result_size);
+    // Clock Instantiation
+    sc_clock clk("clock", 10, SC_NS, 0.5, 0, SC_NS);
 
-  stimgen	T1 ("T1", clk, result, in1, in2, ready);
+    // Process Instantiation
+    datawidth D1("D1", clk, in1, in2, ready, result,
+                 in1_size, in2_size, result_size);
 
-// Simulation Run Control
-  sc_start(); 
-  return 0;
+    stimgen T1("T1", clk, result, in1, in2, ready);
+
+    // Simulation Run Control
+    sc_start();
+    return 0;
 }

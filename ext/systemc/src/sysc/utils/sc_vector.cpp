@@ -26,7 +26,6 @@
   CHANGE LOG AT END OF FILE
  *****************************************************************************/
 
-
 #include "sc_vector.h"
 
 #include "sysc/utils/sc_hash.h"
@@ -38,117 +37,121 @@
 
 #include <sstream>
 
-namespace sc_core {
-
-sc_vector_base::sc_vector_base()
-  : sc_object( sc_gen_unique_name("vector") )
-  , vec_()
-  , objs_vec_()
-{}
-
-std::vector< sc_object* > const &
-sc_vector_base::get_elements() const
+namespace sc_core
 {
-  if( !objs_vec_ )
-    objs_vec_ = new std::vector< sc_object* >;
 
-  if( objs_vec_->size() || !size() )
-    return *objs_vec_;
+    sc_vector_base::sc_vector_base()
+        : sc_object(sc_gen_unique_name("vector")), vec_(), objs_vec_()
+    {
+    }
 
-  objs_vec_->reserve( size() );
-  for( const_iterator it=begin(); it != end(); ++it )
-    if( sc_object* obj = object_cast(*it) )
-      objs_vec_->push_back( obj );
+    std::vector<sc_object *> const &
+    sc_vector_base::get_elements() const
+    {
+        if (!objs_vec_)
+            objs_vec_ = new std::vector<sc_object *>;
 
-  return *objs_vec_;
-}
+        if (objs_vec_->size() || !size())
+            return *objs_vec_;
 
-sc_object*
-sc_vector_base::implicit_cast( ... ) const
-{
-  SC_REPORT_ERROR( SC_ID_VECTOR_NONOBJECT_ELEMENTS_, name() );
-  return NULL;
-}
+        objs_vec_->reserve(size());
+        for (const_iterator it = begin(); it != end(); ++it)
+            if (sc_object *obj = object_cast(*it))
+                objs_vec_->push_back(obj);
 
-void
-sc_vector_base::check_index( size_type i ) const
-{
-  if( i>=size() )
-  {
-    std::stringstream str;
-    str << name()
-        << "[" << i << "] >= size() = " << size();
-    SC_REPORT_ERROR( SC_ID_OUT_OF_BOUNDS_, str.str().c_str() );
-  }
-}
+        return *objs_vec_;
+    }
 
-bool
-sc_vector_base::check_init( size_type n ) const
-{
-  if ( !n )
-    return false;
+    sc_object *
+    sc_vector_base::implicit_cast(...) const
+    {
+        SC_REPORT_ERROR(SC_ID_VECTOR_NONOBJECT_ELEMENTS_, name());
+        return NULL;
+    }
 
-  if( size() ) // already filled
-  {
-    std::stringstream str;
-    str << name()
-        << ", size=" << size()
-        << ", requested size=" << n;
-    SC_REPORT_ERROR( SC_ID_VECTOR_INIT_CALLED_TWICE_
-                   , str.str().c_str() );
-    return false;
-  }
+    void
+    sc_vector_base::check_index(size_type i) const
+    {
+        if (i >= size())
+        {
+            std::stringstream str;
+            str << name()
+                << "[" << i << "] >= size() = " << size();
+            SC_REPORT_ERROR(SC_ID_OUT_OF_BOUNDS_, str.str().c_str());
+        }
+    }
 
-  sc_simcontext* simc = simcontext();
-  sc_assert( simc == sc_get_curr_simcontext() );
+    bool
+    sc_vector_base::check_init(size_type n) const
+    {
+        if (!n)
+            return false;
 
-  sc_object* parent_p = simc->active_object();
-  if( parent_p != get_parent_object() )
-  {
-    std::stringstream str;
-    str << name() << ": expected "
-        << ( get_parent_object()
-              ? get_parent_object()->name() : "<top-level>" )
-        << ", got "
-        << ( parent_p ? parent_p->name() : "<top-level>" );
+        if (size()) // already filled
+        {
+            std::stringstream str;
+            str << name()
+                << ", size=" << size()
+                << ", requested size=" << n;
+            SC_REPORT_ERROR(SC_ID_VECTOR_INIT_CALLED_TWICE_, str.str().c_str());
+            return false;
+        }
 
-    SC_REPORT_ERROR( SC_ID_VECTOR_INIT_INVALID_CONTEXT_
-                   , str.str().c_str() );
-    return false;
-  }
+        sc_simcontext *simc = simcontext();
+        sc_assert(simc == sc_get_curr_simcontext());
 
-  return true;
-}
+        sc_object *parent_p = simc->active_object();
+        if (parent_p != get_parent_object())
+        {
+            std::stringstream str;
+            str << name() << ": expected "
+                << (get_parent_object()
+                        ? get_parent_object()->name()
+                        : "<top-level>")
+                << ", got "
+                << (parent_p ? parent_p->name() : "<top-level>");
 
-void
-sc_vector_base::report_empty_bind( const char* kind_, bool dst_empty_ ) const
-{
-  std::stringstream str;
+            SC_REPORT_ERROR(SC_ID_VECTOR_INIT_INVALID_CONTEXT_, str.str().c_str());
+            return false;
+        }
 
-  str << "target `" << name() << "' "
-      << "(" << kind_ << ") ";
+        return true;
+    }
 
-  if( !size() ) {
-    str << "not initialised yet";
-  } else if ( dst_empty_ ) {
-    str << "empty range given";
-  } else {
-    str << "empty destination range given";
-  }
+    void
+    sc_vector_base::report_empty_bind(const char *kind_, bool dst_empty_) const
+    {
+        std::stringstream str;
 
-  SC_REPORT_WARNING( SC_ID_VECTOR_BIND_EMPTY_, str.str().c_str() );
-}
+        str << "target `" << name() << "' "
+            << "(" << kind_ << ") ";
 
-std::string
-sc_vector_base::make_name( const char* prefix, size_type /* idx */ )
-{
-  // TODO: How to handle name clashes due to interleaved vector
-  //       creation and init()?
-  //       sc_vector< foo > v1, v2;
-  //       v1.name() == "vector", v2.name() == "vector_0"
-  //       v1.init( 1 ); -> v1[0].name() == "vector_0" -> clash
-  return sc_gen_unique_name( prefix );
-}
+        if (!size())
+        {
+            str << "not initialised yet";
+        }
+        else if (dst_empty_)
+        {
+            str << "empty range given";
+        }
+        else
+        {
+            str << "empty destination range given";
+        }
+
+        SC_REPORT_WARNING(SC_ID_VECTOR_BIND_EMPTY_, str.str().c_str());
+    }
+
+    std::string
+    sc_vector_base::make_name(const char *prefix, size_type /* idx */)
+    {
+        // TODO: How to handle name clashes due to interleaved vector
+        //       creation and init()?
+        //       sc_vector< foo > v1, v2;
+        //       v1.name() == "vector", v2.name() == "vector_0"
+        //       v1.init( 1 ); -> v1[0].name() == "vector_0" -> clash
+        return sc_gen_unique_name(prefix);
+    }
 
 } // namespace sc_core
 

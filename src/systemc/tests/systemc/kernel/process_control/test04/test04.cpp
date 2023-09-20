@@ -34,7 +34,7 @@
       Name, Affiliation, Date:
   Description of Modification:
 
-  Revision log at end of the file to let __LINE__ give the same results 
+  Revision log at end of the file to let __LINE__ give the same results
   after a check-in.
  *****************************************************************************/
 // $Log: test04.cpp,v $
@@ -55,8 +55,8 @@ SC_MODULE(DUT)
 {
     SC_CTOR(DUT)
     {
-        SC_CTHREAD(master,m_clk.pos());
-        SC_CTHREAD(slave,m_clk.pos());
+        SC_CTHREAD(master, m_clk.pos());
+        SC_CTHREAD(slave, m_clk.pos());
     }
     void slave()
     {
@@ -72,11 +72,11 @@ SC_MODULE(DUT)
             cout << sc_time_stamp() << ":slave - self-disable ..." << endl;
             m_handle0.disable();
             cout << sc_time_stamp() << ":slave - ... executing ..." << endl;
-	    wait();
+            wait();
             cout << sc_time_stamp() << ":slave - ... enabled" << endl;
-	    wait();
-	    wait();
-	    wait();
+            wait();
+            wait();
+            wait();
         }
     }
     void master()
@@ -87,45 +87,45 @@ SC_MODULE(DUT)
             wait();
             wait();
             wait();
-            cout << sc_time_stamp() 
-	         << ":master -                    resuming slave" << endl;
+            cout << sc_time_stamp()
+                 << ":master -                    resuming slave" << endl;
             m_handle0.resume();
             wait();
             wait();
             wait();
-            cout << sc_time_stamp() 
-	         << ":master -                    enabling slave" << endl;
+            cout << sc_time_stamp()
+                 << ":master -                    enabling slave" << endl;
             m_handle0.enable();
             wait();
-            cout << sc_time_stamp() 
-	         << ":master -                    sync reset on slave" << endl;
+            cout << sc_time_stamp()
+                 << ":master -                    sync reset on slave" << endl;
             m_handle0.sync_reset_on();
             wait();
             wait();
             wait();
-            cout << sc_time_stamp() 
-	         << ":master -                    sync reset off slave" << endl;
+            cout << sc_time_stamp()
+                 << ":master -                    sync reset off slave" << endl;
             m_handle0.sync_reset_off();
             wait();
             wait();
             wait();
-            cout << sc_time_stamp() 
-	         << ":master -                    async reset on slave" << endl;
+            cout << sc_time_stamp()
+                 << ":master -                    async reset on slave" << endl;
             m_handle0.reset();
             wait(20);
             sc_stop();
         }
     }
-    sc_in<bool>       m_clk;
+    sc_in<bool> m_clk;
     sc_process_handle m_handle0;
     sc_process_handle m_handle1;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
     sc_core::sc_allow_process_control_corners = true;
-    sc_clock        clock;
-    DUT             dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
 
     dut.m_clk(clock);
 

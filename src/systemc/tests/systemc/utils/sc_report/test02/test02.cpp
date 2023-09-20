@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,42 +39,47 @@
 
 #include "systemc.h"
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     const int MY_ID = 9999;
 
-    try {
-        sc_report::register_id( -1, "first try" );
+    try
+    {
+        sc_report::register_id(-1, "first try");
     }
-    catch( sc_report x ) {
+    catch (sc_report x)
+    {
         cout << "\ncaught exception" << endl;
         cout << x.what() << endl;
     }
 
-    try {
-        sc_report::register_id( MY_ID, 0 );
+    try
+    {
+        sc_report::register_id(MY_ID, 0);
     }
-    catch( sc_report x ) {
+    catch (sc_report x)
+    {
         cout << "\ncaught exception" << endl;
         cout << x.what() << endl;
     }
 
-    try {
-        sc_report::register_id( MY_ID, "bogus message" );
-        sc_report::register_id( MY_ID, "another bogus message" );
+    try
+    {
+        sc_report::register_id(MY_ID, "bogus message");
+        sc_report::register_id(MY_ID, "another bogus message");
     }
-    catch( sc_report x ) {
+    catch (sc_report x)
+    {
         cout << "\ncaught exception" << endl;
         cout << x.what() << endl;
     }
 
     cout << endl;
-    cout << sc_report::get_message( 1234 ) << endl;
+    cout << sc_report::get_message(1234) << endl;
 
-    sc_report::suppress_id( 4321, true );
+    sc_report::suppress_id(4321, true);
     cout << endl;
-    cout << sc_report::is_suppressed( 4321 ) << endl;
+    cout << sc_report::is_suppressed(4321) << endl;
 
     return 0;
 }

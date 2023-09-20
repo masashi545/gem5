@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  display.cpp -- 
+  display.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-14
 
@@ -37,13 +37,20 @@
 
 #include "display.h"
 
-void display::entry() {
+void display::entry()
+{
 
-    while(true){
-       do { wait(); } while ( in_valid == false );
-       cout << "Display: " << in_value1.read() << " " << in_value2.read() << " " << in_value3.read() << " " << in_value4.read() << " " << in_value5.read() << " " << in_value6.read() << endl;
-       do { wait(); } while ( in_valid == true);
+    while (true)
+    {
+        do
+        {
+            wait();
+        } while (in_valid == false);
+        cout << "Display: " << in_value1.read() << " " << in_value2.read() << " " << in_value3.read() << " " << in_value4.read() << " " << in_value5.read() << " " << in_value6.read() << endl;
+        do
+        {
+            wait();
+        } while (in_valid == true);
     }
-   
 }
 // EOF

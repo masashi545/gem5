@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -68,71 +68,77 @@ JAPAN
 */
 
 #include "systemc.h"
- 
-int
-sc_main( int, char*[] )
+
+int sc_main(int, char *[])
 {
     int i;
-    int index0,index1;
+    int index0, index1;
     sc_biguint<128> A;
     sc_uint<16> B;
     sc_biguint<128> Y;
- 
+
     A = 0;
     Y = 0;
     cout << "A = " << A.to_string(SC_HEX) << endl;
-    cout << "Y = " << Y.to_string(SC_HEX) << endl << endl;
+    cout << "Y = " << Y.to_string(SC_HEX) << endl
+         << endl;
 
-    // 1st Case 
+    // 1st Case
     A = "0xffffffffffffffffffffffffffffffff";
     B = 0;
- 
-    for(i=15;i>=0;i--)
+
+    for (i = 15; i >= 0; i--)
     {
-        index0 = 8*(i+1)-1;
-        index1 = 8* i;
-        if(B[i] == 0) {
-            Y.range(index0,index1) = A.range(index0,index1);
+        index0 = 8 * (i + 1) - 1;
+        index1 = 8 * i;
+        if (B[i] == 0)
+        {
+            Y.range(index0, index1) = A.range(index0, index1);
         }
     }
- 
+
     cout << "A = " << A.to_string(SC_HEX) << endl;
     cout << "B = " << hex << B << endl;
-    cout << "Y = " << Y.to_string(SC_HEX) << endl << endl;
+    cout << "Y = " << Y.to_string(SC_HEX) << endl
+         << endl;
 
-    // 2nd Case 
+    // 2nd Case
     A = 0;
     B = 0;
 
-    for(i=15;i>=0;i--)
+    for (i = 15; i >= 0; i--)
     {
-        index0 = 8*(i+1)-1;
-        index1 = 8* i;
-        if(B[i] == 0) {
-            Y.range(index0,index1) = A.range(index0,index1);
+        index0 = 8 * (i + 1) - 1;
+        index1 = 8 * i;
+        if (B[i] == 0)
+        {
+            Y.range(index0, index1) = A.range(index0, index1);
         }
     }
- 
+
     cout << "A = " << A.to_string(SC_HEX) << endl;
     cout << "B = " << hex << B << endl;
-    cout << "Y = " << Y.to_string(SC_HEX) << endl << endl;
+    cout << "Y = " << Y.to_string(SC_HEX) << endl
+         << endl;
 
     // 3rd Case
     A = 0;
     B = 0;
- 
-    for(i=15;i>=0;i--)
+
+    for (i = 15; i >= 0; i--)
     {
-        index0 = 8*(i+1)-1;
-        index1 = 8* i;
-        if(B[i] == 0) {
-            Y.range(index0,index1) = (sc_biguint<8>)A.range(index0,index1);
+        index0 = 8 * (i + 1) - 1;
+        index1 = 8 * i;
+        if (B[i] == 0)
+        {
+            Y.range(index0, index1) = (sc_biguint<8>)A.range(index0, index1);
         }
     }
- 
+
     cout << "A = " << A.to_string(SC_HEX) << endl;
     cout << "B = " << hex << B << endl;
-    cout << "Y = " << Y.to_string(SC_HEX) << endl << endl;
- 
-    return(0);
+    cout << "Y = " << Y.to_string(SC_HEX) << endl
+         << endl;
+
+    return (0);
 }

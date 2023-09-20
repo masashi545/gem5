@@ -1,5 +1,4 @@
 #!/bin/bash
-cd $GEM5_ROOT
 
 if [ $# != 1 ]; then
     echo "Please select an application from { bt, cg, dc, ep, ft, is, lu, mg, sp, ua }"
@@ -8,15 +7,15 @@ fi
 
 ./build/X86/gem5.opt \
 \
-./configs/example/fs.py \
+configs/example/fs.py \
 \
---kernel=./resource/kernels/x86_64-vmlinux-2.6.22.9.smp \
---disk-image=./resource/disks/linux-x86-npb.img \
+--kernel=resource/kernels/x86_64-vmlinux-2.6.22.9.smp \
+--disk-image=resource/disks/linux-x86-npb.img \
 \
 --cpu-clock=3GHz \
 --cpu-type=AtomicSimpleCPU \
 \
---script=./scripts/npb/$1.sh \
+--script=scripts/npb/$1.sh \
 \
 --mem-size=8GB \
 --caches \

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test1.cpp -- 
+  test1.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,99 +37,103 @@
 
 #include "systemc.h"
 
-SC_MODULE( proc1 )
+SC_MODULE(proc1)
 {
-  SC_HAS_PROCESS( proc1 );
+    SC_HAS_PROCESS(proc1);
 
-  sc_in_clk clk;
+    sc_in_clk clk;
 
-  sc_fifo<int>& in;
+    sc_fifo<int> &in;
 
-  // Constructor
-  proc1( sc_module_name NAME,
-	 sc_clock& CLOCK,
-	 sc_fifo<int>& IN_ )
-    : in(IN_)
-  {
-    clk( CLOCK );
-	SC_THREAD( entry );
-	sensitive << clk.pos();
-  }
-
-  void entry() {
-    int val;
-    cout << "Proc1:: Waiting 10 cycles before reading\n";
-    wait( 10 );
-    cout << "Proc1:: Wait completed\n";
-    val = in.read();
-    cout << "Proc1:: Read. Value = " << val << "\n";
-    cout << "Proc1:: Read\n";
-    val = in.read();
-    cout << "Proc1:: Read completed. Value = " << val << "\n";
-    val = in.read();
-    cout << "Proc1:: Read. Value = " << val << "\n";
-    cout << "Proc1:: Loop start\n";
-    int i = 1;
-    while (true) {
-      val = in.read();
-      cout << "Proc1:: Read. Value = " << val << "\n";
-      wait( i );
-      i += 3;
+    // Constructor
+    proc1(sc_module_name NAME,
+          sc_clock & CLOCK,
+          sc_fifo<int> & IN_)
+        : in(IN_)
+    {
+        clk(CLOCK);
+        SC_THREAD(entry);
+        sensitive << clk.pos();
     }
-  }
+
+    void entry()
+    {
+        int val;
+        cout << "Proc1:: Waiting 10 cycles before reading\n";
+        wait(10);
+        cout << "Proc1:: Wait completed\n";
+        val = in.read();
+        cout << "Proc1:: Read. Value = " << val << "\n";
+        cout << "Proc1:: Read\n";
+        val = in.read();
+        cout << "Proc1:: Read completed. Value = " << val << "\n";
+        val = in.read();
+        cout << "Proc1:: Read. Value = " << val << "\n";
+        cout << "Proc1:: Loop start\n";
+        int i = 1;
+        while (true)
+        {
+            val = in.read();
+            cout << "Proc1:: Read. Value = " << val << "\n";
+            wait(i);
+            i += 3;
+        }
+    }
 };
 
-SC_MODULE( proc2 )
+SC_MODULE(proc2)
 {
-  SC_HAS_PROCESS( proc2 );
+    SC_HAS_PROCESS(proc2);
 
-  sc_in_clk clk;
+    sc_in_clk clk;
 
-  sc_fifo<int>& out;
+    sc_fifo<int> &out;
 
-  // Constructor
-  proc2( sc_module_name NAME,
-	 sc_clock& CLOCK,
-	 sc_fifo<int>& OUT_ )
-    : out(OUT_)
-  {
-    clk( CLOCK );
-	SC_THREAD( entry );
-	sensitive << clk.pos();
-  }
-
-  void entry() {
-    cout << "Proc2:: Write\n";
-    out.write(1);
-    cout << "Proc2:: Write completed\n";
-    cout << "Proc2:: Wait 10 cycles before write\n";
-    wait( 10 );
-    cout << "Proc2:: Wait completed\n";
-    cout << "Proc2:: Write\n";
-    out.write(2);
-    cout << "Proc2:: Write Completed\n";
-    cout << "Proc2:: Write\n";
-    out.write(3);
-    cout << "Proc2:: Write Completed\n";
-    cout << "Proc2:: Loop start\n";
-    for (int i=4; i<10; i++) {
-      out.write(i);
-      wait( i + 2 );
+    // Constructor
+    proc2(sc_module_name NAME,
+          sc_clock & CLOCK,
+          sc_fifo<int> & OUT_)
+        : out(OUT_)
+    {
+        clk(CLOCK);
+        SC_THREAD(entry);
+        sensitive << clk.pos();
     }
-    sc_stop();
-  }
+
+    void entry()
+    {
+        cout << "Proc2:: Write\n";
+        out.write(1);
+        cout << "Proc2:: Write completed\n";
+        cout << "Proc2:: Wait 10 cycles before write\n";
+        wait(10);
+        cout << "Proc2:: Wait completed\n";
+        cout << "Proc2:: Write\n";
+        out.write(2);
+        cout << "Proc2:: Write Completed\n";
+        cout << "Proc2:: Write\n";
+        out.write(3);
+        cout << "Proc2:: Write Completed\n";
+        cout << "Proc2:: Loop start\n";
+        for (int i = 4; i < 10; i++)
+        {
+            out.write(i);
+            wait(i + 2);
+        }
+        sc_stop();
+    }
 };
 
 int sc_main(int ac, char *av[])
 {
-  sc_fifo<int> c("C");
+    sc_fifo<int> c("C");
 
-  sc_clock clock("CLK", 20, SC_NS);
+    sc_clock clock("CLK", 20, SC_NS);
 
-  proc1 p1("P1", clock, c);
-  proc2 p2("P2", clock, c);
+    proc1 p1("P1", clock, c);
+    proc2 p2("P2", clock, c);
 
-  sc_start();
+    sc_start();
 
-  return 0;
+    return 0;
 }

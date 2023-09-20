@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  proc1.cpp -- 
+  proc1.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,14 +37,15 @@
 
 #include "proc1.h"
 
-void
-proc1::entry()
+void proc1::entry()
 {
-    while( true ) {
-	if( ready ) {
-	    ack.write( 0 );
-	    cout << "if( signal ) works" << endl;
-	}
-	wait();
+    while (true)
+    {
+        if (ready)
+        {
+            ack.write(0);
+            cout << "if( signal ) works" << endl;
+        }
+        wait();
     }
 }

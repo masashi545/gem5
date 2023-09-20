@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,7 +37,7 @@
 
 #include "systemc.h"
 
-int sc_main(int ac, char* av[])
-{ 
-  return 0;
-}  
+int sc_main(int ac, char *av[])
+{
+    return 0;
+}

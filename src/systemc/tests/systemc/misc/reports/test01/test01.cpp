@@ -48,133 +48,160 @@
 
 #include "systemc.h"
 
-SC_MODULE( mod_a )
+SC_MODULE(mod_a)
 {
     sc_in_clk clk;
 
-    SC_CTOR( mod_a )
+    SC_CTOR(mod_a)
     {
         clk.pos().find_event();
     }
 };
 
-SC_MODULE( mod_b )
+SC_MODULE(mod_b)
 {
     sc_in_clk clk;
 
-    SC_CTOR( mod_b )
+    SC_CTOR(mod_b)
     {
         clk->read();
     }
 };
 
-SC_MODULE( mod_c )
+SC_MODULE(mod_c)
 {
     const sc_in_clk clk;
 
-    SC_CTOR( mod_c )
+    SC_CTOR(mod_c)
     {
         clk->read();
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     // sc_clock error(s)
 
-    try {
-        sc_clock clk1( "clk1", 0, SC_PS );
-    } catch( sc_report x ) {
+    try
+    {
+        sc_clock clk1("clk1", 0, SC_PS);
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
 
-    try {
-        sc_clock clk2( "clk2", 1, SC_PS, 0.1 );
-    } catch( sc_report x ) {
+    try
+    {
+        sc_clock clk2("clk2", 1, SC_PS, 0.1);
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
 
-    try {
-        sc_clock clk3( "clk3", 1, SC_PS, 0.9 );
-    } catch( sc_report x ) {
+    try
+    {
+        sc_clock clk3("clk3", 1, SC_PS, 0.9);
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
-
 
     // sc_event_finder error(s)
 
-    try {
-        mod_a a( "a" );
-    } catch( sc_report x ) {
+    try
+    {
+        mod_a a("a");
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
-
 
     // sc_port error(s)
 
-    try {
-        mod_b b( "b" );
-    } catch( sc_report x ) {
+    try
+    {
+        mod_b b("b");
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
 
-    try {
-        mod_c c( "c" );
-    } catch( sc_report x ) {
+    try
+    {
+        mod_c c("c");
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
-
 
     // sc_semaphore error(s)
 
-    try {
-        sc_semaphore sem1( -1 );
-    } catch( sc_report x ) {
+    try
+    {
+        sc_semaphore sem1(-1);
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
 
-    try {
-        sc_semaphore sem2( "sem2", -1 );
-    } catch( sc_report x ) {
+    try
+    {
+        sc_semaphore sem2("sem2", -1);
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
-
 
     // sc_event error(s)
 
-    try {
+    try
+    {
         sc_event e1;
-        e1.notify( 10, SC_MS );
+        e1.notify(10, SC_MS);
         e1.notify_delayed();
-    } catch( sc_report x ) {
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
 
-    try {
+    try
+    {
         sc_event e2;
-        e2.notify( 10, SC_MS );
-        e2.notify_delayed( SC_ZERO_TIME );
-    } catch( sc_report x ) {
+        e2.notify(10, SC_MS);
+        e2.notify_delayed(SC_ZERO_TIME);
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }
-
 
     // sc_name_gen error(s)
 
-    try {
-        sc_gen_unique_name( 0 );
-    } catch( sc_report x ) {
+    try
+    {
+        sc_gen_unique_name(0);
+    }
+    catch (sc_report x)
+    {
         cout << "\nException caught" << endl;
         cout << x.what() << endl;
     }

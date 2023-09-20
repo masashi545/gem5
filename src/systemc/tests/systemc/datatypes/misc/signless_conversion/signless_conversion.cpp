@@ -37,63 +37,62 @@
 
 #include "systemc.h"
 
-#define DISP(exp) \
-{ \
-	cout << #exp << " = " << exp << endl; \
-}
+#define DISP(exp)                             \
+    {                                         \
+        cout << #exp << " = " << exp << endl; \
+    }
 
-#define DISPLAY(var) \
-{ \
-	DISP( sc_int_base(var) ) \
-	DISP( sc_uint_base(var) ) \
-	DISP( sc_signed(var) ) \
-	DISP( sc_unsigned(var) ) \
-    cout << endl; \
-}
+#define DISPLAY(var)            \
+    {                           \
+        DISP(sc_int_base(var))  \
+        DISP(sc_uint_base(var)) \
+        DISP(sc_signed(var))    \
+        DISP(sc_unsigned(var))  \
+        cout << endl;           \
+    }
 
-int
-sc_main( int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-	sc_bigint<6>  bi;
-	sc_biguint<6> bui;
-    sc_bv<4>      bv;
-	sc_int<6>     i;
-    sc_lv<4>      lv;
-	sc_int<6>     ui;
+    sc_bigint<6> bi;
+    sc_biguint<6> bui;
+    sc_bv<4> bv;
+    sc_int<6> i;
+    sc_lv<4> lv;
+    sc_int<6> ui;
 
-	bi =  10;
-	bui = 10;
-	bv =  "1010";
-	i =   10;
-	lv =  "1010";
-	ui =  10;
+    bi = 10;
+    bui = 10;
+    bv = "1010";
+    i = 10;
+    lv = "1010";
+    ui = 10;
 
-    DISPLAY(bi(3,0))	
-    DISPLAY(bui(3,0))	
-    DISPLAY(bv)	
-    DISPLAY(i(3,0))	
-    DISPLAY(lv)	
-    DISPLAY(ui(3,0))	
+    DISPLAY(bi(3, 0))
+    DISPLAY(bui(3, 0))
+    DISPLAY(bv)
+    DISPLAY(i(3, 0))
+    DISPLAY(lv)
+    DISPLAY(ui(3, 0))
 
-    DISPLAY((bi(3,2),i(1,0)))	
-    DISPLAY((bi(3,2),ui(1,0)))	
-    DISPLAY((bi(3,2),bui(1,0)))	
-    DISPLAY((bi(3,2),bi(1,0)))	
+    DISPLAY((bi(3, 2), i(1, 0)))
+    DISPLAY((bi(3, 2), ui(1, 0)))
+    DISPLAY((bi(3, 2), bui(1, 0)))
+    DISPLAY((bi(3, 2), bi(1, 0)))
 
-    DISPLAY((bui(3,2),i(1,0)))	
-    DISPLAY((bui(3,2),ui(1,0)))	
-    DISPLAY((bui(3,2),bui(1,0)))	
-    DISPLAY((bui(3,2),bi(1,0)))	
+    DISPLAY((bui(3, 2), i(1, 0)))
+    DISPLAY((bui(3, 2), ui(1, 0)))
+    DISPLAY((bui(3, 2), bui(1, 0)))
+    DISPLAY((bui(3, 2), bi(1, 0)))
 
-    DISPLAY((i(3,2),i(1,0)))	
-    DISPLAY((i(3,2),ui(1,0)))	
-    DISPLAY((i(3,2),bui(1,0)))	
-    DISPLAY((i(3,2),bi(1,0)))	
+    DISPLAY((i(3, 2), i(1, 0)))
+    DISPLAY((i(3, 2), ui(1, 0)))
+    DISPLAY((i(3, 2), bui(1, 0)))
+    DISPLAY((i(3, 2), bi(1, 0)))
 
-    DISPLAY((ui(3,2),i(1,0)))	
-    DISPLAY((ui(3,2),ui(1,0)))	
-    DISPLAY((ui(3,2),bui(1,0)))	
-    DISPLAY((ui(3,2),bi(1,0)))	
+    DISPLAY((ui(3, 2), i(1, 0)))
+    DISPLAY((ui(3, 2), ui(1, 0)))
+    DISPLAY((ui(3, 2), bui(1, 0)))
+    DISPLAY((ui(3, 2), bi(1, 0)))
 
     return 0;
 }

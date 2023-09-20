@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pr-207_blast.cpp -- 
+  pr-207_blast.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,37 +37,35 @@
 
 #include "systemc.h"
 
-
-struct my_pair {
+struct my_pair
+{
     char x;
     char y;
 };
 
-typedef sc_signal<bool>          sig_bool;
-typedef sc_signal<char>          sig_char;
+typedef sc_signal<bool> sig_bool;
+typedef sc_signal<char> sig_char;
 typedef sc_signal<unsigned char> sig_uchar;
 
-SC_MODULE( pr207 )
+SC_MODULE(pr207)
 {
-    SC_HAS_PROCESS( pr207 );
+    SC_HAS_PROCESS(pr207);
 
     sc_in_clk clk;
 
     pr207(sc_module_name NAME,
-          sc_clock& CLK,
+          sc_clock & CLK,
 
-          const sig_bool& RESET,
-          const sig_bool& START,
-          const sig_char& C1,
-          const sig_char& C2,
-          const sig_uchar& IDX1,
-          const sig_uchar& IDX2,
-                sig_char& D1,
-                sig_char& D2,
-                sig_bool& READY
-          )
-        : 
-          reset(RESET),
+          const sig_bool &RESET,
+          const sig_bool &START,
+          const sig_char &C1,
+          const sig_char &C2,
+          const sig_uchar &IDX1,
+          const sig_uchar &IDX2,
+          sig_char &D1,
+          sig_char &D2,
+          sig_bool &READY)
+        : reset(RESET),
           start(START),
           c1(C1),
           c2(C2),
@@ -78,25 +76,23 @@ SC_MODULE( pr207 )
           ready(READY)
     {
         clk(CLK);
-		SC_CTHREAD( entry, clk.pos() );
-        reset_signal_is(reset,true);
+        SC_CTHREAD(entry, clk.pos());
+        reset_signal_is(reset, true);
     }
     void entry();
 
-    const sig_bool& reset;
-    const sig_bool& start;
-    const sig_char& c1;
-    const sig_char& c2;
-    const sig_uchar& idx1;
-    const sig_uchar& idx2;
-          sig_char& d1;
-          sig_char& d2;
-          sig_bool& ready;
-
+    const sig_bool &reset;
+    const sig_bool &start;
+    const sig_char &c1;
+    const sig_char &c2;
+    const sig_uchar &idx1;
+    const sig_uchar &idx2;
+    sig_char & d1;
+    sig_char & d2;
+    sig_bool & ready;
 };
 
-void
-pr207::entry()
+void pr207::entry()
 {
     my_pair pair_array[10];
 
@@ -104,8 +100,12 @@ pr207::entry()
     d1 = 0;
     d2 = 0;
     wait();
-    while (true) {
-        do { wait(); } while (start == 0);
+    while (true)
+    {
+        do
+        {
+            wait();
+        } while (start == 0);
         ready = false;
         wait();
         pair_array[idx1.read()].x = c1;
@@ -123,7 +123,7 @@ pr207::entry()
     }
 }
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

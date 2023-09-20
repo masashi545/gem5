@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  a2901_output_and_shifter.cpp -- 
+  a2901_output_and_shifter.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,28 +37,26 @@
 
 #include "a2901_output_and_shifter.h"
 
-void
-a2901_output_and_shifter::entry()
+void a2901_output_and_shifter::entry()
 {
     bool i8, i7, f0, f3, q0, q3;
     sc_uint<3> i86;
     int4 z4;
 
-    z4  = 0x0;
-    i86 = I.read().range(8,6);
-    i8  = I.read()[8];
-    i7  = I.read()[7];
-    f0  = F.read()[0];
-    f3  = F.read()[3];
-    q0  = Q.read()[0];
-    q3  = Q.read()[3];
+    z4 = 0x0;
+    i86 = I.read().range(8, 6);
+    i8 = I.read()[8];
+    i7 = I.read()[7];
+    f0 = F.read()[0];
+    f3 = F.read()[3];
+    q0 = Q.read()[0];
+    q3 = Q.read()[3];
 
-    Y.write( ( ( i86 == 0x2 ) && ( OEbar.read() == 0x0)) ? (uint64)A.read() :
-	     (!( i86 == 0x2 ) && ( OEbar.read() == 0x0)) ? 
-			(uint64)F.read() : (uint64)z4); 
+    Y.write(((i86 == 0x2) && (OEbar.read() == 0x0)) ? (uint64)A.read() : (!(i86 == 0x2) && (OEbar.read() == 0x0)) ? (uint64)F.read()
+                                                                                                                  : (uint64)z4);
 
-    t_RAM0 .write( (( i8 == 0x1) && ( i7 == 0x0 )) ? f0 : 0x0);             
-    t_RAM3 .write( (( i8 == 0x1) && ( i7 == 0x1 )) ? f3 : 0x0);           
-    t_Q3   .write( (( i8 == 0x1) && ( i7 == 0x1))  ? q3 : 0x0);         
-    t_Q0   .write( (( i8 == 0x1) && ( i7 == 0x0))  ? q0 : 0x0);         
+    t_RAM0.write(((i8 == 0x1) && (i7 == 0x0)) ? f0 : 0x0);
+    t_RAM3.write(((i8 == 0x1) && (i7 == 0x1)) ? f3 : 0x0);
+    t_Q3.write(((i8 == 0x1) && (i7 == 0x1)) ? q3 : 0x0);
+    t_Q0.write(((i8 == 0x1) && (i7 == 0x0)) ? q0 : 0x0);
 }

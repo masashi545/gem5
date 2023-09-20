@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  divide.cpp -- 
+  divide.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-05-13
 
@@ -35,95 +35,99 @@
 
  *****************************************************************************/
 
-
 #include "divide.h"
 
-void divide::entry(){
+void divide::entry()
+{
 
-  int             tmp1;
-  sc_bigint<4>    tmp2;
-  sc_biguint<4>   tmp3;
-  sc_bigint<8>    tmp4;
-  sc_biguint<8>   tmp5;
+    int tmp1;
+    sc_bigint<4> tmp2;
+    sc_biguint<4> tmp3;
+    sc_bigint<8> tmp4;
+    sc_biguint<8> tmp5;
 
-  // reset_loop
-  if (reset.read() == true) {
-    out_valid.write(false);
-    wait();
-  } else wait();
+    // reset_loop
+    if (reset.read() == true)
+    {
+        out_valid.write(false);
+        wait();
+    }
+    else
+        wait();
 
-  //
-  // main loop
-  //
-  //
-  while(1) {
-    while(in_valid.read()==false) wait();
-    wait();
+    //
+    // main loop
+    //
+    //
+    while (1)
+    {
+        while (in_valid.read() == false)
+            wait();
+        wait();
 
-    //reading the inputs
-    tmp1 = in_value1.read();
-    tmp2 = in_value2.read();
-    tmp3 = in_value3.read();
-    tmp4 = in_value4.read();
-    tmp5 = in_value5.read();
+        // reading the inputs
+        tmp1 = in_value1.read();
+        tmp2 = in_value2.read();
+        tmp3 = in_value3.read();
+        tmp4 = in_value4.read();
+        tmp5 = in_value5.read();
 
-    //execute operations
-    tmp1 = tmp1/2;
-    tmp2 = tmp2/2;
-    tmp3 = tmp3/2;
-    tmp4 = tmp4/2;
-    tmp5 = tmp5/2;
-    wait();
+        // execute operations
+        tmp1 = tmp1 / 2;
+        tmp2 = tmp2 / 2;
+        tmp3 = tmp3 / 2;
+        tmp4 = tmp4 / 2;
+        tmp5 = tmp5 / 2;
+        wait();
 
-    // write outputs
-    out_value1.write(tmp1);
-    out_value2.write(tmp2);
-    out_value3.write(tmp3);
-    out_value4.write(tmp4);
-    out_value5.write(tmp5);
-    out_valid.write(true);
-    wait();
-    out_valid.write(false);
-    wait();
-    //execute slf assigning operations
-    tmp1 /= 3;
-    tmp2 /= 3;
-    tmp3 /= 3;
-    tmp4 /= 3;
-    tmp5 /= 3;
-    wait();
+        // write outputs
+        out_value1.write(tmp1);
+        out_value2.write(tmp2);
+        out_value3.write(tmp3);
+        out_value4.write(tmp4);
+        out_value5.write(tmp5);
+        out_valid.write(true);
+        wait();
+        out_valid.write(false);
+        wait();
+        // execute slf assigning operations
+        tmp1 /= 3;
+        tmp2 /= 3;
+        tmp3 /= 3;
+        tmp4 /= 3;
+        tmp5 /= 3;
+        wait();
 
-    // write outputs
-    out_value1.write(tmp1);
-    out_value3.write(tmp3);
-    out_value4.write(tmp4);
-    out_value5.write(tmp5);
-    out_valid.write(true);
-    wait();
-    out_valid.write(false);
-    wait();
-    //execute self assigning operations
-    if (tmp3!=0) 
-       tmp1 = (tmp2/tmp3).to_int();
-    if (tmp4!=0) 
-       tmp2 = tmp2/tmp4;
-    if (tmp5!=0) 
-       tmp3 = tmp3/tmp5;
-    if (tmp5!=0) 
-       tmp4 = tmp4/tmp5;
-    wait();
+        // write outputs
+        out_value1.write(tmp1);
+        out_value3.write(tmp3);
+        out_value4.write(tmp4);
+        out_value5.write(tmp5);
+        out_valid.write(true);
+        wait();
+        out_valid.write(false);
+        wait();
+        // execute self assigning operations
+        if (tmp3 != 0)
+            tmp1 = (tmp2 / tmp3).to_int();
+        if (tmp4 != 0)
+            tmp2 = tmp2 / tmp4;
+        if (tmp5 != 0)
+            tmp3 = tmp3 / tmp5;
+        if (tmp5 != 0)
+            tmp4 = tmp4 / tmp5;
+        wait();
 
-    // write outputs
-    out_value1.write(tmp1);
-    out_value3.write(tmp3);
-    out_value4.write(tmp4);
-    out_value5.write(tmp5);
-    out_valid.write(true);
-    wait();
-    out_valid.write(false);
-    wait();
-  }
+        // write outputs
+        out_value1.write(tmp1);
+        out_value3.write(tmp3);
+        out_value4.write(tmp4);
+        out_value5.write(tmp5);
+        out_valid.write(true);
+        wait();
+        out_valid.write(false);
+        wait();
+    }
 }
 
 // EOF
-

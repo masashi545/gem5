@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,55 +35,51 @@
 
  *****************************************************************************/
 
-/* 
+/*
    Verifies directive line_label.
-   Author: PRP 
+   Author: PRP
    From Test Case misc: 23.sc
 */
 
 #include "systemc.h"
 #include "test.h"
 
-int foobar (int a, int b)
+int foobar(int a, int b)
 {
-        return a + b;
+    return a + b;
 }
 
-void test::entry() 
+void test::entry()
 {
-  int i,j=0,y=0,z=0;
- 
- 
-        for (i = 0; i < 7; i++)
-        {
-                i = z +
-                        y;
-                y = z + j;
-                y = z + j + i;
-                y = z + j + i;
-                y = z +  j;
-                y = z +  j + i;
-                y = z + (j - i);
-                y = z + (j -  i);
-                y = z + (j -  i);
-                y = z + (j -  i);
- 
-                foobar (z,y);
-                foobar ( z,y); 
-                y = foobar (z,y);
-                y = foobar ( z, y);
-                y = foobar (
-                            y, z);
-                y = foobar (z,y);
-                y = foobar (z,y)
-                        ;
-                y = foobar (z,y);
-                y = foobar (foobar (y,z),y);
-                y = foobar (foobar ( z,y), y);
- 
-                wait();
-        }
-                wait();
+    int i, j = 0, y = 0, z = 0;
 
+    for (i = 0; i < 7; i++)
+    {
+        i = z +
+            y;
+        y = z + j;
+        y = z + j + i;
+        y = z + j + i;
+        y = z + j;
+        y = z + j + i;
+        y = z + (j - i);
+        y = z + (j - i);
+        y = z + (j - i);
+        y = z + (j - i);
+
+        foobar(z, y);
+        foobar(z, y);
+        y = foobar(z, y);
+        y = foobar(z, y);
+        y = foobar(
+            y, z);
+        y = foobar(z, y);
+        y = foobar(z, y);
+        y = foobar(z, y);
+        y = foobar(foobar(y, z), y);
+        y = foobar(foobar(z, y), y);
+
+        wait();
+    }
+    wait();
 }
-

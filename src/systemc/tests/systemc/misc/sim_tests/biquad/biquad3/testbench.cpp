@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  testbench.cpp -- 
+  testbench.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -46,63 +46,59 @@ extern float signal_freq;
 
 void testbench::entry()
 {
-  float sample_val;
-  float result_val;
-  float time;
+    float sample_val;
+    float result_val;
+    float time;
 
-  FILE *data1 = fopen("Sample", "w");
-  FILE *data2 = fopen("Result", "w");
+    FILE *data1 = fopen("Sample", "w");
+    FILE *data2 = fopen("Result", "w");
 
-  reset.write(true);
-  wait();
-  reset.write(false);
-  wait();
-
-  time = 0.0;
-  while (true) {
-    sample_val = gen_sample(time);
-    sample.write(sample_val);
+    reset.write(true);
     wait();
-    result_val = result.read();
-    fprintf(data1, "%f\t%f\n", time, sample_val);
-    fprintf(data2, "%f\t%f\n", time, result_val);
-    char buf[BUFSIZ];
-    sprintf( buf, "Input = %f\tOutput = %f", sample_val, result_val );
-    cout << buf << endl;
-    time += 1.0;
-  }
+    reset.write(false);
+    wait();
+
+    time = 0.0;
+    while (true)
+    {
+        sample_val = gen_sample(time);
+        sample.write(sample_val);
+        wait();
+        result_val = result.read();
+        fprintf(data1, "%f\t%f\n", time, sample_val);
+        fprintf(data2, "%f\t%f\n", time, result_val);
+        char buf[BUFSIZ];
+        sprintf(buf, "Input = %f\tOutput = %f", sample_val, result_val);
+        cout << buf << endl;
+        time += 1.0;
+    }
 } // end of entry function
 
-
-float
-gen_step(float t)
+float gen_step(float t)
 {
-  if (t < 10.0)
-    return (0.0);
-  else 
-    return (1.0);
+    if (t < 10.0)
+        return (0.0);
+    else
+        return (1.0);
 }
 
-float
-gen_impulse(float t)
+float gen_impulse(float t)
 {
-  if (t == 20.00)
-    return (1.00);
-  else 
-    return (0.00);
+    if (t == 20.00)
+        return (1.00);
+    else
+        return (0.00);
 }
 
-float
-gen_sine(float t, float freq) // freq in Hertz
+float gen_sine(float t, float freq) // freq in Hertz
 {
-  return sin(6.283185 * freq * t * CLOCK_PERIOD * 1e-9);
+    return sin(6.283185 * freq * t * CLOCK_PERIOD * 1e-9);
 }
 
 // This function actually generates the samples
-float
-gen_sample(float t)
+float gen_sample(float t)
 {
-  // return (gen_step(t));
-  // return (gen_impulse(t));
-  return (gen_sine(t, signal_freq));
+    // return (gen_step(t));
+    // return (gen_impulse(t));
+    return (gen_sine(t, signal_freq));
 }

@@ -22,15 +22,15 @@
 #include "CoreDecouplingLTInitiator.h"
 #include "ExplicitLTTarget.h"
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-  CoreDecouplingLTInitiator initiator("initiator", 10);
-  ExplicitLTTarget target("target");
+    CoreDecouplingLTInitiator initiator("initiator", 10);
+    ExplicitLTTarget target("target");
 
-  initiator.socket(target.socket);
+    initiator.socket(target.socket);
 
-  sc_core::sc_start();
-  sc_core::sc_stop();
+    sc_core::sc_start();
+    sc_core::sc_stop();
 
-  return 0;
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  tx.cpp -- 
+  tx.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,59 +40,63 @@
 
 #include "tx.h"
 
-void sio_tx::byte (char c)
+void sio_tx::byte(char c)
 {
-  bool parity = false;
-  int n;
+    bool parity = false;
+    int n;
 
-  // Start bit
-  tx.write(false);
-  wait();
-  
-  // 8 data bits
-  for (n=0; n<8; n++) {
-    if (c & 0x1) parity=!parity;
-    tx.write (c & 0x1);
-    c = c >>1;
+    // Start bit
+    tx.write(false);
     wait();
-  }
-  
-  // parity bit
-  tx.write(parity);
-  wait();
-  
-  // stop bits;
-  if (two_stop_bits) {
-    tx.write(true);
+
+    // 8 data bits
+    for (n = 0; n < 8; n++)
+    {
+        if (c & 0x1)
+            parity = !parity;
+        tx.write(c & 0x1);
+        c = c >> 1;
+        wait();
+    }
+
+    // parity bit
+    tx.write(parity);
     wait();
-    tx.write(true);
-    wait();
-  } else {
-    tx.write(true);
-    wait();
-  }
+
+    // stop bits;
+    if (two_stop_bits)
+    {
+        tx.write(true);
+        wait();
+        tx.write(true);
+        wait();
+    }
+    else
+    {
+        tx.write(true);
+        wait();
+    }
 } // end of entry function
 
-
-void sio_tx::mark (int cycles)
+void sio_tx::mark(int cycles)
 {
-  int n;
+    int n;
 
-  for (n=0; n<cycles; n++) {
-    tx.write(true);
-    wait();
-  }
+    for (n = 0; n < cycles; n++)
+    {
+        tx.write(true);
+        wait();
+    }
 }
-
 
 void sio_tx::entry()
 {
-  while (1) {
-    mark(5);
-    byte((char)0x5a);
-    byte((char)0xff);
-    mark(1);
-    byte((char)0xab);
-  }
+    while (1)
+    {
+        mark(5);
+        byte((char)0x5a);
+        byte((char)0xff);
+        mark(1);
+        byte((char)0xab);
+    }
 } // end of entry function
-

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  data_gen.cpp -- 
+  data_gen.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,74 +42,76 @@
 /***************************    data_gen Function        **********************/
 /******************************************************************************/
 
-SC_MODULE( DATA_GEN )
+SC_MODULE(DATA_GEN)
 {
-    SC_HAS_PROCESS( DATA_GEN );
+    SC_HAS_PROCESS(DATA_GEN);
 
     sc_in_clk clk;
 
-  /*** Input and Output Ports ***/
-  const sc_signal<bool>&       	ready;
-        signal_bool_vector8&   	data;
-        sc_signal<int>&		addr;
- 
-  /*** Constructor ***/
-  DATA_GEN (   sc_module_name                	NAME,
-                     sc_clock&            	TICK_N,
-               const sc_signal<bool>&    	READY,
-                     signal_bool_vector8& 	DATA,
-  		     sc_signal<int>&		ADDR   )
- 
-    : 
-		ready (READY),
-              	data  (DATA),	// 8 bits
-		addr  (ADDR)
+    /*** Input and Output Ports ***/
+    const sc_signal<bool> &ready;
+    signal_bool_vector8 & data;
+    sc_signal<int> &addr;
 
-    { 
-	    clk (TICK_N);
-        SC_CTHREAD( entry, clk.neg() );
+    /*** Constructor ***/
+    DATA_GEN(sc_module_name NAME,
+             sc_clock & TICK_N,
+             const sc_signal<bool> &READY,
+             signal_bool_vector8 &DATA,
+             sc_signal<int> &ADDR)
+
+        : ready(READY),
+          data(DATA), // 8 bits
+          addr(ADDR)
+
+    {
+        clk(TICK_N);
+        SC_CTHREAD(entry, clk.neg());
     }
- 
-  /*** Call to Process Functionality ***/
-  void entry();
- 
+
+    /*** Call to Process Functionality ***/
+    void entry();
 };
- 
-void
-DATA_GEN::entry()
+
+void DATA_GEN::entry()
 {
-  while(true) {
+    while (true)
+    {
 
-/**  WAIT FOR POSEDGE OF ready  **/
+        /**  WAIT FOR POSEDGE OF ready  **/
 
-    do { wait(); } while (ready == 1);		// Posedge ready
-    do { wait(); } while (ready == 0);
+        do
+        {
+            wait();
+        } while (ready == 1); // Posedge ready
+        do
+        {
+            wait();
+        } while (ready == 0);
 
-/**  CHECK TO SEE IF THE END OF MEMORY HAS BEEN REACHED  **/
+        /**  CHECK TO SEE IF THE END OF MEMORY HAS BEEN REACHED  **/
 
-    if(addr.read() > LIMIT) { 		// if(addr > LIMIT)
-	break; 
+        if (addr.read() > LIMIT)
+        { // if(addr > LIMIT)
+            break;
+        }
+
+        /**  WRITE VALUE OF MEMORY AT CURRENT ADDRESS TO data  **/
+
+        data.write(mem[addr.read()]); // data = mem[addr]
+
+        /**  INCREMENT addr BY 1  **/
+
+        addr.write(addr.read() + 1); // addr = addr + 1
     }
-
-/**  WRITE VALUE OF MEMORY AT CURRENT ADDRESS TO data  **/
-
-    data.write(mem[addr.read()]);	// data = mem[addr]
-
-/**  INCREMENT addr BY 1  **/
-
-    addr.write(addr.read() + 1);   	// addr = addr + 1 
-  }
-
 }
 
-void
-f_DATA_GEN (   const char*          NAME,
-                     sc_clock&      TICK,
-               const sc_signal<bool>&     READY,
-                     signal_bool_vector8& DATA,
-                     sc_signal<int>&      ADDR   )
- 
+void f_DATA_GEN(const char *NAME,
+                sc_clock &TICK,
+                const sc_signal<bool> &READY,
+                signal_bool_vector8 &DATA,
+                sc_signal<int> &ADDR)
+
 {
-        new DATA_GEN(NAME, TICK, READY, DATA, ADDR); 
+    new DATA_GEN(NAME, TICK, READY, DATA, ADDR);
 }
-

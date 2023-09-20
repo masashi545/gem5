@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,160 +39,158 @@
 
 #include "systemc.h"
 
-void
-test_string_conversions()
+void test_string_conversions()
 {
     cout << "*** test_string_conversions" << endl;
     {
-	cout << "sc_bigint" << endl;
+        cout << "sc_bigint" << endl;
 
         sc_bigint<8> a = -1;
         sc_bigint<8> b;
-	std::string s;
+        std::string s;
 
-	s = a.to_string();
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string();
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_BIN );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_BIN);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_BIN_US );
-	cout << s << endl;
-	// b = s.c_str();
-	// sc_assert( b == a );
+        s = a.to_string(SC_BIN_US);
+        cout << s << endl;
+        // b = s.c_str();
+        // sc_assert( b == a );
 
-	s = a.to_string( SC_BIN_SM );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_BIN_SM);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_OCT );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_OCT);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_OCT_US );
-	cout << s << endl;
-	// b = s.c_str();
-	// sc_assert( b == a );
+        s = a.to_string(SC_OCT_US);
+        cout << s << endl;
+        // b = s.c_str();
+        // sc_assert( b == a );
 
-	s = a.to_string( SC_OCT_SM );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_OCT_SM);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_HEX );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_HEX);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_HEX_US );
-	cout << s << endl;
-	// b = s.c_str();
-	// sc_assert( b == a );
+        s = a.to_string(SC_HEX_US);
+        cout << s << endl;
+        // b = s.c_str();
+        // sc_assert( b == a );
 
-	s = a.to_string( SC_HEX_SM );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_HEX_SM);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_DEC );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_DEC);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_CSD );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_CSD);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	sc_bigint<8> c( a.to_string().c_str() );
-	cout << c.to_string() << endl;
+        sc_bigint<8> c(a.to_string().c_str());
+        cout << c.to_string() << endl;
 
-	c.range( 7, 0 ) = a.to_string().c_str();
-	cout << c.range( 7, 0 ).to_string() << endl;
+        c.range(7, 0) = a.to_string().c_str();
+        cout << c.range(7, 0).to_string() << endl;
     }
     {
-	cout << "sc_biguint" << endl;
+        cout << "sc_biguint" << endl;
 
         sc_biguint<8> a = -1;
         sc_biguint<8> b;
-	std::string s;
+        std::string s;
 
-	s = a.to_string();
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string();
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_BIN );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_BIN);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_BIN_US );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_BIN_US);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_BIN_SM );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_BIN_SM);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_OCT );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_OCT);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_OCT_US );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_OCT_US);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_OCT_SM );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_OCT_SM);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_HEX );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_HEX);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_HEX_US );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_HEX_US);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_HEX_SM );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_HEX_SM);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_DEC );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_DEC);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	s = a.to_string( SC_CSD );
-	cout << s << endl;
-	b = s.c_str();
-	sc_assert( b == a );
+        s = a.to_string(SC_CSD);
+        cout << s << endl;
+        b = s.c_str();
+        sc_assert(b == a);
 
-	sc_biguint<8> c( a.to_string().c_str() );
-	cout << c.to_string() << endl;
+        sc_biguint<8> c(a.to_string().c_str());
+        cout << c.to_string() << endl;
 
-	c.range( 7, 0 ) = a.to_string().c_str();
-	cout << c.range( 7, 0 ).to_string() << endl;
+        c.range(7, 0) = a.to_string().c_str();
+        cout << c.range(7, 0).to_string() << endl;
     }
 }
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     test_string_conversions();
 

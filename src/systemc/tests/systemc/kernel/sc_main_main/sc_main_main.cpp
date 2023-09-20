@@ -2,23 +2,26 @@
 
 int main()
 {
-    char *argv[] = { strdup("0"), strdup("1"), strdup("2"), strdup("3"),
-                     strdup("4"), NULL };
+    char *argv[] = {strdup("0"), strdup("1"), strdup("2"), strdup("3"),
+                    strdup("4"), NULL};
     int argc = sizeof argv / sizeof argv[0] - 1;
-    sc_elab_and_sim( argc, argv );
-    for (int i = 0; i < argc; ++i) {
+    sc_elab_and_sim(argc, argv);
+    for (int i = 0; i < argc; ++i)
+    {
         free(argv[i]);
     }
 }
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
     // Number of arguments should be the same
     sc_assert(argc == sc_argc());
 
     // Ensure all arguments are the same as sc_argv
-    for ( int argi = 0; argi < argc; argi++ ) {
-        if ( strcmp( argv[argi], sc_argv()[argi] ) != 0 ) {
+    for (int argi = 0; argi < argc; argi++)
+    {
+        if (strcmp(argv[argi], sc_argv()[argi]) != 0)
+        {
             cout << "sc_argv()[" << argi << "] mismatch: expected: '"
                  << argv[argi] << "' got: '" << sc_argv()[argi] << "'" << endl;
         }

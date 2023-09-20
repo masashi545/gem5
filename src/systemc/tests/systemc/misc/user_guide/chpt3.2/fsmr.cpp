@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  fsmr.cpp -- 
+  fsmr.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -41,43 +41,56 @@
 
 void fsm_recognizer::entry()
 {
-  char c;
-  int state = 0;
-  bool out;
+    char c;
+    int state = 0;
+    bool out;
 
-  while (true) {
-    do { wait(); } while (data_ready != true);
-    c = input_char.read();
-    cout << c;
+    while (true)
+    {
+        do
+        {
+            wait();
+        } while (data_ready != true);
+        c = input_char.read();
+        cout << c;
 
-    switch(state) {
-    case 0: 
-      if (c == pattern[0]) state = 1;
-      else state = 0;
-      out = false;
-      break;
-    case 1:
-      if (c == pattern[1]) state = 2;
-      else state = 0;
-      out = false;
-      break;
-    case 2:
-      if (c == pattern[2]) state = 3;
-      else state = 0;
-      out = false;
-      break;
-    case 3:
-      if (c == pattern[3]) out = true;
-      else out = false;
-      state = 0;
-      break;
-    default:
-      cout << "Error: FSM in bad state." << endl;
-      break;
+        switch (state)
+        {
+        case 0:
+            if (c == pattern[0])
+                state = 1;
+            else
+                state = 0;
+            out = false;
+            break;
+        case 1:
+            if (c == pattern[1])
+                state = 2;
+            else
+                state = 0;
+            out = false;
+            break;
+        case 2:
+            if (c == pattern[2])
+                state = 3;
+            else
+                state = 0;
+            out = false;
+            break;
+        case 3:
+            if (c == pattern[3])
+                out = true;
+            else
+                out = false;
+            state = 0;
+            break;
+        default:
+            cout << "Error: FSM in bad state." << endl;
+            break;
+        }
+
+        found.write(out);
+        wait();             // for writing the found signal
+        found.write(false); // reset the found signal
     }
-
-    found.write(out);
-    wait(); // for writing the found signal
-    found.write(false); // reset the found signal 
-  }
 }

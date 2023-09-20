@@ -19,13 +19,12 @@
 
 /*****************************************************************************
 
-  test07.cpp -- Test that for all the interfaces of a port a callback occurs 
+  test07.cpp -- Test that for all the interfaces of a port a callback occurs
                 for a dynamic process created after the beginning of simulation.
 
   Original Author: Andy Goodrich, Forte Design Systems
 
  *****************************************************************************/
-
 
 /*****************************************************************************
 
@@ -41,62 +40,61 @@
 //  Andy Goodrich: update of copyright notice, added visible CVS logging.
 //
 
-
 #define SC_INCLUDE_DYNAMIC_PROCESSES
 #include "systemc.h"
 
 SC_MODULE(DUT)
 {
-	SC_CTOR(DUT)
-	{
-		SC_CTHREAD(thread,m_clk.pos());
+    SC_CTOR(DUT)
+    {
+        SC_CTHREAD(thread, m_clk.pos());
 
-		// Set up interfaces for m_port.
+        // Set up interfaces for m_port.
 
-		m_port(m_a);
-		m_port(m_b);
-		m_port(m_c);
-	}
-	void method()
-	{
-		cout << sc_time_stamp() << " callback" << endl;
-	}
-	void thread()
-	{
-		sc_spawn_options options;
-		options.spawn_method();
-		options.set_sensitivity( &m_port );
-		options.dont_initialize();
-		sc_spawn( sc_bind(&DUT::method,this), "method", &options );
-		for ( bool value=true;; value = !value)
-		{
-			wait();
-			cout << sc_time_stamp() << " setting m_a " << endl;
-			m_a = value;
-			wait();
-			cout << sc_time_stamp() << " setting m_b " << endl;
-			m_b = value;
-			wait();
-			cout << sc_time_stamp() << " setting m_c " << endl;
-			m_c = value;
-		}
-	}
-	sc_signal<bool>                     m_a;
-	sc_signal<bool>                     m_b;
-	sc_signal<bool>                     m_c;
-	sc_in<bool>                         m_clk;
-	sc_port<sc_signal_inout_if<bool>,3> m_port;
+        m_port(m_a);
+        m_port(m_b);
+        m_port(m_c);
+    }
+    void method()
+    {
+        cout << sc_time_stamp() << " callback" << endl;
+    }
+    void thread()
+    {
+        sc_spawn_options options;
+        options.spawn_method();
+        options.set_sensitivity(&m_port);
+        options.dont_initialize();
+        sc_spawn(sc_bind(&DUT::method, this), "method", &options);
+        for (bool value = true;; value = !value)
+        {
+            wait();
+            cout << sc_time_stamp() << " setting m_a " << endl;
+            m_a = value;
+            wait();
+            cout << sc_time_stamp() << " setting m_b " << endl;
+            m_b = value;
+            wait();
+            cout << sc_time_stamp() << " setting m_c " << endl;
+            m_c = value;
+        }
+    }
+    sc_signal<bool> m_a;
+    sc_signal<bool> m_b;
+    sc_signal<bool> m_c;
+    sc_in<bool> m_clk;
+    sc_port<sc_signal_inout_if<bool>, 3> m_port;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-	sc_clock clock;
-    DUT      dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
 
-	dut.m_clk(clock);
+    dut.m_clk(clock);
 
-	sc_start(50, SC_NS);
+    sc_start(50, SC_NS);
 
-	cout << "Program completed" << endl;
-	return 0;
+    cout << "Program completed" << endl;
+    return 0;
 }

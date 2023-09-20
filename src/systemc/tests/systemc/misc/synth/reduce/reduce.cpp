@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  reduce.cpp -- 
+  reduce.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -38,7 +38,7 @@
 #include "systemc.h"
 
 unsigned
-reduce_imp(const sc_bv<8>& x)
+reduce_imp(const sc_bv<8> &x)
 {
     unsigned r = 0;
     r = (r << 1) | x.and_reduce();
@@ -58,8 +58,7 @@ reduce_imp(const sc_bv<8>& x)
     return r;
 }
 
-int
-sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
     sc_bv<8> u;
     u = "10011011";

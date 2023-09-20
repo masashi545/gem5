@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test03.cpp -- 
+  test03.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,7 +39,7 @@
 
 #include "systemc.h"
 
-SC_MODULE( writer )
+SC_MODULE(writer)
 {
     // port(s)
     sc_fifo_out<int> out;
@@ -48,31 +48,35 @@ SC_MODULE( writer )
     void main_action()
     {
         int val = 0;
-        while( true ) {
-            wait( 10, SC_NS ); // wait for 10 ns
+        while (true)
+        {
+            wait(10, SC_NS); // wait for 10 ns
             cout << "writer: blocking write\n";
-            for( int i = 0; i < 20; i ++ ) {
-                out.write( val ++ ); // blocking write
+            for (int i = 0; i < 20; i++)
+            {
+                out.write(val++); // blocking write
             }
-            wait( 10, SC_NS );
+            wait(10, SC_NS);
             cout << "writer: " << out.num_free() << " free spaces\n";
             cout << "writer: non-blocking write\n";
-            for( int i = 0; i < 20; i ++ ) {
-                while( ! out.nb_write( val ++ ) ) { // non-blocking write
+            for (int i = 0; i < 20; i++)
+            {
+                while (!out.nb_write(val++))
+                { // non-blocking write
                     cout << "writer: waiting\n";
-                    wait( 1, SC_NS );
+                    wait(1, SC_NS);
                 }
             }
         }
     }
 
-    SC_CTOR( writer )
+    SC_CTOR(writer)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
     }
 };
 
-SC_MODULE( reader )
+SC_MODULE(reader)
 {
     // port(s)
     sc_fifo_in<int> in;
@@ -81,54 +85,59 @@ SC_MODULE( reader )
     void main_action()
     {
         int val;
-        while( true ) {
-            wait( 10, SC_NS ); // wait for 10 ns
+        while (true)
+        {
+            wait(10, SC_NS); // wait for 10 ns
             cout << "reader: blocking read 1\n";
-            for( int i = 0; i < 15; i ++ ) {
-                in.read( val ); // blocking read
+            for (int i = 0; i < 15; i++)
+            {
+                in.read(val); // blocking read
                 cout << val << endl;
             }
-            wait( 10, SC_NS );
+            wait(10, SC_NS);
             cout << "reader: " << in.num_available() << " available samples\n";
             cout << "reader: blocking read 2\n";
-            for( int i = 0; i < 15; i ++ ) {
+            for (int i = 0; i < 15; i++)
+            {
                 cout << in.read() << endl; // blocking read
             }
-            wait( 10, SC_NS );
+            wait(10, SC_NS);
             cout << "reader: " << in.num_available() << " available samples\n";
             cout << "reader: non-blocking read\n";
-            for( int i = 0; i < 15; i ++ ) {
-                while( ! in.nb_read( val ) ) { // non-blocking read
+            for (int i = 0; i < 15; i++)
+            {
+                while (!in.nb_read(val))
+                { // non-blocking read
                     cout << "reader: waiting\n";
-                    wait( 1, SC_NS );
+                    wait(1, SC_NS);
                 }
                 cout << val << endl;
             }
         }
     }
 
-    SC_CTOR( reader )
+    SC_CTOR(reader)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
     }
 };
 
-int sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
     // sc_clock c;
 
     // declare channel(s)
-    sc_fifo<int> fifo( 10 );
+    sc_fifo<int> fifo(10);
 
     // instantiate block(s) and connect to channel(s)
-    writer w( "writer" );
-    reader r( "reader" );
+    writer w("writer");
+    reader r("reader");
 
-    w.out( fifo );
-    r.in( fifo );
+    w.out(fifo);
+    r.in(fifo);
 
     // run the simulation
-    sc_start( 100, SC_NS );
+    sc_start(100, SC_NS);
 
     return 0;
 }

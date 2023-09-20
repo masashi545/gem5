@@ -36,7 +36,6 @@
 
  *****************************************************************************/
 
-
 // $Log: sc_logic.cpp,v $
 // Revision 1.1.1.1  2006/12/15 20:20:04  acg
 // SystemC 2.3
@@ -49,127 +48,121 @@
 #include "sysc/datatypes/bit/sc_bit_ids.h"
 #include "sysc/datatypes/bit/sc_logic.h"
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_logic
-//
-//  Four-valued logic type.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_logic
+    //
+    //  Four-valued logic type.
+    // ----------------------------------------------------------------------------
 
-// support methods
+    // support methods
 
-void
-sc_logic::invalid_value( sc_logic_value_t v )
-{
-    char msg[BUFSIZ];
-    std::sprintf( msg, "sc_logic( %d )", v );
-    SC_REPORT_ERROR( sc_core::SC_ID_VALUE_NOT_VALID_, msg );
-}
-
-void
-sc_logic::invalid_value( char c )
-{
-    char msg[BUFSIZ];
-    std::sprintf( msg, "sc_logic( '%c' )", c );
-    SC_REPORT_ERROR( sc_core::SC_ID_VALUE_NOT_VALID_, msg );
-}
-
-void
-sc_logic::invalid_value( int i )
-{
-    char msg[BUFSIZ];
-    std::sprintf( msg, "sc_logic( %d )", i );
-    SC_REPORT_ERROR( sc_core::SC_ID_VALUE_NOT_VALID_, msg );
-}
-
-
-void
-sc_logic::invalid_01() const
-{
-    if( (int) m_val == Log_Z ) {
-	SC_REPORT_WARNING( sc_core::SC_ID_LOGIC_Z_TO_BOOL_, 0 );
-    } else {
-	SC_REPORT_WARNING( sc_core::SC_ID_LOGIC_X_TO_BOOL_, 0 );
+    void
+    sc_logic::invalid_value(sc_logic_value_t v)
+    {
+        char msg[BUFSIZ];
+        std::sprintf(msg, "sc_logic( %d )", v);
+        SC_REPORT_ERROR(sc_core::SC_ID_VALUE_NOT_VALID_, msg);
     }
-}
 
+    void
+    sc_logic::invalid_value(char c)
+    {
+        char msg[BUFSIZ];
+        std::sprintf(msg, "sc_logic( '%c' )", c);
+        SC_REPORT_ERROR(sc_core::SC_ID_VALUE_NOT_VALID_, msg);
+    }
 
-// conversion tables
+    void
+    sc_logic::invalid_value(int i)
+    {
+        char msg[BUFSIZ];
+        std::sprintf(msg, "sc_logic( %d )", i);
+        SC_REPORT_ERROR(sc_core::SC_ID_VALUE_NOT_VALID_, msg);
+    }
 
-const sc_logic_value_t sc_logic::char_to_logic[128] =
-{
-    Log_0, Log_1, Log_Z, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_0, Log_1, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_Z, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
-    Log_X, Log_X, Log_Z, Log_X, Log_X, Log_X, Log_X, Log_X
-};
+    void
+    sc_logic::invalid_01() const
+    {
+        if ((int)m_val == Log_Z)
+        {
+            SC_REPORT_WARNING(sc_core::SC_ID_LOGIC_Z_TO_BOOL_, 0);
+        }
+        else
+        {
+            SC_REPORT_WARNING(sc_core::SC_ID_LOGIC_X_TO_BOOL_, 0);
+        }
+    }
 
-const char sc_logic::logic_to_char[4] = { '0', '1', 'Z', 'X' };
+    // conversion tables
 
-const sc_logic_value_t sc_logic::and_table[4][4] =
-{
-    { Log_0, Log_0, Log_0, Log_0 },
-    { Log_0, Log_1, Log_X, Log_X },
-    { Log_0, Log_X, Log_X, Log_X },
-    { Log_0, Log_X, Log_X, Log_X }
-};
+    const sc_logic_value_t sc_logic::char_to_logic[128] =
+        {
+            Log_0, Log_1, Log_Z, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_0, Log_1, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_Z, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X, Log_X,
+            Log_X, Log_X, Log_Z, Log_X, Log_X, Log_X, Log_X, Log_X};
 
-const sc_logic_value_t sc_logic::or_table[4][4] =
-{
-    { Log_0, Log_1, Log_X, Log_X },
-    { Log_1, Log_1, Log_1, Log_1 },
-    { Log_X, Log_1, Log_X, Log_X },
-    { Log_X, Log_1, Log_X, Log_X }
-};
+    const char sc_logic::logic_to_char[4] = {'0', '1', 'Z', 'X'};
 
-const sc_logic_value_t sc_logic::xor_table[4][4] =
-{
-    { Log_0, Log_1, Log_X, Log_X },
-    { Log_1, Log_0, Log_X, Log_X },
-    { Log_X, Log_X, Log_X, Log_X },
-    { Log_X, Log_X, Log_X, Log_X }
-};
+    const sc_logic_value_t sc_logic::and_table[4][4] =
+        {
+            {Log_0, Log_0, Log_0, Log_0},
+            {Log_0, Log_1, Log_X, Log_X},
+            {Log_0, Log_X, Log_X, Log_X},
+            {Log_0, Log_X, Log_X, Log_X}};
 
-const sc_logic_value_t sc_logic::not_table[4] =
-    { Log_1, Log_0, Log_X, Log_X  };
+    const sc_logic_value_t sc_logic::or_table[4][4] =
+        {
+            {Log_0, Log_1, Log_X, Log_X},
+            {Log_1, Log_1, Log_1, Log_1},
+            {Log_X, Log_1, Log_X, Log_X},
+            {Log_X, Log_1, Log_X, Log_X}};
 
+    const sc_logic_value_t sc_logic::xor_table[4][4] =
+        {
+            {Log_0, Log_1, Log_X, Log_X},
+            {Log_1, Log_0, Log_X, Log_X},
+            {Log_X, Log_X, Log_X, Log_X},
+            {Log_X, Log_X, Log_X, Log_X}};
 
-// other methods
+    const sc_logic_value_t sc_logic::not_table[4] =
+        {Log_1, Log_0, Log_X, Log_X};
 
-void
-sc_logic::scan( ::std::istream& is )
-{
-    char c;
-    is >> c;
-    *this = c;
-}
+    // other methods
 
+    void
+    sc_logic::scan(::std::istream &is)
+    {
+        char c;
+        is >> c;
+        *this = c;
+    }
 
-// #ifdef SC_DT_DEPRECATED
-const sc_logic sc_logic_0( Log_0 );
-const sc_logic sc_logic_1( Log_1 );
-const sc_logic sc_logic_Z( Log_Z );
-const sc_logic sc_logic_X( Log_X );
-// #endif
+    // #ifdef SC_DT_DEPRECATED
+    const sc_logic sc_logic_0(Log_0);
+    const sc_logic sc_logic_1(Log_1);
+    const sc_logic sc_logic_Z(Log_Z);
+    const sc_logic sc_logic_X(Log_X);
+    // #endif
 
-const sc_logic SC_LOGIC_0( Log_0 );
-const sc_logic SC_LOGIC_1( Log_1 );
-const sc_logic SC_LOGIC_Z( Log_Z );
-const sc_logic SC_LOGIC_X( Log_X );
+    const sc_logic SC_LOGIC_0(Log_0);
+    const sc_logic SC_LOGIC_1(Log_1);
+    const sc_logic SC_LOGIC_Z(Log_Z);
+    const sc_logic SC_LOGIC_X(Log_X);
 
 } // namespace sc_dt

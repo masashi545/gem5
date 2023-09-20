@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  main.cpp -- 
+  main.cpp --
 
   Original Author: Rocco Jonack, Synopsys, Inc., 1999-07-22
 
@@ -35,72 +35,67 @@
 
  *****************************************************************************/
 
-
 #include "conditions.h"
 #include "stimulus.h"
 #include "display.h"
 
-int sc_main (int argc , char *argv[]) {
-  sc_clock        	clock;
-  sc_signal<bool> 	reset;
-  sc_signal_bool_vector stim1;
-  sc_signal_bool_vector stim2;
-  sc_signal_bool_vector stim3;
-  sc_signal_bool_vector stim4;
-  sc_signal<int>        stim5;
-  sc_signal<bool>       input_valid;
-  sc_signal_bool_vector result1;
-  sc_signal_bool_vector result2;
-  sc_signal_bool_vector result3;
-  sc_signal_bool_vector result4;
-  sc_signal<int>        result5;
-  sc_signal<bool>       output_valid;
+int sc_main(int argc, char *argv[])
+{
+    sc_clock clock;
+    sc_signal<bool> reset;
+    sc_signal_bool_vector stim1;
+    sc_signal_bool_vector stim2;
+    sc_signal_bool_vector stim3;
+    sc_signal_bool_vector stim4;
+    sc_signal<int> stim5;
+    sc_signal<bool> input_valid;
+    sc_signal_bool_vector result1;
+    sc_signal_bool_vector result2;
+    sc_signal_bool_vector result3;
+    sc_signal_bool_vector result4;
+    sc_signal<int> result5;
+    sc_signal<bool> output_valid;
 
+    conditions conditions1(
+        "process_body",
+        clock,
+        reset,
+        stim1,
+        stim2,
+        stim3,
+        stim4,
+        stim5,
+        input_valid,
+        result1,
+        result2,
+        result3,
+        result4,
+        result5,
+        output_valid);
 
+    stimulus stimulus1(
+        "stimulus",
+        clock,
+        reset,
+        stim1,
+        stim2,
+        stim3,
+        stim4,
+        stim5,
+        input_valid);
 
-  conditions  conditions1   ( 
-			     "process_body",
-			     clock, 
-			     reset,
-			     stim1,
-			     stim2,
-			     stim3,
-			     stim4,
-			     stim5,
-			     input_valid,
-			     result1,
-			     result2,
-			     result3,
-			     result4,
-			     result5,
-			     output_valid
-			     ); 
+    display display1(
+        "display",
+        clock,
+        result1,
+        result2,
+        result3,
+        result4,
+        result5,
+        output_valid);
 
-  stimulus stimulus1   (
-			"stimulus",
-			clock,
-			reset,
-			stim1,
-			stim2,
-			stim3,
-			stim4,
-			stim5,
-			input_valid
-			);
-
-  display display1   (
-		      "display",
-		      clock,
-		      result1,
-		      result2,
-		      result3,
-		      result4,
-		      result5,
-		      output_valid
-		      );
-
-  sc_start();
-  return 0;
+    sc_start();
+    return 0;
 }
 
 // EOF

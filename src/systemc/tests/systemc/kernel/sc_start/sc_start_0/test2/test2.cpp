@@ -30,8 +30,8 @@
   MODIFICATION LOG - modifiers, enter your name, affiliation, date and
   changes you are making here.
 
-      Name, Affiliation, Date: 
-  Description of Modification: - 
+      Name, Affiliation, Date:
+  Description of Modification: -
 
  *****************************************************************************/
 
@@ -88,24 +88,32 @@ SC_MODULE(DUT)
     sc_signal<bool> m_cascade0;
     sc_signal<bool> m_cascade1;
     sc_signal<bool> m_cascade2;
-    sc_in<bool>     m_clk;
+    sc_in<bool> m_clk;
 };
 
-int sc_main(int argc, char* argv[])
+int sc_main(int argc, char *argv[])
 {
-    sc_clock        clock;
-    DUT             dut("dut");
+    sc_clock clock;
+    DUT dut("dut");
 
     dut.m_clk(clock);
 
-
-    do { sc_start(0, SC_NS); } while (sc_pending_activity_at_current_time());
+    do
+    {
+        sc_start(0, SC_NS);
+    } while (sc_pending_activity_at_current_time());
     cout << endl;
     sc_start(1, SC_NS);
-    do { sc_start(0, SC_NS); } while (sc_pending_activity_at_current_time());
+    do
+    {
+        sc_start(0, SC_NS);
+    } while (sc_pending_activity_at_current_time());
     cout << endl;
     sc_start(1, SC_NS);
-    do { sc_start(0, SC_NS); } while (sc_pending_activity_at_current_time());
+    do
+    {
+        sc_start(0, SC_NS);
+    } while (sc_pending_activity_at_current_time());
 
     cout << "Program completed" << endl;
     return 0;

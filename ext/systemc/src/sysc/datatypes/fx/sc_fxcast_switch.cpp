@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  sc_fxcast_switch.cpp - 
+  sc_fxcast_switch.cpp -
 
   Original Author: Martin Janssen, Synopsys, Inc.
 
@@ -32,12 +32,11 @@
 
       Name, Affiliation, Date: Gene Bushuyev, Synopsys, Inc.
   Description of Modification: - fix explicit instantiation syntax.
-    
+
       Name, Affiliation, Date:
-  Description of Modification: 
+  Description of Modification:
 
  *****************************************************************************/
-
 
 // $Log: sc_fxcast_switch.cpp,v $
 // Revision 1.1.1.1  2006/12/15 20:20:04  acg
@@ -50,39 +49,36 @@
 
 #include "sysc/datatypes/fx/sc_fxcast_switch.h"
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_fxcast_switch
-//
-//  Fixed-point cast switch class.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_fxcast_switch
+    //
+    //  Fixed-point cast switch class.
+    // ----------------------------------------------------------------------------
 
-const std::string
-sc_fxcast_switch::to_string() const
-{
-    return sc_dt::to_string( m_sw );
-}
+    const std::string
+    sc_fxcast_switch::to_string() const
+    {
+        return sc_dt::to_string(m_sw);
+    }
 
+    void
+    sc_fxcast_switch::print(::std::ostream &os) const
+    {
+        os << sc_dt::to_string(m_sw);
+    }
 
-void
-sc_fxcast_switch::print( ::std::ostream& os ) const
-{
-    os << sc_dt::to_string( m_sw );
-}
-
-void
-sc_fxcast_switch::dump( ::std::ostream& os ) const
-{
-    os << "sc_fxcast_switch" << ::std::endl;
-    os << "(" << ::std::endl;
-    os << "sw = " << sc_dt::to_string( m_sw ) << ::std::endl;
-    os << ")" << ::std::endl;
-}
+    void
+    sc_fxcast_switch::dump(::std::ostream &os) const
+    {
+        os << "sc_fxcast_switch" << ::std::endl;
+        os << "(" << ::std::endl;
+        os << "sw = " << sc_dt::to_string(m_sw) << ::std::endl;
+        os << ")" << ::std::endl;
+    }
 
 } // namespace sc_dt
-
 
 // Taf!

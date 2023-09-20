@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stage1.cpp -- 
+  stage1.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -43,25 +43,26 @@
 
 void stage1::entry()
 {
-  double a, b;
+    double a, b;
 
-  a = 20.0;
-  b = 5.0;
-  while (true) {
-    sum.write(a+b);
-    diff.write(a-b);
-    wait();
-    a = in1.read();
-    b = in2.read();
-  }
+    a = 20.0;
+    b = 5.0;
+    while (true)
+    {
+        sum.write(a + b);
+        diff.write(a - b);
+        wait();
+        a = in1.read();
+        b = in2.read();
+    }
 } // end of entry function
 
 void f_stage1(const char *NAME,
-	      sc_clock& CLK,
-	      const sc_signal<double>& IN1,
-	      const sc_signal<double>& IN2,
-	      sc_signal<double>& SUM,
-	      sc_signal<double>& DIFF)
+              sc_clock &CLK,
+              const sc_signal<double> &IN1,
+              const sc_signal<double> &IN2,
+              sc_signal<double> &SUM,
+              sc_signal<double> &DIFF)
 {
-  SC_NEW(stage1(NAME, CLK, IN1, IN2, SUM, DIFF));
+    SC_NEW(stage1(NAME, CLK, IN1, IN2, SUM, DIFF));
 }

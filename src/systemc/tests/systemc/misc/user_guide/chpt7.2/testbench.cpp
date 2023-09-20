@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  testbench.cpp -- 
+  testbench.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -46,30 +46,33 @@ QTIsaac<8> rng;
 
 void testbench::entry()
 {
-  int a, b, c, d;
-  int sum;
-  int i;
+    int a, b, c, d;
+    int sum;
+    int i;
 
-  for (i=0; i < 10; i++) {
-    a = rng.rand() & 0x0fffffff;
-    b = rng.rand() & 0x0fffffff;
-    c = rng.rand() & 0x0fffffff;
+    for (i = 0; i < 10; i++)
+    {
+        a = rng.rand() & 0x0fffffff;
+        b = rng.rand() & 0x0fffffff;
+        c = rng.rand() & 0x0fffffff;
 
-    Sa.write(a);
-    Sb.write(b);
-    Sc.write(c);
-    adder_sub_ready.write(true);
-    wait();
-    adder_sub_ready.write(false);
-    do { wait(); } while (adder_sub_done != true);
-    sum = Ssum.read();
-    d = Sdiff.read();
-    // printf("A = %d, B = %d, C = %d, D = %d, SUM = %d\n", a, b, c, d, sum);
-    char buf[BUFSIZ];
-    sprintf(buf, "A = %d, B = %d, C = %d, D = %d, SUM = %d\n", a, b, c, d, sum);
-    cout << buf;
-  }
-  sc_stop();
+        Sa.write(a);
+        Sb.write(b);
+        Sc.write(c);
+        adder_sub_ready.write(true);
+        wait();
+        adder_sub_ready.write(false);
+        do
+        {
+            wait();
+        } while (adder_sub_done != true);
+        sum = Ssum.read();
+        d = Sdiff.read();
+        // printf("A = %d, B = %d, C = %d, D = %d, SUM = %d\n", a, b, c, d, sum);
+        char buf[BUFSIZ];
+        sprintf(buf, "A = %d, B = %d, C = %d, D = %d, SUM = %d\n", a, b, c, d, sum);
+        cout << buf;
+    }
+    sc_stop();
 
 } // end of entry function
-

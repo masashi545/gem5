@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,72 +37,73 @@
 
 #include "systemc.h"
 
-SC_MODULE( proc1 )
+SC_MODULE(proc1)
 {
-  SC_HAS_PROCESS( proc1 );
+    SC_HAS_PROCESS(proc1);
 
-  sc_in<bool> clk;
+    sc_in<bool> clk;
 
-  unsigned char obj1;
-  unsigned short obj2;
-  unsigned int obj3;
-  unsigned long obj4;
+    unsigned char obj1;
+    unsigned short obj2;
+    unsigned int obj3;
+    unsigned long obj4;
 
-  proc1( sc_module_name NAME,
-	 sc_signal<bool>& CLK )
-  {
-    clk(CLK);
-    SC_THREAD( entry );
-    sensitive << clk;
-    obj1 = 0;
-    obj2 = 0;
-    obj3 = 0;
-    obj4 = 0;
-  }
+    proc1(sc_module_name NAME,
+          sc_signal<bool> & CLK)
+    {
+        clk(CLK);
+        SC_THREAD(entry);
+        sensitive << clk;
+        obj1 = 0;
+        obj2 = 0;
+        obj3 = 0;
+        obj4 = 0;
+    }
 
-  void entry();
+    void entry();
 };
-  
-void proc1::entry() 
+
+void proc1::entry()
 {
-  wait();
-  while(true) {
-    obj1 = 7;
-    obj2 = 31;
-    obj3 = 1023;
-    obj4 = 2047;
     wait();
-    obj1 = 1;
-    obj2 = 32;
-    obj3 = 1024;
-    obj4 = 2048;
-    wait();
-  }
+    while (true)
+    {
+        obj1 = 7;
+        obj2 = 31;
+        obj3 = 1023;
+        obj4 = 2047;
+        wait();
+        obj1 = 1;
+        obj2 = 32;
+        obj3 = 1024;
+        obj4 = 2048;
+        wait();
+    }
 }
-  
 
 int sc_main(int ac, char *av[])
 {
-  sc_trace_file *tf;
-  sc_signal<bool> clock;
+    sc_trace_file *tf;
+    sc_signal<bool> clock;
 
-  proc1 P1("P1", clock);
+    proc1 P1("P1", clock);
 
-  tf = sc_create_vcd_trace_file("test02");
-  sc_trace(tf, P1.obj1, "Char");
-  sc_trace(tf, P1.obj2, "Short");
-  sc_trace(tf, P1.obj3, "Int");
-  sc_trace(tf, P1.obj4, "Long");
-  sc_trace(tf, clock, "Clock");
+    tf = sc_create_vcd_trace_file("test02");
+    sc_trace(tf, P1.obj1, "Char");
+    sc_trace(tf, P1.obj2, "Short");
+    sc_trace(tf, P1.obj3, "Int");
+    sc_trace(tf, P1.obj4, "Long");
+    sc_trace(tf, clock, "Clock");
 
-  clock.write(0);
-  sc_start(0, SC_NS);
-  for (int i = 0; i< 10; i++) {
-    clock.write(1);
-    sc_start(10, SC_NS);
     clock.write(0);
-    sc_start(10, SC_NS);
-  }
-  sc_close_vcd_trace_file( tf );
-  return 0;
+    sc_start(0, SC_NS);
+    for (int i = 0; i < 10; i++)
+    {
+        clock.write(1);
+        sc_start(10, SC_NS);
+        clock.write(0);
+        sc_start(10, SC_NS);
+    }
+    sc_close_vcd_trace_file(tf);
+    return 0;
 }

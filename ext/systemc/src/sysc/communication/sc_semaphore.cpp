@@ -31,89 +31,93 @@
 #include "sysc/kernel/sc_simcontext.h"
 #include "sysc/kernel/sc_wait.h"
 
-namespace sc_core {
-
-// ----------------------------------------------------------------------------
-//  CLASS : sc_semaphore
-//
-//  The sc_semaphore primitive channel class.
-// ----------------------------------------------------------------------------
-
-// error reporting
-
-void
-sc_semaphore::report_error( const char* id, const char* add_msg ) const
+namespace sc_core
 {
-    char msg[BUFSIZ];
-    if( add_msg != 0 ) {
-	std::sprintf( msg, "%s: semaphore '%s'", add_msg, name() );
-    } else {
-	std::sprintf( msg, "semaphore '%s'", name() );
+
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_semaphore
+    //
+    //  The sc_semaphore primitive channel class.
+    // ----------------------------------------------------------------------------
+
+    // error reporting
+
+    void
+    sc_semaphore::report_error(const char *id, const char *add_msg) const
+    {
+        char msg[BUFSIZ];
+        if (add_msg != 0)
+        {
+            std::sprintf(msg, "%s: semaphore '%s'", add_msg, name());
+        }
+        else
+        {
+            std::sprintf(msg, "semaphore '%s'", name());
+        }
+        SC_REPORT_ERROR(id, msg);
     }
-    SC_REPORT_ERROR( id, msg );
-}
 
+    // constructors
 
-// constructors
-
-sc_semaphore::sc_semaphore( int init_value_ )
-: sc_object( sc_gen_unique_name( "semaphore" ) ),
-  m_free( (std::string(SC_KERNEL_EVENT_PREFIX)+"_free_event").c_str() ),
-  m_value( init_value_ )
-{
-    if( m_value < 0 ) {
-	report_error( SC_ID_INVALID_SEMAPHORE_VALUE_ );
+    sc_semaphore::sc_semaphore(int init_value_)
+        : sc_object(sc_gen_unique_name("semaphore")),
+          m_free((std::string(SC_KERNEL_EVENT_PREFIX) + "_free_event").c_str()),
+          m_value(init_value_)
+    {
+        if (m_value < 0)
+        {
+            report_error(SC_ID_INVALID_SEMAPHORE_VALUE_);
+        }
     }
-}
 
-sc_semaphore::sc_semaphore( const char* name_, int init_value_ )
-: sc_object( name_ ), 
-  m_free( (std::string(SC_KERNEL_EVENT_PREFIX)+"_free_event").c_str() ),
-  m_value( init_value_ )
-{
-    if( m_value < 0 ) {
-	report_error( SC_ID_INVALID_SEMAPHORE_VALUE_ );
+    sc_semaphore::sc_semaphore(const char *name_, int init_value_)
+        : sc_object(name_),
+          m_free((std::string(SC_KERNEL_EVENT_PREFIX) + "_free_event").c_str()),
+          m_value(init_value_)
+    {
+        if (m_value < 0)
+        {
+            report_error(SC_ID_INVALID_SEMAPHORE_VALUE_);
+        }
     }
-}
 
+    // interface methods
 
-// interface methods
+    // lock (take) the semaphore, block if not available
 
-// lock (take) the semaphore, block if not available
-
-int
-sc_semaphore::wait()
-{
-    while( in_use() ) {
-	sc_core::wait( m_free, sc_get_curr_simcontext() );
+    int
+    sc_semaphore::wait()
+    {
+        while (in_use())
+        {
+            sc_core::wait(m_free, sc_get_curr_simcontext());
+        }
+        --m_value;
+        return 0;
     }
-    -- m_value;
-    return 0;
-}
 
+    // lock (take) the semaphore, return -1 if not available
 
-// lock (take) the semaphore, return -1 if not available
-
-int
-sc_semaphore::trywait()
-{
-    if( in_use() ) {
-	return -1;
+    int
+    sc_semaphore::trywait()
+    {
+        if (in_use())
+        {
+            return -1;
+        }
+        --m_value;
+        return 0;
     }
-    -- m_value;
-    return 0;
-}
 
+    // unlock (give) the semaphore
 
-// unlock (give) the semaphore
-
-int
-sc_semaphore::post()
-{
-    ++m_value;
-    m_free.notify();
-    return 0;
-}
+    int
+    sc_semaphore::post()
+    {
+        ++m_value;
+        m_free.notify();
+        return 0;
+    }
 
 } // namespace sc_core
 

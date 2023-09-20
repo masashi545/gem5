@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  async_clock.cpp -- 
+  async_clock.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,114 +37,115 @@
 
 #include "systemc.h"
 
-SC_MODULE( proc1 )
+SC_MODULE(proc1)
 {
-    SC_HAS_PROCESS( proc1 );
+    SC_HAS_PROCESS(proc1);
 
     sc_in_clk clk;
 
-    proc1( sc_module_name NAME,
-           sc_signal_in_if<bool>& CLK )
+    proc1(sc_module_name NAME,
+          sc_signal_in_if<bool> & CLK)
     {
-        clk( CLK );
-		SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
 
     void entry()
     {
-        while (true) {
+        while (true)
+        {
             wait();
-	    cout << "Process 1 triggered" << endl;
+            cout << "Process 1 triggered" << endl;
         }
     }
 };
 
-SC_MODULE( proc2 )
+SC_MODULE(proc2)
 {
-    SC_HAS_PROCESS( proc2 );
+    SC_HAS_PROCESS(proc2);
 
     sc_in_clk clk;
 
-    proc2( sc_module_name NAME,
-           sc_signal_in_if<bool>& CLK )
+    proc2(sc_module_name NAME,
+          sc_signal_in_if<bool> & CLK)
     {
-        clk( CLK );
-	SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
 
     void entry()
     {
-        while (true) {
+        while (true)
+        {
             wait();
-	    cout << "Process 2 triggered" << endl;
+            cout << "Process 2 triggered" << endl;
         }
     }
-}; 
+};
 
-SC_MODULE( proc3 )
+SC_MODULE(proc3)
 {
-    SC_HAS_PROCESS( proc3 );
+    SC_HAS_PROCESS(proc3);
 
     sc_in_clk clk;
 
-    proc3( sc_module_name NAME,
-           sc_signal_in_if<bool>& CLK )
+    proc3(sc_module_name NAME,
+          sc_signal_in_if<bool> & CLK)
     {
-        clk( CLK );
-	SC_CTHREAD( entry, clk.pos() );
+        clk(CLK);
+        SC_CTHREAD(entry, clk.pos());
     }
 
     void entry()
     {
-        while (true) {
+        while (true)
+        {
             wait();
-	    cout << "Process 3 triggered" << endl;
+            cout << "Process 3 triggered" << endl;
         }
     }
-};           
+};
 
-
-SC_MODULE( proc4 )
+SC_MODULE(proc4)
 {
-    SC_HAS_PROCESS( proc4 );
+    SC_HAS_PROCESS(proc4);
 
-    sc_in<bool>  a;
-    sc_in<bool>  b;
-    sc_in_clk    clk;
-    sc_out_clk   c;
-    sc_out_clk   d;
+    sc_in<bool> a;
+    sc_in<bool> b;
+    sc_in_clk clk;
+    sc_out_clk c;
+    sc_out_clk d;
 
-    proc4( sc_module_name NAME,
-           sc_signal<bool>& A,
-           sc_signal<bool>& B,
-	   sc_signal_in_if<bool>& CLK,
-           sc_signal_out_if<bool>& C,
-           sc_signal_out_if<bool>& D )
+    proc4(sc_module_name NAME,
+          sc_signal<bool> & A,
+          sc_signal<bool> & B,
+          sc_signal_in_if<bool> & CLK,
+          sc_signal_out_if<bool> & C,
+          sc_signal_out_if<bool> & D)
     {
         a(A);
-	b(B);
-	clk(CLK);
-	c(C);
-	d(D);
-        SC_METHOD( entry );
+        b(B);
+        clk(CLK);
+        c(C);
+        d(D);
+        SC_METHOD(entry);
         sensitive << a << b << clk;
     }
-           
+
     void entry()
     {
-      if ((bool) a == 1)
-	c = clk;
-      else 
-	c = 0;
-	
-      d = clk & b; 
+        if ((bool)a == 1)
+            c = clk;
+        else
+            c = 0;
+
+        d = clk & b;
     }
 };
 
-#define NS * 1e-9
+#define NS *1e-9
 
-int
-sc_main( int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
     sc_signal<bool> clk1("clk1");
     sc_signal<bool> dclk1("Dclock1"); // First derived clock
@@ -155,33 +156,36 @@ sc_main( int argc, char* argv[] )
     proc1 p1("p1", clk1);
     proc2 p2("p2", dclk1);
     proc3 p3("p3", dclk2);
-    proc4 p4("p4", p, q, clk1, dclk1, dclk2 );
+    proc4 p4("p4", p, q, clk1, dclk1, dclk2);
 
     sc_start(0, SC_NS);
     p = 1;
     q = 1;
-    for (double t = 0; t < 5 NS; t += 1 NS) {
+    for (double t = 0; t < 5 NS; t += 1 NS)
+    {
         clk1 = 1;
-        sc_start( 1, SC_NS );
+        sc_start(1, SC_NS);
         clk1 = 0;
-        sc_start( 1, SC_NS );
-	cout << " ***" << endl;
+        sc_start(1, SC_NS);
+        cout << " ***" << endl;
     }
     q = 0;
-    for (double t = 0; t < 5 NS; t += 1 NS) {
+    for (double t = 0; t < 5 NS; t += 1 NS)
+    {
         clk1 = 1;
-        sc_start( 1, SC_NS );
+        sc_start(1, SC_NS);
         clk1 = 0;
-        sc_start( 1, SC_NS );
-	cout << " ***" << endl;
+        sc_start(1, SC_NS);
+        cout << " ***" << endl;
     }
     p = 0;
-    for (double t = 0; t < 5 NS; t += 1 NS) {
+    for (double t = 0; t < 5 NS; t += 1 NS)
+    {
         clk1 = 1;
-        sc_start( 1, SC_NS );
+        sc_start(1, SC_NS);
         clk1 = 0;
-        sc_start( 1, SC_NS );
-	cout << " ***" << endl;
+        sc_start(1, SC_NS);
+        cout << " ***" << endl;
     }
 
     return 0;

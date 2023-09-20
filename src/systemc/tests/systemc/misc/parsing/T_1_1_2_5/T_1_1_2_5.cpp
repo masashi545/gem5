@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  T_1_1_2_5.cpp -- 
+  T_1_1_2_5.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -37,27 +37,27 @@
 
 #include "systemc.h"
 
-SC_MODULE( foo )
+SC_MODULE(foo)
 {
-    SC_HAS_PROCESS( foo );
+    SC_HAS_PROCESS(foo);
 
     const sc_signal<bool> &input;
     sc_signal<bool> &output;
 
     int state;
 
-    foo( sc_module_name NAME,
-	 const sc_signal<bool>& INPUT,
-	 sc_signal<bool>& OUTPUT )
+    foo(sc_module_name NAME,
+        const sc_signal<bool> &INPUT,
+        sc_signal<bool> &OUTPUT)
         : input(INPUT), output(OUTPUT)
     {
-        SC_THREAD( entry );
-	sensitive << input;
+        SC_THREAD(entry);
+        sensitive << input;
     }
     void entry();
 };
 
-int sc_main(int argc, char* argv[] )
+int sc_main(int argc, char *argv[])
 {
-  return 0;
+    return 0;
 }

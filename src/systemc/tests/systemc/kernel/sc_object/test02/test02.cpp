@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test02.cpp -- 
+  test02.cpp --
 
   Original Author: Andy Goodrich, Forte Design Systems, Inc., 2005-12-11
 
@@ -39,33 +39,33 @@
 
 #include "systemc.h"
 
-class Name : public sc_object {
-  public:
-  	Name(const char* name) : sc_object(name)
-	{}
-};
-  	
-class NoName : public sc_object {
-  public:
-  	NoName() : sc_object()
-	{}
-};
-  	
-SC_MODULE(DUT)
+class Name : public sc_object
 {
-	SC_CTOR(DUT)
-	{
-	}
+public:
+    Name(const char *name) : sc_object(name)
+    {
+    }
 };
-int sc_main(int argc, char* argv[])
-{
-	Name            name(0);
-	Name            name1("");
-	NoName          no_name;
 
-	cout << name.name() << endl;
-	cout << name1.name() << endl;
-	cout << no_name.name() << endl;
-	cout << "Program completed" << endl;
-	return 0;
+class NoName : public sc_object
+{
+public:
+    NoName() : sc_object()
+    {
+    }
+};
+
+SC_MODULE(DUT){
+    SC_CTOR(DUT){}};
+int sc_main(int argc, char *argv[])
+{
+    Name name(0);
+    Name name1("");
+    NoName no_name;
+
+    cout << name.name() << endl;
+    cout << name1.name() << endl;
+    cout << no_name.name() << endl;
+    cout << "Program completed" << endl;
+    return 0;
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test14.cpp -- 
+  test14.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -39,37 +39,37 @@
 
 #include "systemc.h"
 
-SC_MODULE( source )
+SC_MODULE(source)
 {
-    sc_in_clk   clk;
+    sc_in_clk clk;
     sc_out<int> out;
 
     void main_action()
     {
-        sc_set_default_time_unit( 10, SC_PS );
+        sc_set_default_time_unit(10, SC_PS);
         int a = 0;
-        while( true ) {
+        while (true)
+        {
             wait();
-            out = ++ a;
+            out = ++a;
         }
     }
 
-    SC_CTOR( source )
+    SC_CTOR(source)
     {
-        SC_THREAD( main_action );
+        SC_THREAD(main_action);
         sensitive << clk.pos();
     }
 };
 
-int
-sc_main( int, char*[] )
+int sc_main(int, char *[])
 {
-    sc_clock clk( "clk" );
-    sc_signal<int> sig( "sig" );
+    sc_clock clk("clk");
+    sc_signal<int> sig("sig");
 
-    source src( "src" );
-    src.clk( clk );
-    src.out( sig );
+    source src("src");
+    src.clk(clk);
+    src.out(sig);
 
     sc_start();
 

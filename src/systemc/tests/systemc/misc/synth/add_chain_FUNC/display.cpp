@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  display.cpp -- 
+  display.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -42,57 +42,54 @@
 /***************************    Output Display Function  **********************/
 /******************************************************************************/
 
-SC_MODULE( DISPLAY )
+SC_MODULE(DISPLAY)
 {
-    SC_HAS_PROCESS( DISPLAY );
+    SC_HAS_PROCESS(DISPLAY);
 
-  /*** Input and Output Ports ***/
-  const sc_signal<bool>&       	ready;	// Input
-  const signal_bool_vector8&   	data;	// Input
-  const signal_bool_vector4&   	sum;	// Input
- 
-  /*** Constructor ***/
-  DISPLAY ( 	sc_module_name               	NAME,
-          	const sc_signal<bool>&    	READY,
-               	const signal_bool_vector8& 	DATA,
-               	const signal_bool_vector4& 	SUM   )
- 
-    : ready (READY),
-      data  (DATA),	// 8 bits
-      sum   (SUM)	
+    /*** Input and Output Ports ***/
+    const sc_signal<bool> &ready;    // Input
+    const signal_bool_vector8 &data; // Input
+    const signal_bool_vector4 &sum;  // Input
+
+    /*** Constructor ***/
+    DISPLAY(sc_module_name NAME,
+            const sc_signal<bool> &READY,
+            const signal_bool_vector8 &DATA,
+            const signal_bool_vector4 &SUM)
+
+        : ready(READY),
+          data(DATA), // 8 bits
+          sum(SUM)
 
     {
-        SC_METHOD( entry );
-	sensitive << ready;
-	sensitive << data;
-	sensitive << sum;
+        SC_METHOD(entry);
+        sensitive << ready;
+        sensitive << data;
+        sensitive << sum;
     }
- 
-  /*** Call to Process Functionality ***/
-  void entry();
- 
-};
- 
-void
-DISPLAY::entry()
-{
-//  DISPLAY NUMBER OF 1'S IN DATA AT NEGEDGE ready
 
-  if( ready.posedge() ) {
-	cout << "Sum of "
-	     << data.read()
+    /*** Call to Process Functionality ***/
+    void entry();
+};
+
+void DISPLAY::entry()
+{
+    //  DISPLAY NUMBER OF 1'S IN DATA AT NEGEDGE ready
+
+    if (ready.posedge())
+    {
+        cout << "Sum of "
+             << data.read()
              << " is  " << sum.read().to_uint()
              << endl;
-     }
+    }
 }
 
-void
-f_DISPLAY (     const char*                NAME,
-                const sc_signal<bool>&          READY,
-                const signal_bool_vector8&       DATA,
-                const signal_bool_vector4&       SUM   )
+void f_DISPLAY(const char *NAME,
+               const sc_signal<bool> &READY,
+               const signal_bool_vector8 &DATA,
+               const signal_bool_vector4 &SUM)
 
 {
-        new DISPLAY(NAME, READY, DATA, SUM);
+    new DISPLAY(NAME, READY, DATA, SUM);
 }
-

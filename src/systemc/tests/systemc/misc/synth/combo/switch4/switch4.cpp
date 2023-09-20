@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  switch4.cpp -- 
+  switch4.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -36,13 +36,13 @@
  *****************************************************************************/
 
 #include "systemc.h"
-short
-select( int a, int b, int c )
+short select(int a, int b, int c)
 {
     sc_signed x(7);
     sc_signed y(9);
 
-    switch ((c >> 2) & 3) {
+    switch ((c >> 2) & 3)
+    {
     case 0:
         x = a + b;
         return x.to_int();
@@ -61,8 +61,7 @@ select( int a, int b, int c )
     return y.to_int();
 }
 
-int
-sc_main( int, char** argv )   
+int sc_main(int, char **argv)
 {
     return 0;
 }

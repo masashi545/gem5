@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  stimgen.cpp -- 
+  stimgen.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -35,34 +35,35 @@
 
  *****************************************************************************/
 
-                /*****************************************/
-                /* Implementation Filename:  stimgen.cc  */
-                /*****************************************/
- 
+/*****************************************/
+/* Implementation Filename:  stimgen.cc  */
+/*****************************************/
+
 #include "stimgen.h"
- 
-void
-stimgen::entry()
+
+void stimgen::entry()
 {
-  int i;
-  int j;
+    int i;
+    int j;
 
-  ready.write(0);
+    ready.write(0);
 
-  for (i = 0; i < 64; i++) {		// integer in1 (6 bits of data)
-    for (j = 0; j < 64; j++) {		// integer in2 (6 bits of data)
-      in1.write(i);
-      in2.write(j);
-      ready.write(1);
-      wait();
- 
-      ready.write(0);
-      wait();
+    for (i = 0; i < 64; i++)
+    { // integer in1 (6 bits of data)
+        for (j = 0; j < 64; j++)
+        { // integer in2 (6 bits of data)
+            in1.write(i);
+            in2.write(j);
+            ready.write(1);
+            wait();
 
-      cout << in1.read() << " + " << in2.read() 
-	   << " = " << result.read().to_uint() << endl;
+            ready.write(0);
+            wait();
+
+            cout << in1.read() << " + " << in2.read()
+                 << " = " << result.read().to_uint() << endl;
+        }
     }
-  }
 
-  sc_stop();
+    sc_stop();
 }

@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  scfx_pow10.cpp - 
+  scfx_pow10.cpp -
 
   Original Author: Robert Graulich, Synopsys, Inc.
                    Martin Janssen,  Synopsys, Inc.
@@ -36,7 +36,6 @@
 
  *****************************************************************************/
 
-
 // $Log: scfx_pow10.cpp,v $
 // Revision 1.1.1.1  2006/12/15 20:20:04  acg
 // SystemC 2.3
@@ -48,100 +47,98 @@
 
 #include "sysc/datatypes/fx/scfx_pow10.h"
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  CLASS : scfx_pow10
-//
-//  Class to compute (and cache) powers of 10 in arbitrary precision.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : scfx_pow10
+    //
+    //  Class to compute (and cache) powers of 10 in arbitrary precision.
+    // ----------------------------------------------------------------------------
 
-scfx_pow10::scfx_pow10()
-{
-    m_pos[0] = scfx_rep( 10.0 );
-    m_neg[0] = scfx_rep( 0.1 );
-
-    for( int i = 1; i < SCFX_POW10_TABLE_SIZE; i ++ )
+    scfx_pow10::scfx_pow10()
     {
-        m_pos[i].set_nan();
-	m_neg[i].set_nan();
-    }
-}
+        m_pos[0] = scfx_rep(10.0);
+        m_neg[0] = scfx_rep(0.1);
 
-scfx_pow10::~scfx_pow10()
-{}
-
-
-const scfx_rep
-scfx_pow10::operator() ( int i )
-{
-    if( i == 0 ) {
-        return scfx_rep( 1.0 );
+        for (int i = 1; i < SCFX_POW10_TABLE_SIZE; i++)
+        {
+            m_pos[i].set_nan();
+            m_neg[i].set_nan();
+        }
     }
 
-    if( i > 0 )
+    scfx_pow10::~scfx_pow10()
     {
-        int bit = scfx_find_msb( i );
-	scfx_rep result = *pos( bit );
-	if( bit )
-	{
-	    while( -- bit >= 0 )
-	    {
-	        if( ( 1 << bit ) & i )
-		{
-		    scfx_rep* tmp = mult_scfx_rep( result, *pos( bit ) );
-		    result = *tmp;
-		    delete tmp;
-		}
-	    }
-	}
-	return result;
     }
-    else
-    {
-        i = -i;
-	int bit = scfx_find_msb( i );
-	scfx_rep result = *neg( bit );
-	if( bit )
-	{
-	    while( -- bit >= 0 )
-	    {
-	        if( ( 1 << bit ) & i )
-		{
-		    scfx_rep* tmp = mult_scfx_rep( result, *neg( bit ) );
-		    result = *tmp;
-		    delete tmp;
-		}
-	    }
-	}
-	return result;
-    }
-}
 
-
-scfx_rep*
-scfx_pow10::pos( int i )
-{
-    if( ! m_pos[i].is_normal() )
+    const scfx_rep
+    scfx_pow10::operator()(int i)
     {
-        multiply( m_pos[i], *pos( i - 1 ), *pos( i - 1 ) );
-    }
-    return &m_pos[i];
-}
+        if (i == 0)
+        {
+            return scfx_rep(1.0);
+        }
 
-scfx_rep*
-scfx_pow10::neg( int i )
-{
-    if( ! m_neg[i].is_normal() )
-    {
-	multiply( m_neg[i], *neg( i - 1 ), *neg( i - 1 ) );
+        if (i > 0)
+        {
+            int bit = scfx_find_msb(i);
+            scfx_rep result = *pos(bit);
+            if (bit)
+            {
+                while (--bit >= 0)
+                {
+                    if ((1 << bit) & i)
+                    {
+                        scfx_rep *tmp = mult_scfx_rep(result, *pos(bit));
+                        result = *tmp;
+                        delete tmp;
+                    }
+                }
+            }
+            return result;
+        }
+        else
+        {
+            i = -i;
+            int bit = scfx_find_msb(i);
+            scfx_rep result = *neg(bit);
+            if (bit)
+            {
+                while (--bit >= 0)
+                {
+                    if ((1 << bit) & i)
+                    {
+                        scfx_rep *tmp = mult_scfx_rep(result, *neg(bit));
+                        result = *tmp;
+                        delete tmp;
+                    }
+                }
+            }
+            return result;
+        }
     }
-    return &m_neg[i];
-}
+
+    scfx_rep *
+    scfx_pow10::pos(int i)
+    {
+        if (!m_pos[i].is_normal())
+        {
+            multiply(m_pos[i], *pos(i - 1), *pos(i - 1));
+        }
+        return &m_pos[i];
+    }
+
+    scfx_rep *
+    scfx_pow10::neg(int i)
+    {
+        if (!m_neg[i].is_normal())
+        {
+            multiply(m_neg[i], *neg(i - 1), *neg(i - 1));
+        }
+        return &m_neg[i];
+    }
 
 } // namespace sc_dt
-
 
 // Taf!

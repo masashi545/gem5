@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  scfx_mant.cpp - 
+  scfx_mant.cpp -
 
   Original Author: Robert Graulich, Synopsys, Inc.
                    Martin Janssen,  Synopsys, Inc.
@@ -36,7 +36,6 @@
 
  *****************************************************************************/
 
-
 // $Log: scfx_mant.cpp,v $
 // Revision 1.1.1.1  2006/12/15 20:20:04  acg
 // SystemC 2.3
@@ -48,78 +47,77 @@
 
 #include "sysc/datatypes/fx/scfx_mant.h"
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  word memory management
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  word memory management
+    // ----------------------------------------------------------------------------
 
-class word_list { // Entry in free_words bucket.
-  public:
-    word_list* m_next_p;
-};
+    class word_list
+    { // Entry in free_words bucket.
+    public:
+        word_list *m_next_p;
+    };
 
-static inline
-int
-next_pow2_index( std::size_t size )
-{
-    int index = scfx_find_msb( size );
-    // If this was a power of 2 we are one bucket too low.
-    if( ~ (1 << index) & size ) index ++;
-    // If this is a 64-bit machine and we are using 32-bit words go down
-	// one slot size, as all the slots are 2x in size.
-    if ( index != 0 && ( sizeof(word_list) != sizeof(word) ) ) 
-	{
-		index -= 1;
-	}
-    return index;
-}
-
-static word_list* free_words[32] = { 0 };
-    
-word*
-scfx_mant::alloc_word( std::size_t size )
-{
-    const int ALLOC_SIZE = 128;
-
-    int slot_index = next_pow2_index( size );
-
-    int alloc_size = ( 1 << slot_index );
-
-    word_list*& slot = free_words[slot_index];
-
-    if( ! slot )
+    static inline int
+    next_pow2_index(std::size_t size)
     {
-        slot = new word_list[ALLOC_SIZE * alloc_size];
-	int i;
-	for( i = 0; i < alloc_size*(ALLOC_SIZE-1) ; i+=alloc_size )
-	{
-	    slot[i].m_next_p = &slot[i+alloc_size];
-	}
-	slot[i].m_next_p = 0;
+        int index = scfx_find_msb(size);
+        // If this was a power of 2 we are one bucket too low.
+        if (~(1 << index) & size)
+            index++;
+        // If this is a 64-bit machine and we are using 32-bit words go down
+        // one slot size, as all the slots are 2x in size.
+        if (index != 0 && (sizeof(word_list) != sizeof(word)))
+        {
+            index -= 1;
+        }
+        return index;
     }
 
-    word* result = (word*)slot;
-    free_words[slot_index] = slot[0].m_next_p;
-    return result;
-}
+    static word_list *free_words[32] = {0};
 
-void
-scfx_mant::free_word( word* array, std::size_t size )
-{
-    if( array && size )
+    word *
+    scfx_mant::alloc_word(std::size_t size)
     {
-        int slot_index = next_pow2_index( size );
-	word_list* wl_p = (word_list*)array;
+        const int ALLOC_SIZE = 128;
 
-	wl_p->m_next_p = free_words[slot_index];
-	free_words[slot_index] = wl_p;
+        int slot_index = next_pow2_index(size);
+
+        int alloc_size = (1 << slot_index);
+
+        word_list *&slot = free_words[slot_index];
+
+        if (!slot)
+        {
+            slot = new word_list[ALLOC_SIZE * alloc_size];
+            int i;
+            for (i = 0; i < alloc_size * (ALLOC_SIZE - 1); i += alloc_size)
+            {
+                slot[i].m_next_p = &slot[i + alloc_size];
+            }
+            slot[i].m_next_p = 0;
+        }
+
+        word *result = (word *)slot;
+        free_words[slot_index] = slot[0].m_next_p;
+        return result;
     }
-}
+
+    void
+    scfx_mant::free_word(word *array, std::size_t size)
+    {
+        if (array && size)
+        {
+            int slot_index = next_pow2_index(size);
+            word_list *wl_p = (word_list *)array;
+
+            wl_p->m_next_p = free_words[slot_index];
+            free_words[slot_index] = wl_p;
+        }
+    }
 
 } // namespace sc_dt
-
 
 // Taf!

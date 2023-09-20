@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  mean.cpp -- 
+  mean.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -40,84 +40,126 @@
 
 #include "mean.h"
 
-void calculate_geometric_mean(const sc_signed& a, const sc_signed& b, 
-			      const sc_signed& c, const sc_signed& d,
-			      sc_signed& mean){}
+void calculate_geometric_mean(const sc_signed &a, const sc_signed &b,
+                              const sc_signed &c, const sc_signed &d,
+                              sc_signed &mean) {}
 
-void calculate_harmonic_mean(const sc_signed& a, const sc_signed& b, 
-			      const sc_signed& c, const sc_signed& d,
-			      sc_signed& mean){}
+void calculate_harmonic_mean(const sc_signed &a, const sc_signed &b,
+                             const sc_signed &c, const sc_signed &d,
+                             sc_signed &mean) {}
 
 void mean::entry()
 {
-  sc_signed i(24);  // Will hold input a
-  sc_signed j(24);  // Will hold input b
-  sc_signed k(24);  // Will hold input c
-  sc_signed l(24);  // Will hold input d
+    sc_signed i(24); // Will hold input a
+    sc_signed j(24); // Will hold input b
+    sc_signed k(24); // Will hold input c
+    sc_signed l(24); // Will hold input d
 
-  sc_signed arith(24);    // Arithmetic mean
-  sc_signed geom(24);     // Geometric mean
-  sc_signed harmonic(24); // Harmonic mean
+    sc_signed arith(24);    // Arithmetic mean
+    sc_signed geom(24);     // Geometric mean
+    sc_signed harmonic(24); // Harmonic mean
 
-  while (true) {
-    // read all inputs
-    do { wait(); } while (input_available != true);
-    send_data.write(true);
-    do { wait(); } while (input_available != false);
-    i = in.read().to_int();
-    send_data.write(false);
+    while (true)
+    {
+        // read all inputs
+        do
+        {
+            wait();
+        } while (input_available != true);
+        send_data.write(true);
+        do
+        {
+            wait();
+        } while (input_available != false);
+        i = in.read().to_int();
+        send_data.write(false);
 
-    do { wait(); } while (input_available != true);
-    send_data.write(true);
-    do { wait(); } while (input_available != false);
-    j = in.read().to_int();
-    send_data.write(false);
+        do
+        {
+            wait();
+        } while (input_available != true);
+        send_data.write(true);
+        do
+        {
+            wait();
+        } while (input_available != false);
+        j = in.read().to_int();
+        send_data.write(false);
 
-    do { wait(); } while (input_available != true);
-    send_data.write(true);
-    do { wait(); } while (input_available != false);
-    k = in.read().to_int();
-    send_data.write(false);
+        do
+        {
+            wait();
+        } while (input_available != true);
+        send_data.write(true);
+        do
+        {
+            wait();
+        } while (input_available != false);
+        k = in.read().to_int();
+        send_data.write(false);
 
-    do { wait(); } while (input_available != true);
-    send_data.write(true);
-    do { wait(); } while (input_available != false);
-    l = in.read().to_int();
-    send_data.write(false);
-    wait();
+        do
+        {
+            wait();
+        } while (input_available != true);
+        send_data.write(true);
+        do
+        {
+            wait();
+        } while (input_available != false);
+        l = in.read().to_int();
+        send_data.write(false);
+        wait();
 
-    // Calculate arithmetic mean
-    arith = (i + j + k + l) / 4;
-    // Calculate geometric mean
-    calculate_geometric_mean(i, j, k, l, geom);
-    // Calculate harmonic mean
-    calculate_harmonic_mean(i, j, k, l, harmonic);
+        // Calculate arithmetic mean
+        arith = (i + j + k + l) / 4;
+        // Calculate geometric mean
+        calculate_geometric_mean(i, j, k, l, geom);
+        // Calculate harmonic mean
+        calculate_harmonic_mean(i, j, k, l, harmonic);
 
-    // write all outputs
-    output_ready.write(true);
-    do { wait(); } while (receiver_ready != true);
-    output_ready.write(false);
-    out.write(arith);
-    do { wait(); } while (receiver_ready != false);
+        // write all outputs
+        output_ready.write(true);
+        do
+        {
+            wait();
+        } while (receiver_ready != true);
+        output_ready.write(false);
+        out.write(arith);
+        do
+        {
+            wait();
+        } while (receiver_ready != false);
 
-    output_ready.write(true);
-    do { wait(); } while (receiver_ready != true);
-    output_ready.write(false);
-    out.write(geom);
-    do { wait(); } while (receiver_ready != false);
+        output_ready.write(true);
+        do
+        {
+            wait();
+        } while (receiver_ready != true);
+        output_ready.write(false);
+        out.write(geom);
+        do
+        {
+            wait();
+        } while (receiver_ready != false);
 
-
-    output_ready.write(true);
-    do { wait(); } while (receiver_ready != true);
-    output_ready.write(false);
-    out.write(harmonic);
-    do { wait(); } while (receiver_ready != false);
-  }
+        output_ready.write(true);
+        do
+        {
+            wait();
+        } while (receiver_ready != true);
+        output_ready.write(false);
+        out.write(harmonic);
+        do
+        {
+            wait();
+        } while (receiver_ready != false);
+    }
 } // end of entry function
 
 // Just to make the compiler shut up
 
 int sc_main(int ac, char *av[])
 {
-   return 0;
+    return 0;
 }

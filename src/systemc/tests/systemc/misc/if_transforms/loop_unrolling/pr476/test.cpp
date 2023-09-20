@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  test.cpp -- 
+  test.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -45,51 +45,49 @@
 //	Date Created: 05 APR 99
 //
 
-
 #include "test.h"
- 
-void test::entry() 
+
+void test::entry()
 {
-  int         i;
-  short int   j;
-  long int    k;
-  sc_int<4>   l;
-  sc_uint<4>  m;
-  sc_bigint<4>   p;
-  sc_biguint<4>  q;
-  sc_signed   n(8);
-  sc_unsigned o(8);
-  int tmp = 0;
+    int i;
+    short int j;
+    long int k;
+    sc_int<4> l;
+    sc_uint<4> m;
+    sc_bigint<4> p;
+    sc_biguint<4> q;
+    sc_signed n(8);
+    sc_unsigned o(8);
+    int tmp = 0;
 
-  for (i = 0; i < 3; i++)
-    tmp++;
+    for (i = 0; i < 3; i++)
+        tmp++;
 
-  for (j = 0; j < 3; j++)
-    tmp++;
+    for (j = 0; j < 3; j++)
+        tmp++;
 
-  for (k = 0; k < 3; k++)
-    tmp++;
+    for (k = 0; k < 3; k++)
+        tmp++;
 
-  for (l = 0; l < 3; l++)
-    tmp++;
+    for (l = 0; l < 3; l++)
+        tmp++;
 
-  for (m = 0; m < 3; m++)
-    tmp++;
+    for (m = 0; m < 3; m++)
+        tmp++;
 
-  for (n = 0; n < 3; n++)
-    tmp++;
+    for (n = 0; n < 3; n++)
+        tmp++;
 
-  for (o = 0; o < 3; o++)
-    tmp++;
+    for (o = 0; o < 3; o++)
+        tmp++;
 
-  for (p = 0; p < 3; p++)
-    tmp++;
+    for (p = 0; p < 3; p++)
+        tmp++;
 
-  for (q = 0; q < 3; q++)
-    tmp++;
+    for (q = 0; q < 3; q++)
+        tmp++;
 
-  o1 = tmp;
+    o1 = tmp;
 
-  wait();
+    wait();
 }
- 

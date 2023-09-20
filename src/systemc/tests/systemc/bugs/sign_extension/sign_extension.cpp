@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  sign_extension.cpp -- 
+  sign_extension.cpp --
 
   Original Author: Philipp A. Hartmann, OFFIS, 2012-07-17
 
@@ -33,37 +33,37 @@
  *****************************************************************************/
 
 #include <systemc>
-using sc_dt::sc_int;
-using sc_dt::sc_uint;
 using sc_dt::sc_bigint;
 using sc_dt::sc_biguint;
 using sc_dt::SC_BIN;
+using sc_dt::sc_int;
+using sc_dt::sc_uint;
 
-#define DUMP_VAR( Var ) \
-  std::cout << #Var "=" << (Var).to_string(SC_BIN) << "\n"
+#define DUMP_VAR(Var) \
+    std::cout << #Var "=" << (Var).to_string(SC_BIN) << "\n"
 
-int sc_main(int, char*[])
+int sc_main(int, char *[])
 {
-  
-    sc_int<31>     v_sc_int_31_min     = (1<<30); // 010...0 (31 bit)
-    sc_bigint<31>  v_sc_bigint_31_min  = (1<<30); // 010...0 
-    unsigned int   v_uint_max          = ~0;      // 11....1 (32-bit)
-    sc_uint<32>    v_sc_uint32_max     = ~0;      // 11....1 (32-bit)
+
+    sc_int<31> v_sc_int_31_min = (1 << 30);       // 010...0 (31 bit)
+    sc_bigint<31> v_sc_bigint_31_min = (1 << 30); // 010...0
+    unsigned int v_uint_max = ~0;                 // 11....1 (32-bit)
+    sc_uint<32> v_sc_uint32_max = ~0;             // 11....1 (32-bit)
     sc_biguint<32> v_sc_biguint_32_max = -1;      // 11....1 (32-bit)
 
-    DUMP_VAR( v_sc_int_31_min );
-    DUMP_VAR( v_sc_bigint_31_min );
-    DUMP_VAR( v_sc_uint32_max );
-    DUMP_VAR( v_sc_biguint_32_max );
+    DUMP_VAR(v_sc_int_31_min);
+    DUMP_VAR(v_sc_bigint_31_min);
+    DUMP_VAR(v_sc_uint32_max);
+    DUMP_VAR(v_sc_biguint_32_max);
 
-    sc_bigint<64> int31_uint         = (v_sc_int_31_min    & v_uint_max);
+    sc_bigint<64> int31_uint = (v_sc_int_31_min & v_uint_max);
     // the following expression yields 0b1....10...0 on 32-bit machines
-    sc_bigint<64> bigint31_uint      = (v_sc_bigint_31_min & v_uint_max);
-    sc_bigint<64> bigint31_uint32    = (v_sc_bigint_31_min & v_sc_uint32_max);
+    sc_bigint<64> bigint31_uint = (v_sc_bigint_31_min & v_uint_max);
+    sc_bigint<64> bigint31_uint32 = (v_sc_bigint_31_min & v_sc_uint32_max);
     sc_bigint<64> bigint31_biguint32 = (v_sc_bigint_31_min & v_sc_biguint_32_max);
 
-    DUMP_VAR( v_sc_bigint_31_min & v_uint_max );
-    DUMP_VAR( v_sc_bigint_31_min & v_sc_biguint_32_max );
+    DUMP_VAR(v_sc_bigint_31_min & v_uint_max);
+    DUMP_VAR(v_sc_bigint_31_min & v_sc_biguint_32_max);
 
     DUMP_VAR(int31_uint);
     DUMP_VAR(bigint31_uint); // <--
@@ -72,4 +72,3 @@ int sc_main(int, char*[])
 
     return 0;
 }
-

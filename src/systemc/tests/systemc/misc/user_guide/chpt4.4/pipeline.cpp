@@ -19,7 +19,7 @@
 
 /*****************************************************************************
 
-  pipeline.cpp -- 
+  pipeline.cpp --
 
   Original Author: Martin Janssen, Synopsys, Inc., 2002-02-15
 
@@ -46,11 +46,11 @@
 #include "pipeline.h"
 #include "f_pipeline.h"
 
-void  f_pipeline(const char *NAME,
-		 sc_clock& CLK,
-		 const sc_signal<double>& IN1,
-		 const sc_signal<double>& IN2,
-		 sc_signal<double>& OUT_)
+void f_pipeline(const char *NAME,
+                sc_clock &CLK,
+                const sc_signal<double> &IN1,
+                const sc_signal<double> &IN2,
+                sc_signal<double> &OUT_)
 {
-  SC_NEW(pipeline(NAME, CLK, IN1, IN2, OUT_));
+    SC_NEW(pipeline(NAME, CLK, IN1, IN2, OUT_));
 }

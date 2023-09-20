@@ -35,7 +35,6 @@
 
  *****************************************************************************/
 
-
 // $Log: sc_lv_base.cpp,v $
 // Revision 1.2  2011/08/24 22:05:40  acg
 //  Torsten Maehne: initialization changes to remove warnings.
@@ -51,123 +50,124 @@
 #include "sysc/datatypes/bit/sc_bit_ids.h"
 #include "sysc/datatypes/bit/sc_lv_base.h"
 
-
 namespace sc_dt
 {
 
-// ----------------------------------------------------------------------------
-//  CLASS : sc_lv_base
-//
-//  Arbitrary size logic vector base class.
-// ----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
+    //  CLASS : sc_lv_base
+    //
+    //  Arbitrary size logic vector base class.
+    // ----------------------------------------------------------------------------
 
-static const sc_digit data_array[] =
-    { SC_DIGIT_ZERO, ~SC_DIGIT_ZERO, SC_DIGIT_ZERO, ~SC_DIGIT_ZERO };
+    static const sc_digit data_array[] =
+        {SC_DIGIT_ZERO, ~SC_DIGIT_ZERO, SC_DIGIT_ZERO, ~SC_DIGIT_ZERO};
 
-static const sc_digit ctrl_array[] =
-    { SC_DIGIT_ZERO, SC_DIGIT_ZERO, ~SC_DIGIT_ZERO, ~SC_DIGIT_ZERO };
+    static const sc_digit ctrl_array[] =
+        {SC_DIGIT_ZERO, SC_DIGIT_ZERO, ~SC_DIGIT_ZERO, ~SC_DIGIT_ZERO};
 
-
-void
-sc_lv_base::init( int length_, const sc_logic& init_value )
-{
-    // check the length
-    if( length_ <= 0 ) {
-	SC_REPORT_ERROR( sc_core::SC_ID_ZERO_LENGTH_, 0 );
+    void
+    sc_lv_base::init(int length_, const sc_logic &init_value)
+    {
+        // check the length
+        if (length_ <= 0)
+        {
+            SC_REPORT_ERROR(sc_core::SC_ID_ZERO_LENGTH_, 0);
+        }
+        // allocate memory for the data and control words
+        m_len = length_;
+        m_size = (m_len - 1) / SC_DIGIT_SIZE + 1;
+        m_data = new sc_digit[m_size * 2];
+        m_ctrl = m_data + m_size;
+        // initialize the bits to 'init_value'
+        sc_digit dw = data_array[init_value.value()];
+        sc_digit cw = ctrl_array[init_value.value()];
+        int sz = m_size;
+        for (int i = 0; i < sz; ++i)
+        {
+            m_data[i] = dw;
+            m_ctrl[i] = cw;
+        }
+        clean_tail();
     }
-    // allocate memory for the data and control words
-    m_len = length_;
-    m_size = (m_len - 1) / SC_DIGIT_SIZE + 1;
-    m_data = new sc_digit[m_size * 2];
-    m_ctrl = m_data + m_size;
-    // initialize the bits to 'init_value'
-    sc_digit dw = data_array[init_value.value()];
-    sc_digit cw = ctrl_array[init_value.value()];
-    int sz = m_size;
-    for( int i = 0; i < sz; ++ i ) {
-	m_data[i] = dw;
-	m_ctrl[i] = cw;
+
+    void
+    sc_lv_base::assign_from_string(const std::string &s)
+    {
+        // s must have been converted to bin
+        int len = m_len;
+        int s_len = s.length() - 1;
+        int min_len = sc_min(len, s_len);
+        int i = 0;
+        for (; i < min_len; ++i)
+        {
+            char c = s[s_len - i - 1];
+            set_bit(i, sc_logic::char_to_logic[(int)c]);
+        }
+        // if formatted, fill the rest with sign(s), otherwise fill with zeros
+        sc_logic_value_t fill = (s[s_len] == 'F' ? sc_logic_value_t(s[0] - '0')
+                                                 : sc_logic_value_t(0));
+        for (; i < len; ++i)
+        {
+            set_bit(i, fill);
+        }
     }
-    clean_tail();
-}
 
+    // constructors
 
-void
-sc_lv_base::assign_from_string( const std::string& s )
-{
-    // s must have been converted to bin
-    int len = m_len;
-    int s_len = s.length() - 1;
-    int min_len = sc_min( len, s_len );
-    int i = 0;
-    for( ; i < min_len; ++ i ) {
-	char c = s[s_len - i - 1];
-	set_bit( i, sc_logic::char_to_logic[(int)c] );
+    sc_lv_base::sc_lv_base(const char *a)
+        : m_len(0), m_size(0), m_data(0), m_ctrl(0)
+    {
+        std::string s = convert_to_bin(a);
+        init(s.length() - 1);
+        assign_from_string(s);
     }
-    // if formatted, fill the rest with sign(s), otherwise fill with zeros
-    sc_logic_value_t fill = (s[s_len] == 'F' ? sc_logic_value_t( s[0] - '0' )
-		                             : sc_logic_value_t( 0 ));
-    for( ; i < len; ++ i ) {
-	set_bit( i, fill );
+
+    sc_lv_base::sc_lv_base(const char *a, int length_)
+        : m_len(0), m_size(0), m_data(0), m_ctrl(0)
+    {
+        init(length_);
+        assign_from_string(convert_to_bin(a));
     }
-}
 
-
-// constructors
-
-sc_lv_base::sc_lv_base( const char* a )
-    : m_len( 0 ), m_size( 0 ), m_data( 0 ), m_ctrl( 0 )
-{
-    std::string s = convert_to_bin( a );
-    init( s.length() - 1 );
-    assign_from_string( s );
-}
-
-sc_lv_base::sc_lv_base( const char* a, int length_ )
-    : m_len( 0 ), m_size( 0 ), m_data( 0 ), m_ctrl( 0 )
-{
-    init( length_ );
-    assign_from_string( convert_to_bin( a ) );
-}
-
-sc_lv_base::sc_lv_base( const sc_lv_base& a )
-    : sc_proxy<sc_lv_base>(),
-      m_len( a.m_len ),
-      m_size( a.m_size ),
-      m_data( new sc_digit[m_size * 2] ),
-      m_ctrl( m_data + m_size )
-{
-    // copy the bits
-    int sz = m_size;
-    for( int i = 0; i < sz; ++ i ) {
-	m_data[i] = a.m_data[i];
-	m_ctrl[i] = a.m_ctrl[i];
+    sc_lv_base::sc_lv_base(const sc_lv_base &a)
+        : sc_proxy<sc_lv_base>(),
+          m_len(a.m_len),
+          m_size(a.m_size),
+          m_data(new sc_digit[m_size * 2]),
+          m_ctrl(m_data + m_size)
+    {
+        // copy the bits
+        int sz = m_size;
+        for (int i = 0; i < sz; ++i)
+        {
+            m_data[i] = a.m_data[i];
+            m_ctrl[i] = a.m_ctrl[i];
+        }
     }
-}
 
+    // assignment operators
 
-// assignment operators
-
-sc_lv_base&
-sc_lv_base::operator = ( const char* a )
-{
-    assign_from_string( convert_to_bin( a ) );
-    return *this;
-}
-
-
-// returns true if logic vector contains only 0's and 1's
-
-bool
-sc_lv_base::is_01() const
-{
-    int sz = m_size;
-    for( int i = 0; i < sz; ++ i ) {
-	if( m_ctrl[i] != 0 ) {
-	    return false;
-	}
+    sc_lv_base &
+    sc_lv_base::operator=(const char *a)
+    {
+        assign_from_string(convert_to_bin(a));
+        return *this;
     }
-    return true;
-}
+
+    // returns true if logic vector contains only 0's and 1's
+
+    bool
+    sc_lv_base::is_01() const
+    {
+        int sz = m_size;
+        for (int i = 0; i < sz; ++i)
+        {
+            if (m_ctrl[i] != 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
 } // namespace sc_dt
