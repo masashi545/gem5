@@ -1,4 +1,5 @@
 #!/bin/bash
+cd ${GEM5_ROOT}
 
 if [ $# == 0 ]; then
     echo "Please specify checkpoint ID"
@@ -18,10 +19,10 @@ fi
 --cpu-clock=3GHz \
 --cpu-type=TimingSimpleCPU \
 \
---checkpoint-restore=$1 \
+--checkpoint-restore=${1} \
 --restore-with-cpu=TimingSimpleCPU \
 \
---mem-size=8GB \
+--mem-size=2GB \
 --caches \
 --l2cache \
 --l1d_size=32kB \
@@ -31,8 +32,7 @@ fi
 \
 --network=garnet \
 --topology=MCN_Mesh_XY \
---num-mems=16 \
+--num-mems=${2} \
 --num-cpus=4 \
 --num-l2caches=4 \
---num-dir=16 \
---mesh-rows=4
+--num-dir=${2}

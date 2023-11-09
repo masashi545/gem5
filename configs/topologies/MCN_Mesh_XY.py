@@ -1,8 +1,9 @@
-# DMN.py
+# MCN_Mesh_XY.py
 # Author: Masashi Oda <oda@lab3.kuis.kyoto-u.ac.jp>
 
 from m5.params import *
 from m5.objects import *
+import math
 
 from common import FileSystemConfig
 
@@ -26,9 +27,8 @@ class MCN_Mesh_XY(SimpleTopology):
     def makeTopology(self, options, network, IntLink, ExtLink, Router):
         nodes = self.nodes
 
-        num_nodes = options.num_cpus
-        num_rows = options.mesh_rows
-        assert num_rows > 0 and num_rows <= num_nodes, "mesh_rows: invalid"
+        num_nodes = options.num_mems
+        num_rows = int(math.sqrt(num_nodes))
         num_columns = int(num_nodes / num_rows)
 
         link_latency = options.link_latency  # used by simple and garnet
@@ -48,8 +48,6 @@ class MCN_Mesh_XY(SimpleTopology):
             elif node.type == "DMA_Controller":
                 dma_nodes.append(node)
         assert len(cpu_nodes) == 4, "num_cpus: invalid"
-        assert len(l2c_nodes) == 4, "num_l2caches: invalid"
-        assert len(dir_nodes) == options.num_dirs, "num_dir: invalid"
 
         # Create the routers in the mesh
         routers = [
@@ -168,7 +166,7 @@ class MCN_Mesh_XY(SimpleTopology):
                             src_outport="North",
                             dst_inport="South",
                             latency=link_latency,
-                            weight=2,
+                            weight=1,
                         )
                     )
                     link_count += 1
@@ -187,7 +185,7 @@ class MCN_Mesh_XY(SimpleTopology):
                             src_outport="South",
                             dst_inport="North",
                             latency=link_latency,
-                            weight=2,
+                            weight=1,
                         )
                     )
                     link_count += 1

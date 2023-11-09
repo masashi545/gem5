@@ -1,4 +1,5 @@
 #!/bin/bash
+cd $GEM5_ROOT
 
 if [ $# == 0 ]; then
     echo "Please specify checkpoint ID"

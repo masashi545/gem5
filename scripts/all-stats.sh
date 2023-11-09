@@ -1,4 +1,5 @@
 #!/bin/bash
+cd $GEM5_ROOT
 
 echo "simTime,numCycles,numOps" > data/all-stats.csv
 

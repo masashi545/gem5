@@ -1,0 +1,35 @@
+#!/bin/bash
+cd ${GEM5_ROOT}
+
+if [ $# == 0 ]; then
+    echo "Please specify checkpoint ID"
+    exit 1
+fi
+
+./build/X86_MOESI_CMP_directory/gem5.opt \
+\
+--debug-flags=TracePacket \
+--debug-file=debug.out \
+\
+./configs/example/fs.py \
+\
+--kernel=resource/kernels/x86_64-vmlinux-2.6.22.9.smp \
+--disk-image=resource/disks/linux-x86-npb.img \
+\
+--cpu-clock=3GHz \
+--cpu-type=TimingSimpleCPU \
+\
+--checkpoint-restore=${1} \
+--restore-with-cpu=TimingSimpleCPU \
+\
+--mem-size=2GB \
+--caches \
+--l1d_size=32kB \
+--l1i_size=32kB \
+--ruby \
+\
+--network=garnet \
+--topology=MCN_Mesh_XY \
+--num-mems=${2} \
+--num-cpus=4 \
+--num-dir=${2}
